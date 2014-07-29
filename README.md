@@ -1,10 +1,14 @@
 # Kerberos
 Kerberos is currently a test lab for various functionality and features of rendering, physics, AI, etc.  
-Eventually it will become a usable game engine.   
+Eventually it will become a usable game engine.  If you ran the program now, it would present you with
+a basic screen that changes color when you press spacebar, and exits when you hit escape.
 
 
 ### Roadmap  
-TODO
+* Develop "systems" classes (input, physics, sound, render, etc)
+* Develop logging system
+* Develop debugging system
+* Implement GUI system (need to research options)
 
 
 ### Changelog  
