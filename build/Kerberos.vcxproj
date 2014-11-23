@@ -11,13 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\source\krbCore.cpp" />
+    <ClCompile Include="..\source\krbInputSystem.cpp" />
+    <ClCompile Include="..\source\krbRenderSystem.cpp" />
     <ClCompile Include="..\source\main.cpp" />
-    <ClCompile Include="..\source\stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\stdafx.h" />
+    <ClInclude Include="..\include\Kerberos.h" />
+    <ClInclude Include="..\include\krbCore.h" />
+    <ClInclude Include="..\include\krbInputSystem.h" />
+    <ClInclude Include="..\include\krbRenderSystem.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E7640B66-D605-4FFA-8E6B-B8DEEA64B136}</ProjectGuid>
@@ -66,9 +69,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>..\include;$(OGRE_HOME)\boost;$(OGRE_HOME)\include;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\include\OGRE\Overlay;$(OGRE_HOME)\include\OIS;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>stdafx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <AdditionalOptions>-Zm121 %(AdditionalOptions)</AdditionalOptions>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>
+      </PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
