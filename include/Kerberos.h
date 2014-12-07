@@ -1,44 +1,56 @@
 #pragma once
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+#ifndef Kerberos_H
+#define Kerberos_H
+
+///////////////////////////////////////////////////////////////////////////////
 //
+//  FILE    : Kerberos.h
+//  UPDATED : 12/07/2014
 //
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
+#include "INIReader.h"
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// OGRE3D
-#include <OgreException.h>
-#include <OgreRoot.h>
-#include <OgreConfigFile.h>
-#include <OgreCamera.h>
-#include <OgreViewport.h>
-#include <OgreSceneManager.h>
-#include <OgreRenderWindow.h>
-#include <OgreEntity.h>
-#include <OgreSingleton.h>
-#include <OgreTimer.h>
-#include <OgreWindowEventUtilities.h>
-#include <OIS/OIS.h>
+#include "Gorilla.h"
 
-// WINDOWS
-#define WIN32_LEAN_AND_MEAN
-#include "windows.h"
+///////////////////////////////////////////////////////////////////////////////
+// CLASS FORWARD DECLARATIONS
 
-// STD AND SUCH
-#include <iostream>
-using namespace std;
+namespace Kerberos {
+  class Core;
+  class Logger;
+  class Timer;
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// CLASS DECLARATIONS
-class krbCore;
-class krbInputSystem;
-class krbRenderSystem;
+  class SystemAudio;
+  class SystemGUI;
+  class SystemInput;
+  class SystemPhysics;
+  class SystemRender;
+  class SystemScript;
+  class SystemWorld;
+
+  class ModuleCamera;
+  class ModuleDebug;
+}
 
 // KERBEROS INCLUDES
 #include "krbCore.h"
-#include "krbInputSystem.h"
-#include "krbRenderSystem.h"
+#include "krbLogger.h"
+#include "krbTimer.h"
 
-// EOF ////////////////////////////////////////////////////////////////////////////////////////////
+#include "systems\krbSystemFactory.h"
+#include "systems\krbSystemGUI.h"
+#include "systems\krbSystemInput.h"
+#include "systems\krbSystemPhysics.h"
+#include "systems\krbSystemRender.h"
+#include "systems\krbSystemScript.h"
+#include "systems\krbSystemWorld.h"
+
+#include "modules\krbModuleFactory.h"
+#include "modules\krbModuleCamera.h"
+#include "modules\krbModuleDebug.h"
+
+// EOF ////////////////////////////////////////////////////////////////////////
+
+#endif

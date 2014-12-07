@@ -1,0 +1,15 @@
+material demo/floor_grid_512
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.8 0.8 0.8
+
+			texture_unit
+			{
+				texture floor_grid_512.tga
+			}
+		}
+	}
+}

@@ -1,53 +1,139 @@
 #pragma once
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////
+#ifndef krbCore_H
+#define krbCore_H
 
-#include "Kerberos.h"
+///////////////////////////////////////////////////////////////////////////////
+//
+//  FILE    : krbCore.h
+//  UPDATED : 12/07/2014
+//
+///////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+#include "OgreSingleton.h"
 
-class krbCore : public Ogre::Singleton<krbCore>
-{
+///////////////////////////////////////////////////////////////////////////////
+
+class INIReader;
+
+namespace Gorilla {
+  class Layer;
+  class Rectangle;
+  class Screen;
+}
+
+namespace Ogre {
+  class Root;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+namespace Kerberos {
+
+///////////////////////////////////////////////////////////////////////////////
+
+class Logger;
+class Timer;
+
+class System;
+class SystemFactory;
+class SystemAudio;
+class SystemGUI;
+class SystemInput;
+class SystemPhysics;
+class SystemRender;
+class SystemScript;
+class SystemWorld;
+
+class Module;
+class ModuleFactory;
+class ModuleCamera;
+class ModuleDebug;
+
+///////////////////////////////////////////////////////////////////////////////
+
+class Core : public Ogre::Singleton<Core> {
 public:
-    krbCore();
-	static krbCore& getInstance(void);
-    static krbCore* getPointer(void);
- 
-	void Init(float logicRate, bool capFPS, float fpsCap);
-	void Cycle();
-	void LogicCycle();
-	void RenderCycle();
-	void Halt();
+  Core();
+  static Core &singleton(void);
+  static Core *singletonPtr(void);
 
-	Ogre::Real getMilliseconds() { return mTimer->getMilliseconds(); }
-	
-	krbInputSystem* pInputSys;
-	krbRenderSystem* pRenderSys;
+  // FUNCTIONS
+  void init();
+  void update(void);
+  void halt(void);
 
-	Ogre::Root* mRoot;
+  // GETTERS
+  INIReader *getINI(void) { return pConfig; }
+  Logger *getLogger(void) { return pLogger; }
+  Timer *getTimer(void) { return pTimer; }
 
-	// CORE TIME
-	Ogre::Real fTotalTime;
-	Ogre::String strTotalTime;
+  double getLogicTicks(void) { return dLogicTicks; }
+  double getLogicTPS(void);
 
-	// LOGIC CYCLE
-	Ogre::Real fLogicTimePassed;
-	int iLogicTicks;
+private:
+  void loadResources(void);
 
-	// STRINGS FOR TICK COUNT
-	Ogre::Real fTimePerLogicTick;
-	Ogre::String strTotalLogicTicks;
-	Ogre::String strTotalRenderTicks;
+  void primeSystems(void);
+  void haltSystems(void);
 
-	// DEMO STUFF
-	float fRanR, fRanG, fRanB;
+  void primeModules(void);
+  void removeModules(void);
+
+  void initDebug(void);
+  void createHUD(void);
+  void updateHUD(void);
+
+  void handleInput(void);
+  void handleLogic(void);
 
 protected:
-	Ogre::Timer* mTimer;
+  float fInputCounter;
+  float fInputRate;
+  bool bIsActive;
+
+  INIReader *pConfig;
+  Logger *pLogger;
+  Timer *pTimer;
+
+  // SYSTEMS
+  SystemFactory *pSysFactory;
+  SystemAudio *pSysAudio;
+  SystemGUI *pSysGUI;
+  SystemInput *pSysInput;
+  SystemPhysics *pSysPhysics;
+  SystemRender *pSysRender;
+  SystemScript *pSysScript;
+  SystemWorld *pSysWorld;
+
+  // MODULES
+  ModuleFactory *pModFactory;
+  ModuleCamera *pModCamera;
+  ModuleDebug *pModDebug;
+
+  Ogre::Root *pRoot;
+
+  // CORE TIME
+  double dDeltaTime;
+  double dAccumulator;
+  double dCurrentTime;
+  double dNewTime;
+
+  // LOGIC CYCLE
+  double dTimePerLogicTick, dLogicTimePassed;
+  double dLogicTicks;
+  std::string strLogicTicks;
+
+  // BASIC HUD
+  Gorilla::Screen *pScreenHUD;
+  Gorilla::Layer *pLayerHUD;
+  Gorilla::Layer *pLayerCursor;
+  Gorilla::Rectangle *pRectCursor;
+
+  // "DEMO" TIME
+  unsigned int iDemoTime;
 };
 
-// EOF ////////////////////////////////////////////////////////////////////////////////////////////
+// EOF ////////////////////////////////////////////////////////////////////////
+}
+#endif

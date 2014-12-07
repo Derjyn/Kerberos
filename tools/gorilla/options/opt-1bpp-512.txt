@@ -1,0 +1,1 @@
+ -bmsize 512 -trh 1bpp

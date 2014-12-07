@@ -1,0 +1,5 @@
+build/intermediate
+build/Kerberos.sdf
+build/Kerberos.vcxproj.user
+build/docs/doxygen/html
+bin/debug/*.log

@@ -1,0 +1,1 @@
+-bmsize 256 -trh 1bpp-grid

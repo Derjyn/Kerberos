@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -11,16 +11,44 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\dependencies\include\Gorilla\Gorilla.cpp" />
+    <ClCompile Include="..\dependencies\include\INIH\ini.c" />
+    <ClCompile Include="..\dependencies\include\INIH\INIReader.cpp" />
     <ClCompile Include="..\source\krbCore.cpp" />
-    <ClCompile Include="..\source\krbInputSystem.cpp" />
-    <ClCompile Include="..\source\krbRenderSystem.cpp" />
-    <ClCompile Include="..\source\main.cpp" />
+    <ClCompile Include="..\source\krbLogger.cpp" />
+    <ClCompile Include="..\source\krbTimer.cpp" />
+    <ClCompile Include="..\source\krbMain.cpp" />
+    <ClCompile Include="..\source\modules\krbModuleCamera.cpp" />
+    <ClCompile Include="..\source\modules\krbModuleDebug.cpp" />
+    <ClCompile Include="..\source\systems\krbSystemAudio.cpp" />
+    <ClCompile Include="..\source\systems\krbSystemGUI.cpp" />
+    <ClCompile Include="..\source\systems\krbSystemInput.cpp" />
+    <ClCompile Include="..\source\systems\krbSystemPhysics.cpp" />
+    <ClCompile Include="..\source\systems\krbSystemRender.cpp" />
+    <ClCompile Include="..\source\systems\krbSystemScript.cpp" />
+    <ClCompile Include="..\source\systems\krbSystemWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Kerberos.h" />
     <ClInclude Include="..\include\krbCore.h" />
-    <ClInclude Include="..\include\krbInputSystem.h" />
-    <ClInclude Include="..\include\krbRenderSystem.h" />
+    <ClInclude Include="..\include\krbLogger.h" />
+    <ClInclude Include="..\include\krbTimer.h" />
+    <ClInclude Include="..\include\modules\krbModule.h" />
+    <ClInclude Include="..\include\modules\krbModuleCamera.h" />
+    <ClInclude Include="..\include\modules\krbModuleDebug.h" />
+    <ClInclude Include="..\include\modules\krbModuleFactory.h" />
+    <ClInclude Include="..\include\systems\krbSystem.h" />
+    <ClInclude Include="..\include\systems\krbSystemAudio.h" />
+    <ClInclude Include="..\include\systems\krbSystemFactory.h" />
+    <ClInclude Include="..\include\systems\krbSystemGUI.h" />
+    <ClInclude Include="..\include\systems\krbSystemInput.h" />
+    <ClInclude Include="..\include\systems\krbSystemPhysics.h" />
+    <ClInclude Include="..\include\systems\krbSystemRender.h" />
+    <ClInclude Include="..\include\systems\krbSystemScript.h" />
+    <ClInclude Include="..\include\systems\krbSystemWorld.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\docs\Scratchpad.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E7640B66-D605-4FFA-8E6B-B8DEEA64B136}</ProjectGuid>
@@ -31,12 +59,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -68,19 +98,24 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\include;$(OGRE_HOME)\boost;$(OGRE_HOME)\include;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\include\OGRE\Overlay;$(OGRE_HOME)\include\OIS;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\dependencies\include;..\dependencies\include\Ogre3D;..\dependencies\include\OIS;..\dependencies\include\Gorilla;..\dependencies\include\INIH;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <AdditionalOptions>-Zm121 %(AdditionalOptions)</AdditionalOptions>
-      <PrecompiledHeaderFile>
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>
-      </PrecompiledHeaderOutputFile>
+      <AdditionalOptions>-Zm400 %(AdditionalOptions)</AdditionalOptions>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <ShowIncludes>false</ShowIncludes>
+      <DisableSpecificWarnings>4786;4503;4251;4275;4290;4661;4996;4127;4100;4244;4013;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <UndefinePreprocessorDefinitions>%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\lib;$(OGRE_HOME)\lib\Release;$(OGRE_HOME)\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\dependencies\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>OgreMain.lib;OgreOverlay.lib;OIS.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
