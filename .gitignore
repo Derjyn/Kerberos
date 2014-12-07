@@ -1,5 +1,7 @@
 build/intermediate
 build/Kerberos.sdf
+build/Kerberos.suo
+build/Kerberos.v12.suo
 build/Kerberos.vcxproj.user
 build/docs/doxygen/html
 bin/debug/*.log

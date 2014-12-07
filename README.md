@@ -4,14 +4,17 @@ Eventually it will become a usable game engine.
 
 
 ### Roadmap  
-* Further flesh out and tidy up systems
-* Clean up dependencies
 * DOCUMENTATION
 * Peformance enhancements
 * Tools development
 
 
-### Changelog  
+### Changelog
+12/07/2014
+* Systems mostly operational
+* Added ModuleCamera
+* Added ModuleDefault
+
 12/03/2014
 * Systems groundwork laid
 * Core functionality implemented (basic demo running)
