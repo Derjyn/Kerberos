@@ -1,4 +1,5 @@
 build/intermediate
+build/dependencies
 build/Kerberos.sdf
 build/Kerberos.suo
 build/Kerberos.v12.suo

@@ -1,56 +1,72 @@
+/*******************************************************************************
+*                                                                              *
+* Copyright (C) 2014 Nathan Harris                                             *
+*                                                                              *
+* This file is part of Kerberos.                                               *
+*                                                                              *
+*   Kerberos is free software. Enjoy it, modify it, contribute to it.          *
+*   For sales inqueries, see <http://www.omglasergunspewpewpew.com/>           *
+*                                                                              *
+*******************************************************************************/
+
+/**
+* @file   Kerberos.h
+* @author Nathan Harris
+* @date   13 December 2014
+* @brief  Wrangles up Kerberos for consumption
+*/
+
+/*****************************************************************************
+*****************************************************************************/
+
 #pragma once
 
-#ifndef Kerberos_H
-#define Kerberos_H
+#ifndef Kerberos_h
+#define Kerberos_h
 
-///////////////////////////////////////////////////////////////////////////////
-//
-//  FILE    : Kerberos.h
-//  UPDATED : 12/07/2014
-//
-///////////////////////////////////////////////////////////////////////////////
+/*****************************************************************************
+*****************************************************************************/
 
-#include "INIReader.h"
+#include "KerberosPrereqs.h"
 
-#include "Gorilla.h"
+/*****************************************************************************
+*****************************************************************************/
 
-///////////////////////////////////////////////////////////////////////////////
-// CLASS FORWARD DECLARATIONS
-
-namespace Kerberos {
+namespace Kerberos
+{
   class Core;
+  class Config;
   class Logger;
   class Timer;
 
-  class SystemAudio;
-  class SystemGUI;
-  class SystemInput;
-  class SystemPhysics;
-  class SystemRender;
-  class SystemScript;
-  class SystemWorld;
-
-  class ModuleCamera;
-  class ModuleDebug;
+  class AISystem;
+  class GUISystem;
+  class InputSystem;
+  class PhysicsSystem;
+  class RenderSystem;
+  class SoundSystem;
+  class WorldSystem;
 }
 
-// KERBEROS INCLUDES
-#include "krbCore.h"
-#include "krbLogger.h"
-#include "krbTimer.h"
+/*****************************************************************************
+*****************************************************************************/
 
-#include "systems\krbSystemFactory.h"
-#include "systems\krbSystemGUI.h"
-#include "systems\krbSystemInput.h"
-#include "systems\krbSystemPhysics.h"
-#include "systems\krbSystemRender.h"
-#include "systems\krbSystemScript.h"
-#include "systems\krbSystemWorld.h"
+#include "core\krbCore.h"
+#include "core\krbConfig.h"
+#include "core\krbLogger.h"
+#include "core\krbTimer.h"
 
-#include "modules\krbModuleFactory.h"
-#include "modules\krbModuleCamera.h"
-#include "modules\krbModuleDebug.h"
+#include "systems\ai\krbAISystem.h"
+#include "systems\gui\krbGUISystem.h"
+#include "systems\input\krbInputSystem.h"
+#include "systems\physics\krbPhysicsSystem.h"
+#include "systems\render\krbRenderSystem.h"
+#include "systems\sound\krbSoundSystem.h"
+#include "systems\world\krbWorldSystem.h"
 
-// EOF ////////////////////////////////////////////////////////////////////////
+/*****************************************************************************
+*****************************************************************************/
 
-#endif
+#endif // Kerberos_h
+
+/***]EOF[*********************************************************************/

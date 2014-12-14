@@ -1,145 +1,177 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Source">
+      <UniqueIdentifier>{72853611-5cb6-48e2-8137-5a22966fe9ed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Documentation">
-      <UniqueIdentifier>{8e53cfce-2b12-4a00-be64-f4e8bc57a8c7}</UniqueIdentifier>
+    <Filter Include="Include">
+      <UniqueIdentifier>{15a20cf2-47b0-4fa0-bc95-c3dd0c064fab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    <Filter Include="Include\Core">
+      <UniqueIdentifier>{b5c73551-5fdd-4d28-92ef-0608cd0520ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Systems">
-      <UniqueIdentifier>{221fe158-525c-4592-824d-5244c37e6215}</UniqueIdentifier>
+    <Filter Include="Source\Core">
+      <UniqueIdentifier>{5de9792c-d668-4793-a429-3004bc1f82c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Core">
-      <UniqueIdentifier>{9a2be231-b64f-4fd9-a28c-dad571ea133e}</UniqueIdentifier>
+    <Filter Include="Include\Systems">
+      <UniqueIdentifier>{078a43a2-0ee4-410b-97d8-ad86f47eb4dd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Systems">
-      <UniqueIdentifier>{0b63a67e-de7a-4ae1-b93e-2edcf4449eb5}</UniqueIdentifier>
+    <Filter Include="Include\Systems\AI">
+      <UniqueIdentifier>{7de8e5dc-46c2-4067-8244-be191800878c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Core">
-      <UniqueIdentifier>{bceb1470-e2c4-41e6-9f59-a16cced10e79}</UniqueIdentifier>
+    <Filter Include="Include\Systems\GUI">
+      <UniqueIdentifier>{49e5e8c5-55de-442f-8796-195b71b0815f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Modules">
-      <UniqueIdentifier>{9c264dba-c7f9-4abc-ad28-cda0a304630a}</UniqueIdentifier>
+    <Filter Include="Include\Systems\Input">
+      <UniqueIdentifier>{4d506028-1ae7-47f1-a125-941710e46bd5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Modules">
-      <UniqueIdentifier>{fb6af1c4-8cc2-4fad-bf6c-23ef991c4cb1}</UniqueIdentifier>
+    <Filter Include="Include\Systems\Physics">
+      <UniqueIdentifier>{81efb1bb-993b-4960-a601-2aa258ff8aae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Dependencies">
-      <UniqueIdentifier>{345e4b6c-ba13-4543-94c5-4a788c2f970e}</UniqueIdentifier>
+    <Filter Include="Include\Systems\Render">
+      <UniqueIdentifier>{6cc62732-0e0f-4706-9660-b6abfe9b3614}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\source\krbCore.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\krbLogger.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\systems\krbSystemInput.cpp">
-      <Filter>Source Files\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\systems\krbSystemGUI.cpp">
-      <Filter>Source Files\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\systems\krbSystemPhysics.cpp">
-      <Filter>Source Files\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\systems\krbSystemRender.cpp">
-      <Filter>Source Files\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\systems\krbSystemScript.cpp">
-      <Filter>Source Files\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\systems\krbSystemAudio.cpp">
-      <Filter>Source Files\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\krbTimer.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\systems\krbSystemWorld.cpp">
-      <Filter>Source Files\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\include\Gorilla\Gorilla.cpp">
-      <Filter>Source Files\Dependencies</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\include\INIH\INIReader.cpp">
-      <Filter>Source Files\Dependencies</Filter>
-    </ClCompile>
-    <ClCompile Include="..\dependencies\include\INIH\ini.c">
-      <Filter>Source Files\Dependencies</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\modules\krbModuleDebug.cpp">
-      <Filter>Source Files\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\krbMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\modules\krbModuleCamera.cpp">
-      <Filter>Source Files\Modules</Filter>
-    </ClCompile>
+    <Filter Include="Include\Systems\Sound">
+      <UniqueIdentifier>{d9beaf2c-f289-471a-a066-708d713c8570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Systems\World">
+      <UniqueIdentifier>{bbab9960-2bcc-4d2c-994c-d02852ef5f1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Systems">
+      <UniqueIdentifier>{907eb452-a88b-4d3d-bd55-e4554d256c74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Systems\AI">
+      <UniqueIdentifier>{a43e5467-2d12-4432-90f2-22abedade850}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Systems\GUI">
+      <UniqueIdentifier>{753f2b02-6bed-4ccb-9efd-476e2c519e80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Systems\Input">
+      <UniqueIdentifier>{7732bf52-3e17-4ce3-a252-0c49c60ae111}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Systems\Physics">
+      <UniqueIdentifier>{e33195f4-9c60-4b8d-b833-1b596b6c1a90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Systems\Render">
+      <UniqueIdentifier>{7dfaa482-b58a-4a56-8900-db7c7a2f944c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Systems\Sound">
+      <UniqueIdentifier>{41b59729-466b-4ed6-83ea-8c2428899423}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Systems\World">
+      <UniqueIdentifier>{474831b0-12d0-4eab-a60e-cc63d6dd2510}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Dependencies">
+      <UniqueIdentifier>{942bab78-4645-4d42-8231-5e7642325e62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Entities">
+      <UniqueIdentifier>{87efff4e-5ca7-46f3-ba0e-895d3ac2a58a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Entities">
+      <UniqueIdentifier>{28b27fbe-4f98-4005-b1c3-f1dbc0a67c84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Kerberos.h">
-      <Filter>Header Files</Filter>
+      <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\krbCore.h">
-      <Filter>Header Files\Core</Filter>
+    <ClInclude Include="..\include\core\krbCore.h">
+      <Filter>Include\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\krbLogger.h">
-      <Filter>Header Files\Core</Filter>
+    <ClInclude Include="..\include\core\krbLogger.h">
+      <Filter>Include\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\systems\krbSystemGUI.h">
-      <Filter>Header Files\Systems</Filter>
+    <ClInclude Include="..\include\core\krbTimer.h">
+      <Filter>Include\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\systems\krbSystemInput.h">
-      <Filter>Header Files\Systems</Filter>
+    <ClInclude Include="..\include\systems\ai\krbAISystem.h">
+      <Filter>Include\Systems\AI</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\systems\krbSystemPhysics.h">
-      <Filter>Header Files\Systems</Filter>
+    <ClInclude Include="..\include\systems\gui\krbGUISystem.h">
+      <Filter>Include\Systems\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\systems\krbSystemRender.h">
-      <Filter>Header Files\Systems</Filter>
+    <ClInclude Include="..\include\systems\input\krbInputSystem.h">
+      <Filter>Include\Systems\Input</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\systems\krbSystemScript.h">
-      <Filter>Header Files\Systems</Filter>
+    <ClInclude Include="..\include\systems\render\krbRenderSystem.h">
+      <Filter>Include\Systems\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\systems\physics\krbPhysicsSystem.h">
+      <Filter>Include\Systems\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\systems\sound\krbSoundSystem.h">
+      <Filter>Include\Systems\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\systems\world\krbWorldSystem.h">
+      <Filter>Include\Systems\World</Filter>
     </ClInclude>
     <ClInclude Include="..\include\systems\krbSystem.h">
-      <Filter>Header Files\Systems</Filter>
+      <Filter>Include\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\systems\krbSystemAudio.h">
-      <Filter>Header Files\Systems</Filter>
+    <ClInclude Include="..\include\core\krbConfig.h">
+      <Filter>Include\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\krbTimer.h">
-      <Filter>Header Files\Core</Filter>
+    <ClInclude Include="..\include\KerberosPrereqs.h">
+      <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\systems\krbSystemWorld.h">
-      <Filter>Header Files\Systems</Filter>
+    <ClInclude Include="..\include\KerberosUtility.h">
+      <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\systems\krbSystemFactory.h">
-      <Filter>Header Files\Systems</Filter>
+    <ClInclude Include="..\include\entities\krbEntityCamera.h">
+      <Filter>Include\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\modules\krbModule.h">
-      <Filter>Header Files\Modules</Filter>
+    <ClInclude Include="..\include\entities\krbEntity.h">
+      <Filter>Include\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\modules\krbModuleFactory.h">
-      <Filter>Header Files\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\modules\krbModuleDebug.h">
-      <Filter>Header Files\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\modules\krbModuleCamera.h">
-      <Filter>Header Files\Modules</Filter>
+    <ClInclude Include="..\include\entities\krbEntityDynamic.h">
+      <Filter>Include\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\docs\Scratchpad.txt">
-      <Filter>Documentation</Filter>
-    </None>
+    <ClCompile Include="..\source\Kerberos.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\core\krbCore.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\core\krbLogger.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\core\krbTimer.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\systems\ai\krbAISystem.cpp">
+      <Filter>Source\Systems\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\systems\gui\krbGUISystem.cpp">
+      <Filter>Source\Systems\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\systems\input\krbInputSystem.cpp">
+      <Filter>Source\Systems\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\systems\physics\krbPhysicsSystem.cpp">
+      <Filter>Source\Systems\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\systems\render\krbRenderSystem.cpp">
+      <Filter>Source\Systems\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\systems\sound\krbSoundSystem.cpp">
+      <Filter>Source\Systems\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\systems\world\krbWorldSystem.cpp">
+      <Filter>Source\Systems\World</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\core\krbConfig.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\include\Gorilla\Gorilla.cpp">
+      <Filter>Source\Dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\include\BtOgre\BtOgre.cpp">
+      <Filter>Source\Dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\entities\krbEntityCamera.cpp">
+      <Filter>Source\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

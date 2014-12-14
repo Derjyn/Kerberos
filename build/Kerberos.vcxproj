@@ -10,63 +10,24 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\dependencies\include\Gorilla\Gorilla.cpp" />
-    <ClCompile Include="..\dependencies\include\INIH\ini.c" />
-    <ClCompile Include="..\dependencies\include\INIH\INIReader.cpp" />
-    <ClCompile Include="..\source\krbCore.cpp" />
-    <ClCompile Include="..\source\krbLogger.cpp" />
-    <ClCompile Include="..\source\krbTimer.cpp" />
-    <ClCompile Include="..\source\krbMain.cpp" />
-    <ClCompile Include="..\source\modules\krbModuleCamera.cpp" />
-    <ClCompile Include="..\source\modules\krbModuleDebug.cpp" />
-    <ClCompile Include="..\source\systems\krbSystemAudio.cpp" />
-    <ClCompile Include="..\source\systems\krbSystemGUI.cpp" />
-    <ClCompile Include="..\source\systems\krbSystemInput.cpp" />
-    <ClCompile Include="..\source\systems\krbSystemPhysics.cpp" />
-    <ClCompile Include="..\source\systems\krbSystemRender.cpp" />
-    <ClCompile Include="..\source\systems\krbSystemScript.cpp" />
-    <ClCompile Include="..\source\systems\krbSystemWorld.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\include\Kerberos.h" />
-    <ClInclude Include="..\include\krbCore.h" />
-    <ClInclude Include="..\include\krbLogger.h" />
-    <ClInclude Include="..\include\krbTimer.h" />
-    <ClInclude Include="..\include\modules\krbModule.h" />
-    <ClInclude Include="..\include\modules\krbModuleCamera.h" />
-    <ClInclude Include="..\include\modules\krbModuleDebug.h" />
-    <ClInclude Include="..\include\modules\krbModuleFactory.h" />
-    <ClInclude Include="..\include\systems\krbSystem.h" />
-    <ClInclude Include="..\include\systems\krbSystemAudio.h" />
-    <ClInclude Include="..\include\systems\krbSystemFactory.h" />
-    <ClInclude Include="..\include\systems\krbSystemGUI.h" />
-    <ClInclude Include="..\include\systems\krbSystemInput.h" />
-    <ClInclude Include="..\include\systems\krbSystemPhysics.h" />
-    <ClInclude Include="..\include\systems\krbSystemRender.h" />
-    <ClInclude Include="..\include\systems\krbSystemScript.h" />
-    <ClInclude Include="..\include\systems\krbSystemWorld.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\docs\Scratchpad.txt" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E7640B66-D605-4FFA-8E6B-B8DEEA64B136}</ProjectGuid>
+    <ProjectGuid>{934D9C5C-AD68-4B0D-ADDF-5F88D8EBB00E}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
     <RootNamespace>Kerberos</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -78,46 +39,89 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetName>Kerberos</TargetName>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>..\bin\</OutDir>
     <IntDir>.\intermediate\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\include;..\dependencies\include;..\dependencies\include\Ogre3D;..\dependencies\include\OIS;..\dependencies\include\Gorilla;..\dependencies\include\INIH;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <AdditionalOptions>-Zm400 %(AdditionalOptions)</AdditionalOptions>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <ShowIncludes>false</ShowIncludes>
-      <DisableSpecificWarnings>4786;4503;4251;4275;4290;4661;4996;4127;4100;4244;4013;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\include;.\dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
-      <UndefinePreprocessorDefinitions>%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
-      <PreprocessorDefinitions>NDEBUG;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <DisableSpecificWarnings>4244</DisableSpecificWarnings>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\dependencies\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OgreMain.lib;OgreOverlay.lib;OIS.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>.\dependencies\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LinkStatus>false</LinkStatus>
+      <AdditionalDependencies>OgreMain.lib;OgreOverlay.lib;OIS.lib;BulletDynamics.lib;BulletCollision.lib;BulletLinearMath.lib;BulletMultiThreaded.lib;BulletSoftBody.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Version>
+      </Version>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\core\krbConfig.h" />
+    <ClInclude Include="..\include\core\krbCore.h" />
+    <ClInclude Include="..\include\core\krbLogger.h" />
+    <ClInclude Include="..\include\core\krbTimer.h" />
+    <ClInclude Include="..\include\entities\krbEntity.h" />
+    <ClInclude Include="..\include\entities\krbEntityCamera.h" />
+    <ClInclude Include="..\include\entities\krbEntityDynamic.h" />
+    <ClInclude Include="..\include\Kerberos.h" />
+    <ClInclude Include="..\include\KerberosPrereqs.h" />
+    <ClInclude Include="..\include\KerberosUtility.h" />
+    <ClInclude Include="..\include\systems\ai\krbAISystem.h" />
+    <ClInclude Include="..\include\systems\gui\krbGUISystem.h" />
+    <ClInclude Include="..\include\systems\input\krbInputSystem.h" />
+    <ClInclude Include="..\include\systems\krbSystem.h" />
+    <ClInclude Include="..\include\systems\physics\krbPhysicsSystem.h" />
+    <ClInclude Include="..\include\systems\render\krbRenderSystem.h" />
+    <ClInclude Include="..\include\systems\sound\krbSoundSystem.h" />
+    <ClInclude Include="..\include\systems\world\krbWorldSystem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\core\krbConfig.cpp" />
+    <ClCompile Include="..\source\core\krbCore.cpp" />
+    <ClCompile Include="..\source\core\krbLogger.cpp" />
+    <ClCompile Include="..\source\core\krbTimer.cpp" />
+    <ClCompile Include="..\source\entities\krbEntityCamera.cpp" />
+    <ClCompile Include="..\source\Kerberos.cpp" />
+    <ClCompile Include="..\source\systems\ai\krbAISystem.cpp" />
+    <ClCompile Include="..\source\systems\gui\krbGUISystem.cpp" />
+    <ClCompile Include="..\source\systems\input\krbInputSystem.cpp" />
+    <ClCompile Include="..\source\systems\physics\krbPhysicsSystem.cpp" />
+    <ClCompile Include="..\source\systems\render\krbRenderSystem.cpp" />
+    <ClCompile Include="..\source\systems\sound\krbSoundSystem.cpp" />
+    <ClCompile Include="..\source\systems\world\krbWorldSystem.cpp" />
+    <ClCompile Include="dependencies\include\BtOgre\BtOgre.cpp" />
+    <ClCompile Include="dependencies\include\Gorilla\Gorilla.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -38,6 +38,45 @@
 
 	* ModuleDebug handles debug info and console display
 
+///////////////////////////////////////////////////////////////////////////////
+//	WORLD
+	Kerberos is "world" oriented, or rather it is assumed a game/simulation
+	will take place in the "natural" world. Size scale is metric:
+
+	* 100 centimeters = 1 meter
+	* 1000 meters = 1 kilometer
+	* 1 Ogre unit = 1 meter
+	* 1 Blender unit = 1 meter
+
+	* Weight (w) in kilograms
+	* Mass (m)
+	* Gravity (g) in meters per second ^ 2
+	* Volume (v) in meters ^ 3
+	* Density (d)
+
+		Equations:
+			w	= (m * g)
+			m	= (w / g)
+			m	= (v * d)
+			d	= (m / v)
+			v	= (m / d)
+
+	Common densities:
+		* cardboard		: 0.689
+		* wood			: 0.5 to 0.9
+		* rubber		: 1.506
+		* soil			: 1.6
+		* concrete		: 2.4
+		* granite		: 2.45
+		* glass			: 2.579
+		* aluminum		: 2.7
+		* diamond		: 3.01 to 3.52
+		* titanium		: 4.5
+		* iron			: 7.8
+		* lead			: 11.3
+		* uranium		: 18.74
+		* tungsten		: 19.3
+		* platinum		: 21.4
 
 ///////////////////////////////////////////////////////////////////////////////
 //	TRICKS?

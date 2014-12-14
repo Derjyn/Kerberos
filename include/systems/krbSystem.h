@@ -1,63 +1,91 @@
+/*******************************************************************************
+*                                                                              *
+* Copyright (C) 2014 Nathan Harris                                             *
+*                                                                              *
+* This file is part of Kerberos.                                               *
+*                                                                              *
+*   Kerberos is free software. Enjoy it, modify it, contribute to it.          *
+*   For sales inqueries, see <http://www.omglasergunspewpewpew.com/>           *
+*                                                                              *
+*******************************************************************************/
+
+/**
+\file   krbSystem.h
+\author Nathan Harris
+\date   14 December 2014
+\brief  Abstract base class for systems
+*/
+
+/*****************************************************************************
+*****************************************************************************/
+
 #pragma once
 
-#ifndef krbSystem_H
-#define krbSystem_H
+#ifndef krbSystem_h
+#define krbSystem_h
 
-///////////////////////////////////////////////////////////////////////////////
-//
-//  FILE    : krbSystem.h
-//  UPDATED : 12/07/2014
-//
-///////////////////////////////////////////////////////////////////////////////
+/*****************************************************************************
+*****************************************************************************/
 
-#include "krbLogger.h"
-#include "krbTimer.h"
+#include "core\krbConfig.h"
+#include "core\krbLogger.h"
+#include "core\krbTimer.h"
 
-#include "INIReader.h"
-
-#include "OgreSingleton.h"
-
-///////////////////////////////////////////////////////////////////////////////
+/*****************************************************************************
+*****************************************************************************/
 
 namespace Kerberos {
 
-///////////////////////////////////////////////////////////////////////////////
+/*****************************************************************************
+*****************************************************************************/
 
-class System {
+class System
+{
 public:
-  virtual ~System() {
-    bAdded = false;
-    bAlive = false;
-  };
+  System() {}
+  virtual ~System() {}
 
-  // GETTERS
-  std::string getSystemName() { return strName; }
-  bool isAdded() { return bAdded; }
-  bool isAlive() { return bAlive; }
+  virtual void start() = 0;
+  virtual void stop() = 0;
+  virtual void cycle() {}
+
+  std::string getName() { return strName; }
 
 protected:
-  virtual void init(void) = 0;
-  virtual void halt(void) = 0;
+  void setName(std::string name)  { strName = name; }
+  void setConfig(Config* cfg)     { pConfig = cfg; }
+  void setLog(Logger* log)        { pLog = log; }
+  void setTimer(Timer* timer)     { pTimer = timer; }
 
-  void setConfig(INIReader* config) { pConfig = config; }
-  void setLogger(Logger* log) { pLogger = log; }
-  void setCoreTimer(Timer *coreTimer) { pCoreTimer = coreTimer; }
-  void setName(std::string name) { strName = name; }
-  void setAdded(bool added) { bAdded = added; }
-  void setAlive(bool alive) { bAlive = alive; }
+  // COMMON LOG MESSAGES
+  void logCreation()
+  {
+    pLog->logMessage(pLog->LOG_INFO, pLog->MSG_SYSTEM, strName + " created");
+  }
+  void logDestruction()
+  {
+    pLog->logMessage(pLog->LOG_INFO, pLog->MSG_SYSTEM, strName + " destroyed");
+  }
+  void logStart()
+  {
+    pLog->logMessage(pLog->LOG_INFO, pLog->MSG_SYSTEM, strName + " started");
+  }
+  void logStop()
+  {
+    pLog->logMessage(pLog->LOG_INFO, pLog->MSG_SYSTEM, strName + " stopped");
+  }
 
-  INIReader     *pConfig;
-  Logger        *pLogger;
-  Timer         *pCoreTimer;
-  std::string   strName;
-  bool          bAdded;
-  bool          bAlive;
+  std::string strName;
+
+  Config*     pConfig;
+  Logger*     pLog;
+  Timer*      pTimer;
 };
 
-///////////////////////////////////////////////////////////////////////////////
+/*****************************************************************************
+*****************************************************************************/
 
-}
+} // namespace Kerberos
+#endif // krbSystem_h
 
-// EOF ////////////////////////////////////////////////////////////////////////
-
-#endif
+/***]EOF[*********************************************************************/

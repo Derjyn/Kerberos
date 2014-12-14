@@ -1,12 +1,12 @@
 [Texture]
 file debug.png
-whitepixel 254 254
+whitepixel 252 252
 
 [Sprites]
 cursor 0 32 16 16
 
 [Font.7]
-lineheight 9
+lineheight 10
 spacelength 7
 baseline 7
 letterspacing 0.0
