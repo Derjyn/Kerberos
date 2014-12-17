@@ -12,8 +12,11 @@
 /**
 * @file   Kerberos.h
 * @author Nathan Harris
-* @date   13 December 2014
+* @date   17 December 2014
 * @brief  Wrangles up Kerberos for consumption
+*
+* @description
+*  Coming soon to a code file near you...
 */
 
 /*****************************************************************************
@@ -27,42 +30,48 @@
 /*****************************************************************************
 *****************************************************************************/
 
-#include "KerberosPrereqs.h"
+#define KRB_CONSOLE
 
 /*****************************************************************************
 *****************************************************************************/
 
 namespace Kerberos
 {
-  class Core;
+  class Brain;
   class Config;
   class Logger;
   class Timer;
 
-  class AISystem;
-  class GUISystem;
-  class InputSystem;
-  class PhysicsSystem;
-  class RenderSystem;
-  class SoundSystem;
-  class WorldSystem;
+  class SystemAI;
+  class SystemInput;
+  class SystemNetwork;
+  class SystemPhysics;
+  class SystemRender;
+  class SystemScript;
+  class SystemSound;
+  class SystemWorld;
 }
 
 /*****************************************************************************
 *****************************************************************************/
 
-#include "core\krbCore.h"
-#include "core\krbConfig.h"
-#include "core\krbLogger.h"
-#include "core\krbTimer.h"
+#include "core/krbBrain.h"
+#include "core/krbClock.h"
+#include "core/krbConfig.h"
+#include "core/krbLogger.h"
 
-#include "systems\ai\krbAISystem.h"
-#include "systems\gui\krbGUISystem.h"
-#include "systems\input\krbInputSystem.h"
-#include "systems\physics\krbPhysicsSystem.h"
-#include "systems\render\krbRenderSystem.h"
-#include "systems\sound\krbSoundSystem.h"
-#include "systems\world\krbWorldSystem.h"
+#include "systems/krbSystemAI.h"
+#include "systems/krbSystemInput.h"
+#include "systems/krbSystemNetwork.h"
+#include "systems/krbSystemPhysics.h"
+#include "systems/krbSystemRender.h"
+#include "systems/krbSystemScript.h"
+#include "systems/krbSystemSound.h"
+#include "systems/krbSystemWorld.h"
+
+#include "utility/krbConverter.h"
+#include "utility/krbMath.h"
+#include "utility/krbUtility.h"
 
 /*****************************************************************************
 *****************************************************************************/

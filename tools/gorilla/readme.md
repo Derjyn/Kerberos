@@ -4,9 +4,9 @@ this toolchain allowed me to generate crisper fonts. Many of the other tools I c
 generating *.gorilla files read from other bitmap font generators that spit out antialiased fonts
 whether you like it or not. These tools here fix that.
 
-One thing to note- the XMLtoOgre had to be compiled from source, as it would crash when attempting
+The XMLtoOgre had to be compiled from source, as it would crash when attempting
 to convert the BMFontgen XML file. This is because there were some schema changes in both the
-BMFontgen tool output, as well as Gorilla's schema. I can't figure out how to get the glyph kerning
+BMFontgen tool output, as well as Gorilla. I can't figure out how to get the glyph kerning
 values to work, so you won't get kerning per-glyph... You will have to use the global kerning
 setting in the *.gorilla files. Out of the dozen or so fonts I generated and tested in Kerberos,
 this wasn't an issue, but your mileage may vary. This isn't the most graceful solution, but it works

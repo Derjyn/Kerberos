@@ -5,17 +5,17 @@
 * This file is part of Kerberos.                                               *
 *                                                                              *
 *   Kerberos is free software. Enjoy it, modify it, contribute to it.          *
-*   For sales inqueries, see <http://www.omglasergunspewpewpew.com/>           *
 *                                                                              *
 *******************************************************************************/
 
 /**
-\file   krbEntity.h
-\author Nathan Harris
-\date   14 December 2014
-\brief  Base class for entities.
-\details
-Need to write some stuff. Me so lazy.
+* @file   krbEntity.h
+* @author Nathan Harris
+* @date   17 December 2014
+* @brief  Base class for entities
+*
+* @details
+*  Coming soon to a code file near you...
 */
 
 /*****************************************************************************
@@ -29,15 +29,13 @@ Need to write some stuff. Me so lazy.
 /*****************************************************************************
 *****************************************************************************/
 
-#include "..\KerberosUtility.h"
-
-#include "Ogre3D\OgreSceneManager.h"
-#include "Ogre3D\OgreSceneNode.h"
+#include "utility/krbUtility.h"
 
 /*****************************************************************************
 *****************************************************************************/
 
-namespace Kerberos {
+namespace Kerberos
+{
 
 /*****************************************************************************
 *****************************************************************************/
@@ -45,25 +43,18 @@ namespace Kerberos {
 class Entity
 {
 public:
-  Entity() {}
-  virtual ~Entity() {}
+  virtual ~Entity() = 0;
 
-  virtual void update() = 0;
-
-  std::string getName()       { return strName; }
-  Vector3 getPosition()       { return toKerberos(pNode->getPosition()); }
-  Ogre::SceneNode* getNode()  { return pNode; }
+  string getName() { return m_strName; }
 
 protected:
-  std::string         strName;
-  Ogre::SceneManager* pSceneMgr;
-  Ogre::SceneNode*    pNode;
+  string m_strName;
 };
 
 /*****************************************************************************
 *****************************************************************************/
 
-} // namepsace Kerberos
+} // namespace Kerberos
 #endif // krbEntity_h
 
 /***]EOF[*********************************************************************/

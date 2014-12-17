@@ -10,15 +10,14 @@
 *******************************************************************************/
 
 /**
-* @file   krbConfig.h
+* @file   krbUtility.h
 * @author Nathan Harris
-* @date   17 December 2014
-* @brief  Handles configuration/properties files
+* @date   16 December 2014
+* @brief  Deeper down the rabbit hole?
 *
-* @details
-*  The config class is a handy little guy that makes it easy to deal with
-*  properties from files. Thanks to betajaen for developing and providing
-*  Ook: https://github.com/betajaen/ook
+* @description
+*   These varied utility functions and such are globally available, though
+*   if you want to change that, comment the #define UTIL_GLOBAL line
 */
 
 /*****************************************************************************
@@ -26,34 +25,61 @@
 
 #pragma once
 
-#ifndef krbConfig_h
-#define krbConfig_h
+#ifndef krbUtility_h
+#define krbUtility_h
 
 /*****************************************************************************
 *****************************************************************************/
 
-#include "../utility/krbUtility.h"
+#include "utility/krbConverter.h"
+#include "utility/krbMath.h"
+
+#include <iosfwd>
+#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
+
+using namespace std;
 
 /*****************************************************************************
 *****************************************************************************/
 
-namespace Kerberos
+#define UTIL_GLOBAL
+#ifndef UTIL_GLOBAL
+namespace Kerberos {
+#endif
+
+/*****************************************************************************
+*****************************************************************************/
+
+// HANDY FOR ERROR REPORTING - FROM http://goo.gl/c0yroZ
+// TO USE, DO: CONMSG(AT, "YOUR MESSAGE");
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+#define AT __FILE__ " at line " TOSTRING(__LINE__) " : (" __FUNCTION__ ")"
+
+static void CONMSG(const char *location, const char* msg)
 {
+  const char *no_path = strrchr(location, '\\');
+  if (no_path)
+  {
+    ++no_path;  // move off of '\\'
+  }
+  else
+  {
+    no_path = location;
+  }
+
+  printf("ALERT: %s in %s\n", msg, no_path);
+}
 
 /*****************************************************************************
 *****************************************************************************/
 
-//
-//! \brief Handles configuration/properties files
-//
-class Config
-{
-};
-
-/*****************************************************************************
-*****************************************************************************/
-
-} // namespace Kerberos
-#endif // krbConfig_h
+#ifndef UTIL_GLOBAL
+}
+#endif // namespace Kerberos
+#endif // krbUtility_h
 
 /***]EOF[*********************************************************************/

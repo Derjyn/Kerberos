@@ -5,4 +5,5 @@ build/Kerberos.suo
 build/Kerberos.v12.suo
 build/Kerberos.vcxproj.user
 build/docs/doxygen/html
+workfiles/*
 bin/debug/*.log

@@ -5,20 +5,17 @@
 * This file is part of Kerberos.                                               *
 *                                                                              *
 *   Kerberos is free software. Enjoy it, modify it, contribute to it.          *
-*   For sales inqueries, see <http://www.omglasergunspewpewpew.com/>           *
 *                                                                              *
 *******************************************************************************/
 
 /**
-* @file   krbConfig.h
+* @file   krbSystemScript.h
 * @author Nathan Harris
 * @date   17 December 2014
-* @brief  Handles configuration/properties files
+* @brief  Script system
 *
 * @details
-*  The config class is a handy little guy that makes it easy to deal with
-*  properties from files. Thanks to betajaen for developing and providing
-*  Ook: https://github.com/betajaen/ook
+*  Coming soon to a code file near you...
 */
 
 /*****************************************************************************
@@ -26,13 +23,13 @@
 
 #pragma once
 
-#ifndef krbConfig_h
-#define krbConfig_h
+#ifndef krbSystemScript_h
+#define krbSystemScript_h
 
 /*****************************************************************************
 *****************************************************************************/
 
-#include "../utility/krbUtility.h"
+#include "systems/krbSystem.h"
 
 /*****************************************************************************
 *****************************************************************************/
@@ -43,17 +40,21 @@ namespace Kerberos
 /*****************************************************************************
 *****************************************************************************/
 
-//
-//! \brief Handles configuration/properties files
-//
-class Config
+class SystemScript final : public System
 {
+public:
+  SystemScript();
+  ~SystemScript();
+
+  void init();
+  void cycle();
+  void halt();
 };
 
 /*****************************************************************************
 *****************************************************************************/
 
 } // namespace Kerberos
-#endif // krbConfig_h
+#endif // krbSystemScript_h
 
 /***]EOF[*********************************************************************/

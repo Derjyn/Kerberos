@@ -10,15 +10,13 @@
 *******************************************************************************/
 
 /**
-* @file   krbConfig.h
+* @file   krbConverter.h
 * @author Nathan Harris
-* @date   17 December 2014
-* @brief  Handles configuration/properties files
+* @date   16 December 2014
+* @brief  Various functions for converting to/from various other things
 *
-* @details
-*  The config class is a handy little guy that makes it easy to deal with
-*  properties from files. Thanks to betajaen for developing and providing
-*  Ook: https://github.com/betajaen/ook
+* @description
+*  Coming soon to a code file near you...
 */
 
 /*****************************************************************************
@@ -26,13 +24,8 @@
 
 #pragma once
 
-#ifndef krbConfig_h
-#define krbConfig_h
-
-/*****************************************************************************
-*****************************************************************************/
-
-#include "../utility/krbUtility.h"
+#ifndef krbConverter_h
+#define krbConverter_h
 
 /*****************************************************************************
 *****************************************************************************/
@@ -43,17 +36,12 @@ namespace Kerberos
 /*****************************************************************************
 *****************************************************************************/
 
-//
-//! \brief Handles configuration/properties files
-//
-class Config
-{
-};
+
 
 /*****************************************************************************
 *****************************************************************************/
 
 } // namespace Kerberos
-#endif // krbConfig_h
+#endif // krbConverter_h
 
 /***]EOF[*********************************************************************/

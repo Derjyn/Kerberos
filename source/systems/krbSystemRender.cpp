@@ -5,34 +5,23 @@
 * This file is part of Kerberos.                                               *
 *                                                                              *
 *   Kerberos is free software. Enjoy it, modify it, contribute to it.          *
-*   For sales inqueries, see <http://www.omglasergunspewpewpew.com/>           *
 *                                                                              *
 *******************************************************************************/
 
 /**
-* @file   krbConfig.h
+* @file   krbSystemRender.cpp
 * @author Nathan Harris
 * @date   17 December 2014
-* @brief  Handles configuration/properties files
+* @brief  Rendering system
 *
-* @details
-*  The config class is a handy little guy that makes it easy to deal with
-*  properties from files. Thanks to betajaen for developing and providing
-*  Ook: https://github.com/betajaen/ook
+* @description
+*  Coming soon to a code file near you...
 */
 
 /*****************************************************************************
 *****************************************************************************/
 
-#pragma once
-
-#ifndef krbConfig_h
-#define krbConfig_h
-
-/*****************************************************************************
-*****************************************************************************/
-
-#include "../utility/krbUtility.h"
+#include "systems/krbSystemRender.h"
 
 /*****************************************************************************
 *****************************************************************************/
@@ -43,17 +32,38 @@ namespace Kerberos
 /*****************************************************************************
 *****************************************************************************/
 
-//
-//! \brief Handles configuration/properties files
-//
-class Config
+SystemRender::SystemRender()
 {
-};
+  m_strName = "Render";
+  cout << "System created: " << m_strName << endl;
+}
+
+SystemRender::~SystemRender()
+{
+  cout << "System destroyed: " << m_strName << endl;
+}
 
 /*****************************************************************************
 *****************************************************************************/
 
-} // namespace Kerberos
-#endif // krbConfig_h
+void SystemRender::init()
+{
+  cout << "System intialized: " << m_strName << endl;
+}
+
+void SystemRender::cycle()
+{
+  cout << m_strName << " system cycled." <<  endl;
+}
+
+void SystemRender::halt()
+{
+  cout << "System halted: " << m_strName << endl;
+}
+
+/*****************************************************************************
+*****************************************************************************/
+
+}
 
 /***]EOF[*********************************************************************/

@@ -5,15 +5,17 @@
 * This file is part of Kerberos.                                               *
 *                                                                              *
 *   Kerberos is free software. Enjoy it, modify it, contribute to it.          *
-*   For sales inqueries, see <http://www.omglasergunspewpewpew.com/>           *
 *                                                                              *
 *******************************************************************************/
 
 /**
-\file   krbSystem.h
-\author Nathan Harris
-\date   14 December 2014
-\brief  Abstract base class for systems
+* @file   krbSystem.h
+* @author Nathan Harris
+* @date   16 December 2014
+* @brief  Base class for systems
+*
+* @details
+*  Coming soon to a code file near you...
 */
 
 /*****************************************************************************
@@ -27,9 +29,7 @@
 /*****************************************************************************
 *****************************************************************************/
 
-#include "core\krbConfig.h"
-#include "core\krbLogger.h"
-#include "core\krbTimer.h"
+#include "utility/krbUtility.h"
 
 /*****************************************************************************
 *****************************************************************************/
@@ -42,45 +42,19 @@ namespace Kerberos {
 class System
 {
 public:
-  System() {}
-  virtual ~System() {}
+  virtual ~System() = 0;
 
-  virtual void start() = 0;
-  virtual void stop() = 0;
-  virtual void cycle() {}
+  virtual void init()   = 0;
+  virtual void cycle()  = 0;
+  virtual void halt()   = 0;
 
-  std::string getName() { return strName; }
+  string getName() { return m_strName; }
 
 protected:
-  void setName(std::string name)  { strName = name; }
-  void setConfig(Config* cfg)     { pConfig = cfg; }
-  void setLog(Logger* log)        { pLog = log; }
-  void setTimer(Timer* timer)     { pTimer = timer; }
-
-  // COMMON LOG MESSAGES
-  void logCreation()
-  {
-    pLog->logMessage(pLog->LOG_INFO, pLog->MSG_SYSTEM, strName + " created");
-  }
-  void logDestruction()
-  {
-    pLog->logMessage(pLog->LOG_INFO, pLog->MSG_SYSTEM, strName + " destroyed");
-  }
-  void logStart()
-  {
-    pLog->logMessage(pLog->LOG_INFO, pLog->MSG_SYSTEM, strName + " started");
-  }
-  void logStop()
-  {
-    pLog->logMessage(pLog->LOG_INFO, pLog->MSG_SYSTEM, strName + " stopped");
-  }
-
-  std::string strName;
-
-  Config*     pConfig;
-  Logger*     pLog;
-  Timer*      pTimer;
+  string m_strName;
 };
+
+inline System::~System() {}
 
 /*****************************************************************************
 *****************************************************************************/
