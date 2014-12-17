@@ -43,12 +43,15 @@ namespace Kerberos
 class SystemPhysics final : public System
 {
 public:
-  SystemPhysics();
+  SystemPhysics(Config* config, Logger* log);
   ~SystemPhysics();
 
   void init();
   void cycle();
   void halt();
+
+private:
+  void parseConfig();
 };
 
 /*****************************************************************************

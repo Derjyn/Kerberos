@@ -43,7 +43,7 @@ namespace Kerberos
 class SystemScript final : public System
 {
 public:
-  SystemScript();
+  SystemScript(Config* config, Logger* log);
   ~SystemScript();
 
   void init();

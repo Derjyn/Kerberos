@@ -43,12 +43,15 @@ namespace Kerberos
 class SystemNetwork final : public System
 {
 public:
-  SystemNetwork();
+  SystemNetwork(Config* config, Logger* log);
   ~SystemNetwork();
 
   void init();
   void cycle();
   void halt();
+
+private:
+  void parseConfig();
 };
 
 /*****************************************************************************

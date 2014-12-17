@@ -32,7 +32,8 @@
 /*****************************************************************************
 *****************************************************************************/
 
-#include "../utility/krbUtility.h"
+#include <string>
+using namespace std;
 
 /*****************************************************************************
 *****************************************************************************/
@@ -43,11 +44,24 @@ namespace Kerberos
 /*****************************************************************************
 *****************************************************************************/
 
-//
-//! \brief Handles configuration/properties files
-//
 class Config
 {
+public:
+  Config(string cfgFile);
+  ~Config();
+
+  bool          getBool(string section, string key);
+  int           getInt(string section, string key);
+  float         getFloat(string section, string key);
+  double        getDouble(string section, string key);
+  string        getString(string section, string key);
+  //Color       getColor(std::string, std::string key);
+  //Vector3     getVec3(std::string, std::string key);
+
+  string        getFileName();
+
+protected:
+  string        str_File;
 };
 
 /*****************************************************************************

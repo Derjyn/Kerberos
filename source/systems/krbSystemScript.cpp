@@ -22,6 +22,9 @@
 *****************************************************************************/
 
 #include "systems/krbSystemScript.h"
+#include "core/krbConfig.h"
+#include "core/krbClock.h"
+#include "core/krbLogger.h"
 
 /*****************************************************************************
 *****************************************************************************/
@@ -32,15 +35,20 @@ namespace Kerberos
 /*****************************************************************************
 *****************************************************************************/
 
-SystemScript::SystemScript()
+SystemScript::SystemScript(Config* config, Logger* log)
 {
-  m_strName = "Script";
-  cout << "System created: " << m_strName << endl;
+  str_Name  = "Script";
+  m_Config  = config;
+  m_Log     = log;
+
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Got anything that needs parsing?");
 }
 
 SystemScript::~SystemScript()
 {
-  cout << "System destroyed: " << m_strName << endl;
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": I was getting bored anyhow...");
 }
 
 /*****************************************************************************
@@ -48,17 +56,18 @@ SystemScript::~SystemScript()
 
 void SystemScript::init()
 {
-  cout << "System initialized: " << m_strName << endl;
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Initialized :)");
 }
 
 void SystemScript::cycle()
 {
-  cout << m_strName << " system cycled." <<  endl;
 }
 
 void SystemScript::halt()
 {
-  cout << "System halted: " << m_strName << endl;
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Halted :)");
 }
 
 /*****************************************************************************

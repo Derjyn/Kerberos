@@ -29,7 +29,10 @@
 /*****************************************************************************
 *****************************************************************************/
 
-#include "../utility/krbUtility.h"
+#include <fstream>
+#include <string>
+
+using namespace std;
 
 /*****************************************************************************
 *****************************************************************************/
@@ -42,6 +45,40 @@ namespace Kerberos
 
 class Logger
 {
+public:
+  Logger(string file, int level, string version);
+  ~Logger();
+
+  typedef enum
+  {
+    LVL_ERROR,
+    LVL_INFO,
+    LVL_WARNING    
+  } MsgLevel;
+
+  typedef enum
+  {
+    MSG_BRAIN,
+    MSG_ENTITY,
+    MSG_LAB,
+    MSG_NOTE,
+    MSG_STAT,
+    MSG_SYSTEM
+  } MsgType;
+
+  void logMessage(MsgLevel level, MsgType type, std::string message);
+  void logSection(std::string name);
+  void closeLog();
+  void closeLog(string clock);
+
+private:
+  std::ofstream   ofs_Log;
+  std::string     str_File;
+
+  int             i_LogLevel;
+  int             i_CntError;
+  int             i_CntWarning;
+  int             i_CntInfo;
 };
 
 /*****************************************************************************

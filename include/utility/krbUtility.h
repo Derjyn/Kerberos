@@ -12,7 +12,7 @@
 /**
 * @file   krbUtility.h
 * @author Nathan Harris
-* @date   16 December 2014
+* @date   17 December 2014
 * @brief  Deeper down the rabbit hole?
 *
 * @description
@@ -27,20 +27,6 @@
 
 #ifndef krbUtility_h
 #define krbUtility_h
-
-/*****************************************************************************
-*****************************************************************************/
-
-#include "utility/krbConverter.h"
-#include "utility/krbMath.h"
-
-#include <iosfwd>
-#include <iostream>
-#include <map>
-#include <string>
-#include <vector>
-
-using namespace std;
 
 /*****************************************************************************
 *****************************************************************************/

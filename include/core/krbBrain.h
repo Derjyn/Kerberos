@@ -32,6 +32,10 @@
 
 #include "systems/krbSystem.h"
 
+#include <map>
+#include <vector>
+using namespace std;
+
 /*****************************************************************************
 *****************************************************************************/
 
@@ -61,14 +65,16 @@ class Brain
 {
 public:
   Brain();
+  ~Brain();
 
   void init();
   void cycle();
   void halt();
 
-  Clock* getClock()     { return m_Clock; }
-  Config* getConfig()   { return m_Config; }
-  Logger* getLogger()   { return m_Logger; }
+  string          getVersion()    { return str_Version; }
+  Clock*          getClock()      { return m_Clock; }
+  Config*         getConfig()     { return m_Config; }
+  Logger*         getLogger()     { return m_Log; }
 
   SystemAI*       getSysAI()      { return m_sysAI; }
   SystemInput*    getSysInput()   { return m_sysInput; }
@@ -81,7 +87,7 @@ public:
 protected:
   Clock*          m_Clock;
   Config*         m_Config;
-  Logger*         m_Logger;
+  Logger*         m_Log;
 
   SystemAI*       m_sysAI;
   SystemInput*    m_sysInput;
@@ -92,15 +98,30 @@ protected:
   SystemSound*    m_sysSound;
   SystemWorld*    m_sysWorld;
 
+  bool            b_Alive;
+  string          str_Version;
+  string          str_LogFile;
+  float           f_DemoTime;
+
 private:
+  void parseConfig();
+
   void addSystems();
   void initSystems();
-  void cycleSystems();
   void haltSystems();
   void destroySystems();
 
-  vector<System*> vec_Sys;
-  map<string, System*> map_Sys;
+  // TIMER JUNK
+  double          d_Accumulator;
+  double          d_Counter;
+  double          d_DeltaTime;
+  double          d_LogicRate;
+  double          d_CurrentTime;
+  double          d_NewTime;
+  double          d_TickCount;
+
+  vector<System*>       vec_Sys;
+  map<string, System*>  map_Sys;
 };
 
 /*****************************************************************************

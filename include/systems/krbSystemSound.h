@@ -43,12 +43,15 @@ namespace Kerberos
 class SystemSound final : public System
 {
 public:
-  SystemSound();
+  SystemSound(Config* config, Logger* log);
   ~SystemSound();
 
   void init();
   void cycle();
   void halt();
+
+private:
+  void parseConfig();
 };
 
 /*****************************************************************************

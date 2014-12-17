@@ -33,6 +33,8 @@ Kerberos::Brain* m_Brain = new Kerberos::Brain();
 
 #ifdef KRB_CONSOLE
   #include <tchar.h>
+  #include <iostream>
+  using namespace std;
 #else
   #define WIN32_LEAN_AND_MEAN
   #include "windows.h"
@@ -44,17 +46,17 @@ Kerberos::Brain* m_Brain = new Kerberos::Brain();
 #ifdef KRB_CONSOLE
 int wmain(int argc, _TCHAR* argv[])
 {
-  std::cout << "Kerberos Engine v0.0.0.1 (Conceptus)";
-  std::cout << std::endl << std::endl;
+  cout << "Kerberos Engine v0.0.0.1 (Conceptus)";
+  cout << std::endl << std::endl;
 
   m_Brain->init();
   m_Brain->cycle();
   m_Brain->halt();
 
-  std::cout << std::endl;
+  delete m_Brain;
 
-  printf( "Press enter to exit..." );
-	getchar();
+  cout << std::endl;
+
   return 0;
 }
 #else

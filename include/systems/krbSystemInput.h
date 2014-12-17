@@ -43,12 +43,15 @@ namespace Kerberos
 class SystemInput final : public System
 {
 public:
-  SystemInput();
+  SystemInput(Config* config, Logger* log);
   ~SystemInput();
 
   void init();
   void cycle();
   void halt();
+
+private:
+  void parseConfig();
 };
 
 /*****************************************************************************

@@ -42,12 +42,15 @@ namespace Kerberos {
 class SystemAI final : public System
 {
 public:
-  SystemAI();
+  SystemAI(Config* config, Logger* log);
   ~SystemAI();
 
   void init();
   void cycle();
   void halt();
+
+private:
+  void parseConfig();
 };
 
 /*****************************************************************************

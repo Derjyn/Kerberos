@@ -22,6 +22,9 @@
 *****************************************************************************/
 
 #include "systems/krbSystemPhysics.h"
+#include "core/krbConfig.h"
+#include "core/krbClock.h"
+#include "core/krbLogger.h"
 
 /*****************************************************************************
 *****************************************************************************/
@@ -32,15 +35,20 @@ namespace Kerberos
 /*****************************************************************************
 *****************************************************************************/
 
-SystemPhysics::SystemPhysics()
+SystemPhysics::SystemPhysics(Config* config, Logger* log)
 {
-  m_strName = "Physics";
-  cout << "System created: " << m_strName << endl;
+  str_Name  = "Physics";
+  m_Config  = config;
+  m_Log     = log;
+
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Gravity check good!");
 }
 
 SystemPhysics::~SystemPhysics()
 {
-  cout << "System destroyed: " << m_strName << endl;
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Don't cry to me, if you fall.");
 }
 
 /*****************************************************************************
@@ -48,17 +56,27 @@ SystemPhysics::~SystemPhysics()
 
 void SystemPhysics::init()
 {
-  cout << "System intialized: " << m_strName << endl;
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Initialized :)");
 }
 
 void SystemPhysics::cycle()
 {
-  cout << m_strName << " system cycled." <<  endl;
 }
 
 void SystemPhysics::halt()
 {
-  cout << "System halted: " << m_strName << endl;
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Halted :)");
+}
+
+/*****************************************************************************
+*****************************************************************************/
+
+void SystemPhysics::parseConfig()
+{
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Config parsed...");
 }
 
 /*****************************************************************************

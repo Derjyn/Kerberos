@@ -22,6 +22,9 @@
 *****************************************************************************/
 
 #include "systems/krbSystemAI.h"
+#include "core/krbConfig.h"
+#include "core/krbClock.h"
+#include "core/krbLogger.h"
 
 /*****************************************************************************
 *****************************************************************************/
@@ -32,15 +35,20 @@ namespace Kerberos
 /*****************************************************************************
 *****************************************************************************/
 
-SystemAI::SystemAI()
+SystemAI::SystemAI(Config* config, Logger* log)
 {
-  m_strName = "AI";
-  cout << "System created: " << m_strName << endl;
+  str_Name  = "AI";
+  m_Config  = config;
+  m_Log     = log;
+
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": 010010000110100100100001");
 }
 
 SystemAI::~SystemAI()
 {
-  cout << "System destroyed: " << m_strName << endl;
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Almost got all your bases :/");
 }
 
 /*****************************************************************************
@@ -48,17 +56,27 @@ SystemAI::~SystemAI()
 
 void SystemAI::init()
 {
-  cout << "System initialized: " << m_strName << endl;
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Initialized :)");
 }
 
 void SystemAI::cycle()
 {
-  cout << m_strName << " system cycled." <<  endl;
 }
 
 void SystemAI::halt()
 {
-  cout << "System halted: " << m_strName << endl;
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Halted :)");
+}
+
+/*****************************************************************************
+*****************************************************************************/
+
+void SystemAI::parseConfig()
+{
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Config parsed...");
 }
 
 /*****************************************************************************

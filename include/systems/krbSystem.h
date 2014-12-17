@@ -11,7 +11,7 @@
 /**
 * @file   krbSystem.h
 * @author Nathan Harris
-* @date   16 December 2014
+* @date   17 December 2014
 * @brief  Base class for systems
 *
 * @details
@@ -29,12 +29,17 @@
 /*****************************************************************************
 *****************************************************************************/
 
-#include "utility/krbUtility.h"
+#include <string>
+using namespace std;
 
 /*****************************************************************************
 *****************************************************************************/
 
 namespace Kerberos {
+
+class Config;
+class Clock;
+class Logger;
 
 /*****************************************************************************
 *****************************************************************************/
@@ -48,10 +53,14 @@ public:
   virtual void cycle()  = 0;
   virtual void halt()   = 0;
 
-  string getName() { return m_strName; }
+  string getName() { return str_Name; }
 
 protected:
-  string m_strName;
+  string        str_Name;
+
+  Config*       m_Config;
+  Clock*        m_Clock;
+  Logger*       m_Log;
 };
 
 inline System::~System() {}
