@@ -61,11 +61,15 @@ int wmain(int argc, _TCHAR* argv[])
 }
 #else
 int CALLBACK WinMain(
-  HINSTANCE hInstance, 
-  HINSTANCE hPrevInstance, 
-  LPSTR lpCmdLine, 
-  int nCmdShow)
+  HINSTANCE hInstance, HINSTANCE hPrevInstance, 
+  LPSTR lpCmdLine, int nCmdShow)
 {
+  m_Brain->init();
+  m_Brain->cycle();
+  m_Brain->halt();
+
+  delete m_Brain;
+
   return 0;
 }
 #endif

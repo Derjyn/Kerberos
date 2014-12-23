@@ -12,7 +12,7 @@
 /**
 * @file   Kerberos.h
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   22 December 2014
 * @brief  Wrangles up Kerberos for consumption
 *
 * @description
@@ -30,19 +30,12 @@
 /*****************************************************************************
 *****************************************************************************/
 
-#include <sstream>
-#include <string>
-using namespace std;
-
-/*****************************************************************************
-*****************************************************************************/
-
-#define KRB_CONSOLE
+//#define KRB_CONSOLE
 
 #define KRB_VERSION_MAJOR 0
 #define KRB_VERSION_MINOR 0
 #define KRB_VERSION_PATCH 0
-#define KRB_VERSION_ALPHA 4
+#define KRB_VERSION_ALPHA 6
 #define KRB_VERSION_NAME "Conceptus"
 
 /*****************************************************************************
@@ -55,7 +48,9 @@ namespace Kerberos
   class Logger;
   class Timer;
 
+  class System;
   class SystemAI;
+  class SystemGUI;
   class SystemInput;
   class SystemNetwork;
   class SystemPhysics;
@@ -63,6 +58,13 @@ namespace Kerberos
   class SystemScript;
   class SystemSound;
   class SystemWorld;
+
+  class Entity;
+  class EntityCamera;
+  class EntityLight;
+  class EntityMesh;
+  class EntityPhysicsDynamic;
+  class EntityPhysicsStatic;
 }
 
 /*****************************************************************************
@@ -73,7 +75,9 @@ namespace Kerberos
 #include "core/krbConfig.h"
 #include "core/krbLogger.h"
 
+#include "systems/krbSystem.h"
 #include "systems/krbSystemAI.h"
+#include "systems/krbSystemGUI.h"
 #include "systems/krbSystemInput.h"
 #include "systems/krbSystemNetwork.h"
 #include "systems/krbSystemPhysics.h"
@@ -81,6 +85,14 @@ namespace Kerberos
 #include "systems/krbSystemScript.h"
 #include "systems/krbSystemSound.h"
 #include "systems/krbSystemWorld.h"
+
+#include "entities/krbEntity.h"
+#include "entities/krbEntityCamera.h"
+#include "entities/krbEntityLight.h"
+#include "entities/krbEntityMesh.h"
+#include "entities/krbEntityPhysics.h"
+#include "entities/krbEntityPhysicsDynamic.h"
+#include "entities/krbEntityPhysicsStatic.h"
 
 #include "utility/krbConverter.h"
 #include "utility/krbMath.h"

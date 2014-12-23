@@ -1,0 +1,74 @@
+import * from "base.material"
+
+///////////////////////////////////////////////////////////////////////////////
+
+material grid
+{
+  receive_shadows off
+
+  technique
+  {
+    pass
+    {
+      ambient       0.0 0.0 0.0 1.0
+      diffuse       0.0 0.0 0.0 1.0
+      emissive      0.1 0.1 0.12 1.0
+    }
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+material ent_light
+{
+  technique
+  {
+    pass
+    {
+      depth_write   off
+      lighting      off
+      scene_blend   alpha_blend
+
+      texture_unit
+      {
+        texture "icons/ent_light.png"
+      }
+    }
+  }
+}
+material ent_sound
+{
+  technique
+  {
+    pass
+    {
+      depth_write   off
+      lighting      off
+      scene_blend   alpha_blend
+
+      texture_unit
+      {
+        texture "icons/ent_sound.png"
+      }
+    }
+  }
+}
+material ent_trigger
+{
+  technique
+  {
+    pass
+    {
+      depth_write   off
+      lighting      off
+      scene_blend   alpha_blend
+
+      texture_unit
+      {
+        texture "icons/ent_trigger.png"
+      }
+    }
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////

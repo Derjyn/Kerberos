@@ -40,6 +40,9 @@ namespace Kerberos
 /*****************************************************************************
 *****************************************************************************/
 
+//
+//! \brief Script system (currently empty)
+//
 class SystemScript final : public System
 {
 public:
@@ -49,6 +52,9 @@ public:
   void init();
   void cycle();
   void halt();
+
+private:
+  void parseConfig();
 };
 
 /*****************************************************************************

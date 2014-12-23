@@ -11,7 +11,7 @@
 /**
 * @file   krbClock.h
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   19 December 2014
 * @brief  Tick, tock...
 *
 * @details
@@ -62,27 +62,9 @@ public:
   double msex() { return double(elapsed().count()); }
   string msexString();
 
-  // CLOCK TIMER
-  void tick(double rate);
-  void resetClock();
-  double msexClock() { return double(elapsedClock().count()); }
-  string clockString();
-
-  struct Hand
-  {
-    double msexCount;
-    double millisecond;
-    double second;
-    double minute;
-    double hour;
-  } Hand;
-
 private:
   hrc::time_point _start;
   millisec elapsed() const;
-
-  hrcClock::time_point _startClock;
-  millisecClock elapsedClock() const;
 };
 
 /*****************************************************************************

@@ -40,6 +40,9 @@ namespace Kerberos
 /*****************************************************************************
 *****************************************************************************/
 
+//
+//! \brief Network system (currently empty)
+//
 class SystemNetwork final : public System
 {
 public:

@@ -12,7 +12,7 @@
 /**
 * @file   krbConfig.h
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   19 December 2014
 * @brief  Handles configuration/properties files
 *
 * @details
@@ -38,12 +38,17 @@ using namespace std;
 /*****************************************************************************
 *****************************************************************************/
 
-namespace Kerberos
-{
+namespace Kerberos {
+
+class Color;
+class Vector3;
 
 /*****************************************************************************
 *****************************************************************************/
 
+//
+//! \brief Deals with properties, utilizing Ook
+//
 class Config
 {
 public:
@@ -53,10 +58,9 @@ public:
   bool          getBool(string section, string key);
   int           getInt(string section, string key);
   float         getFloat(string section, string key);
-  double        getDouble(string section, string key);
   string        getString(string section, string key);
-  //Color       getColor(std::string, std::string key);
-  //Vector3     getVec3(std::string, std::string key);
+  Color         getColor(std::string, std::string key);
+  Vector3       getVec3(std::string, std::string key);
 
   string        getFileName();
 

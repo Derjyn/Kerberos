@@ -11,7 +11,7 @@
 /**
 * @file   krbConfig.cpp
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   19 December 2014
 * @brief  Handles configuration/properties files
 *
 * @description
@@ -22,6 +22,7 @@
 *****************************************************************************/
 
 #include "core/krbConfig.h"
+#include "utility/krbMath.h"
 
 #include "Ook/Ook.h"
 
@@ -72,15 +73,6 @@ float Config::getFloat(string section, string key)
   return ookSet[key.c_str()].asFloat();
 }
 
-double Config::getDouble(string section, string key)
-{
-  Ook::File file;
-  file.unserialise(ifstream(str_File.c_str(), ios::in | ios::binary));
-  Ook::Set &ookSet = file[section.c_str()];
-
-  return ookSet[key.c_str()].asDouble();
-}
-
 std::string Config::getString(string section, string key)
 {
   Ook::File file;
@@ -88,6 +80,33 @@ std::string Config::getString(string section, string key)
   Ook::Set &ookSet = file[section.c_str()];
 
   return ookSet[key.c_str()].asString();
+}
+
+Color Config::getColor(string section, std::string key)
+{
+  Ook::File file;
+  file.unserialise(ifstream(str_File.c_str(), ios::in | ios::binary));
+  Ook::Set &ookSet = file[section.c_str()];
+
+  float r = ookSet[key].atFloat(0);
+  float g = ookSet[key].atFloat(1);
+  float b = ookSet[key].atFloat(2);
+  float a = ookSet[key].atFloat(3);
+
+  return Color(r,g,b,a);
+}
+
+Vector3 Config::getVec3(string section, string key)
+{
+  Ook::File file;
+  file.unserialise(ifstream(str_File.c_str(), ios::in | ios::binary));
+  Ook::Set &ookSet = file[section.c_str()];
+
+  float x = ookSet[key].atFloat(0);
+  float y = ookSet[key].atFloat(1);
+  float z = ookSet[key].atFloat(2);
+
+  return Vector3(x, y, z);
 }
 
 /*****************************************************************************

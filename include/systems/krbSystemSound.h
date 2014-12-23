@@ -30,16 +30,24 @@
 *****************************************************************************/
 
 #include "systems/krbSystem.h"
+#include "utility/krbMath.h"
+
+#include "FMOD/fmod.hpp"
+
+#include <string>
+using namespace std;
 
 /*****************************************************************************
 *****************************************************************************/
 
-namespace Kerberos
-{
+namespace Kerberos {
 
 /*****************************************************************************
 *****************************************************************************/
 
+//
+//! \brief Sound system, utilizing FMOD
+//
 class SystemSound final : public System
 {
 public:
@@ -50,7 +58,42 @@ public:
   void cycle();
   void halt();
 
-private:
+  bool Load2DSound(const string& filepath, FMOD::Sound** sound);
+  void Play2DSound(FMOD::Sound* sound, FMOD::Channel** channel);
+  
+  bool Load3DSound(const string& filepath, FMOD::Sound** sound);
+  void Play3DSound(FMOD::Sound* sound, 
+    const FMOD_VECTOR& position, FMOD::Channel** channel);
+
+  bool LoadSoundFromStream(const string& filepath, FMOD::Sound** sound);
+  void PlayStreamingSound(FMOD::Sound* sound, FMOD::Channel** channel);
+
+  void StopSound(FMOD::Sound* sound);
+  void StopMusic(FMOD::Sound* sound);
+
+  void PauseSound(FMOD::Sound* sound, FMOD::Channel** channel);
+  void PauseMusic(FMOD::Sound* sound, FMOD::Channel** channel);
+  void SetLoop(FMOD::Sound* sound, bool value);
+
+  void updateEars(Vector3 position, Vector3 velocity, 
+    Vector3 forward, Vector3 upward);
+
+  FMOD::System* getFMOD() { return m_FMOD; }
+
+protected:
+  FMOD_RESULT       result;  
+
+  FMOD::System*     m_FMOD;
+  FMOD_RESULT       m_Result;
+  int               i_DriverCount;
+  FMOD_SPEAKERMODE  m_SpeakerMode;
+  FMOD_CAPS         m_Caps;
+
+  float             f_DistanceFactor;
+  FMOD_VECTOR       fmv_EarsPosition;
+  FMOD_VECTOR       fmv_EarsVecloity;
+  FMOD_VECTOR       fmv_EarsForward;
+  FMOD_VECTOR       fmv_EarsUpward;
   void parseConfig();
 };
 

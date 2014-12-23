@@ -44,13 +44,16 @@ class Logger;
 /*****************************************************************************
 *****************************************************************************/
 
+//
+//! \brief Base class for systems
+//
 class System
 {
 public:
   virtual ~System() = 0;
 
   virtual void init()   = 0;
-  virtual void cycle()  = 0;
+  virtual void cycle() {}
   virtual void halt()   = 0;
 
   string getName() { return str_Name; }

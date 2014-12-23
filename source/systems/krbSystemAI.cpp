@@ -76,7 +76,7 @@ void SystemAI::halt()
 void SystemAI::parseConfig()
 {
   m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
-    str_Name + ": Config parsed...");
+    str_Name + ": Config parsed");
 }
 
 /*****************************************************************************

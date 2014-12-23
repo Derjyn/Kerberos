@@ -11,7 +11,7 @@
 /**
 * @file   krbSystemRender.h
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   23 December 2014
 * @brief  Rendering system
 *
 * @details
@@ -30,8 +30,15 @@
 *****************************************************************************/
 
 #include "systems/krbSystem.h"
+#include "utility/krbConverter.h"
+#include "utility/krbMath.h"
 
 #include "Ogre3D/OgreCommon.h"
+#include "Ogre3D/OgreFrameListener.h"
+#include "Ogre3D/OgreHardwarePixelBuffer.h"
+#include "Ogre3D/OgreMaterial.h"
+#include "Ogre3D/OgreRenderTargetListener.h"
+#include "Ogre3D/OgreTexture.h"
 
 #include <string>
 using namespace std;
@@ -42,11 +49,16 @@ using namespace std;
 namespace Ogre 
 {
   class Camera;
+  class MaterialManager;
+  class Rectangle2D;
   class RenderSystem;
+  class RenderTexture;
   class RenderWindow;
+  class ResourceGroupManager;
   class Root;
   class SceneManager;
   class SceneNode;
+  class TextureManager;
   class Viewport;
 }
 
@@ -61,7 +73,12 @@ class Logger;
 /*****************************************************************************
 *****************************************************************************/
 
-class SystemRender final : public System
+//
+//! \brief Render system, utilizing Ogre
+//
+class SystemRender final : public System, 
+  public Ogre::FrameListener,
+  public Ogre::RenderTargetListener
 {
 public:
   SystemRender(Config* config, Logger* log);
@@ -71,6 +88,10 @@ public:
   void cycle();
   void halt();
 
+  void loadResources();
+
+  void setActiveCam(Ogre::Camera* camera);
+
   Ogre::RenderSystem*     getRenderer();
   Ogre::RenderWindow*     getWindow();
   Ogre::Viewport*         getViewport();
@@ -78,6 +99,7 @@ public:
   int                     getWindowWidth();
   int                     getWindowHeight();
   float                   getAspectRatio();
+  float                   getLastFrameTime();
 
 protected:
   Ogre::Root*             m_Ogre;
@@ -88,7 +110,21 @@ protected:
   Ogre::Viewport*         m_Viewport;
   Ogre::SceneManager*     m_SceneMgr;
   Ogre::Camera*           m_Cam;
+  Ogre::Camera*           m_CamActive;
   Ogre::SceneNode*        m_CamNode;
+  float                   f_LastFrameTime;
+
+  // HANDY POINTERS
+  Ogre::MaterialManager*        m_MatMgr;
+  Ogre::TextureManager*         m_TexMgr;
+  Ogre::ResourceGroupManager*   m_ResMgr;
+
+  virtual bool frameStarted(const Ogre::FrameEvent& evt);
+  virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
+  virtual bool frameEnded(const Ogre::FrameEvent& evt);
+
+  virtual void preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt);
+  virtual void postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt);
 
 private:
   void parseConfig();
@@ -97,10 +133,19 @@ private:
   string                  str_OgreLog;
   string                  str_WinTitle;
   unsigned short          i_ViewportW, i_ViewportH;
-  float                   f_AspectRatio;
+  float                   f_AspectRatio;  
   string                  str_Resolution;
   bool                    b_Fullscreen;
   int                     i_TexFilter;
+
+  // WORKING TOWARDS A GBUFFER FOR DEFERRED RENDERING
+  Ogre::Rectangle2D*		  rtt_Screen;
+  Ogre::SceneNode*			  rtt_ScreenNode;
+  Ogre::TexturePtr			  rtt_Texture;
+  Ogre::RenderTexture*	  rtt_RenderTexture;
+  Ogre::MaterialPtr			  rtt_Material;
+  Ogre::Technique*			  rtt_Technique;
+	Ogre::Viewport*         rtt_Viewport;
 };
 
 /*****************************************************************************
