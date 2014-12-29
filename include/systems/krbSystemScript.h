@@ -11,7 +11,7 @@
 /**
 * @file   krbSystemScript.h
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   26 December 2014
 * @brief  Script system
 *
 * @details
@@ -34,8 +34,7 @@
 /*****************************************************************************
 *****************************************************************************/
 
-namespace Kerberos
-{
+namespace Kerberos {
 
 /*****************************************************************************
 *****************************************************************************/
@@ -43,11 +42,16 @@ namespace Kerberos
 //
 //! \brief Script system (currently empty)
 //
-class SystemScript final : public System
+class SystemScript final : 
+  public System, 
+  public Ogre::Singleton<SystemScript>
 {
 public:
   SystemScript(Config* config, Logger* log);
   ~SystemScript();
+
+  static SystemScript& getSingleton();
+  static SystemScript* getSingletonPtr();
 
   void init();
   void cycle();

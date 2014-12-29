@@ -11,7 +11,7 @@
 /**
 * @file   krbEntityPhysics.h
 * @author Nathan Harris
-* @date   22 December 2014
+* @date   26 December 2014
 * @brief  Physics entity
 *
 * @details
@@ -31,11 +31,18 @@
 
 #include "entities/krbEntity.h"
 
-#include "BtOgre/BtOgreGP.h"
-#include "BtOgre/BtOgrePG.h"
-
 /*****************************************************************************
 *****************************************************************************/
+
+class btDynamicsWorld;
+class btConvexHullShape;
+class btTriangleMeshShape;
+class btRigidBody;
+
+namespace BtOgre
+{
+  class RigidBodyState;
+}
 
 namespace Ogre
 {
@@ -56,14 +63,8 @@ namespace Kerberos {
 class EntityPhysics : public Entity
 {
 public:
-  virtual void setBulletWorld(btDynamicsWorld* world)
-  {
-    m_BulletWorld = world;
-  }
-
   virtual void setGravity(Vector3 gravity)
   {
-    ent_Body->setGravity(toBullet(gravity));
   }
 
   virtual void setMass(float mass)
@@ -71,30 +72,15 @@ public:
     f_MassKg = mass;
   }
 
-  virtual void setConvexMargin(float margin)
-  {
-    f_Margin = margin;
-    ent_ShapeConvex->setMargin(f_Margin);
-  }
-  virtual void setTrimeshMargin(float margin)
-  {
-    f_Margin = margin;
-    ent_ShapeTrimesh->setMargin(f_Margin);
-  }
-
   // GETTERS //////////////////////////////////////////////////////////////////
 
   inline bool isResting() 
   { 
-    b_Resting = ent_Body->isActive();
-
     return b_Resting; 
   }
 
-  inline Vector3 getVelocity() // Returns linear velocity.
+  inline Vector3 getVelocity()
   {
-    ent_Velocity = toKRB(ent_Body->getLinearVelocity());
-
     return ent_Velocity;
   }
 
@@ -105,13 +91,12 @@ protected:
   float     f_MassKg;
   Vector3   ent_Velocity;
 
-  btDynamicsWorld*        m_BulletWorld;
-  btConvexHullShape*      ent_ShapeConvex;
-  btBvhTriangleMeshShape* ent_ShapeTrimesh;
-  btRigidBody*            ent_Body;
-  btTransform             ent_Transform;
-  BtOgre::RigidBodyState* ent_State;
-  Ogre::Entity*           ent_Mesh;
+  Ogre::Entity*               ent_Mesh;
+  btRigidBody*                ent_Body;
+  btConvexHullShape*          ent_HullConvex;
+  btTriangleMeshShape*        ent_HullTrimesh;
+  BtOgre::RigidBodyState*     ent_State;
+  btDynamicsWorld*            m_PhysWorld;
 };
 
 /*****************************************************************************

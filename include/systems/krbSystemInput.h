@@ -11,7 +11,7 @@
 /**
 * @file   krbSystemInput.h
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   26 December 2014
 * @brief  Input system
 *
 * @details
@@ -55,18 +55,23 @@ namespace Kerberos {
 //
 //! \brief Input system, utilizing OIS
 //
-class SystemInput final : public System, 
-  public OIS::MouseListener, public OIS::KeyListener
+class SystemInput final : 
+  public System, 
+  public OIS::MouseListener, 
+  public OIS::KeyListener, 
+  public Ogre::Singleton<SystemInput>
 {
 public:
   SystemInput(Config* config, Logger* log);
   ~SystemInput();
 
+  static SystemInput& getSingleton();
+  static SystemInput* getSingletonPtr();
+
   void init();
   void cycle();
   void halt();
 
-  void setWindow(Ogre::RenderWindow* win) { m_Window = win; }
   void setWindowExtents(int width, int height);
 
   bool mouseMoved(const OIS::MouseEvent& evt);

@@ -11,7 +11,7 @@
 /**
 * @file   krbSystemWorld.h
 * @author Nathan Harris
-* @date   23 December 2014
+* @date   28 December 2014
 * @brief  World system
 *
 * @details
@@ -35,13 +35,12 @@
 #include "entities/krbEntityCamera.h"
 #include "entities/krbEntityLight.h"
 #include "entities/krbEntityMesh.h"
+#include "entities/krbEntityParticleEmitter.h"
 #include "entities/krbEntityPhysicsDynamic.h"
 #include "entities/krbEntityPhysicsStatic.h"
 
 /*****************************************************************************
 *****************************************************************************/
-
-class btDynamicsWorld;
 
 namespace Ogre
 {
@@ -62,41 +61,40 @@ namespace Kerberos {
 //
 //! \brief World system. Tracks world time, the enviornment, and entities
 //
-class SystemWorld final : public System
+class SystemWorld final : 
+  public System, 
+  public Ogre::Singleton<SystemWorld>
 {
 public:
   SystemWorld(Config* config, Logger* log);
   ~SystemWorld();
 
+  static SystemWorld& getSingleton();
+  static SystemWorld* getSingletonPtr();
+
   void init();
   void cycle();
   void halt();
-
-  void connectOgre(Ogre::SceneManager* sceneMgr, Ogre::Viewport* viewport);
-  void connectBullet(btDynamicsWorld* world);
 
   void resetClock();
   void pauseWorld();
 
   void createGrid();
   void toggleGrid();
+  void createPlane(Vector2 extent);
 
   // ENVIRONMENT
   void setAmbient(Color color);
   void setFog(Color color, float density, float start, float end);
-  void setEnvironment(Color baseColor, 
-    float fogDensity, float fogStart, float fogEnd);
+  void setEnvironment(Color baseColor, Vector3 fogSettings);
 
   // ENTITIES
-  EntityCamera*   addCamera(string name);
-  EntityLight*    addLight(string name, EntityLight::LightType type);
-  EntityMesh*     addMesh(string name, string mesh, float scale);
-
-  EntityPhysicsDynamic* addDynamic(string name, string mesh, 
-  int maxAge, float mass, Vector3 pos);
-
-  EntityPhysicsStatic* addStatic(string name, string mesh, 
-  int maxAge, Vector3 pos);
+  EntityCamera*           addCamera(string name);
+  EntityLight*            addLight(string name, EntityLight::LightType type);
+  EntityMesh*             addMesh(string name, string mesh, float scale);
+  EntityPhysicsStatic*    addStatic(string name, string mesh, int maxAge, Vector3 pos);
+  EntityPhysicsDynamic*   addDynamic(string name, string mesh, int maxAge, Vector3 pos);
+  EntityParticleEmitter*  addParticleEmitter(string name);
 
   // SETTERS //////////////////////////////////////////////////////////////////
   void setWorldRate(float rate);
@@ -111,13 +109,12 @@ public:
 
 protected:
   float       f_WorldRate;
+  float       f_WorldRateTemp;
   float       f_WorldTimeRate;
   TimeVector  vec_Time;
   bool        b_WorldPaused;
 
   Color       env_Color;
-
-  btDynamicsWorld*      m_BulletWorld;
 
   Ogre::SceneManager*   m_SceneMgr;
   Ogre::SceneNode*      m_WorldNode;
@@ -125,15 +122,20 @@ protected:
 
   Clock*    ent_Clock;
   float     ent_Pulse;
-  int       i_EntityCount;
 
   float     f_GridExtent;
   float     f_GridScale;
   bool      b_GridVisible;
   Ogre::ManualObject* m_Grid;
 
-  vector<Entity*>           vec_Entities;
+  int       i_EntityCount;
+  int       i_EmitterCount;
+
+  vector<Entity*> vec_Entities;
   vector<Entity*>::iterator vit_Entities;
+
+  vector<EntityParticleEmitter*> vec_Emitters;
+  vector<EntityParticleEmitter*>::iterator vit_Emitters;
 
 private:
   void parseConfig();

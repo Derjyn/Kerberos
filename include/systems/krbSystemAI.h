@@ -11,7 +11,7 @@
 /**
 * @file   krbSystemAI.h
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   26 December 2014
 * @brief  AI system
 *
 * @details
@@ -42,11 +42,16 @@ namespace Kerberos {
 //
 //! \brief AI system (currently empty)
 //
-class SystemAI final : public System
+class SystemAI final : 
+  public System, 
+  public Ogre::Singleton<SystemAI>
 {
 public:
   SystemAI(Config* config, Logger* log);
   ~SystemAI();
+
+  static SystemAI& getSingleton();
+  static SystemAI* getSingletonPtr();
 
   void init();
   void cycle();

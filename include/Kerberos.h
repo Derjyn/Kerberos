@@ -12,7 +12,7 @@
 /**
 * @file   Kerberos.h
 * @author Nathan Harris
-* @date   22 December 2014
+* @date   28 December 2014
 * @brief  Wrangles up Kerberos for consumption
 *
 * @description
@@ -30,12 +30,17 @@
 /*****************************************************************************
 *****************************************************************************/
 
-//#define KRB_CONSOLE
+#include <string>
+#include <sstream>
+using namespace std;
+
+/*****************************************************************************
+*****************************************************************************/
 
 #define KRB_VERSION_MAJOR 0
 #define KRB_VERSION_MINOR 0
-#define KRB_VERSION_PATCH 0
-#define KRB_VERSION_ALPHA 6
+#define KRB_VERSION_PATCH 1
+#define KRB_VERSION_ALPHA 5
 #define KRB_VERSION_NAME "Conceptus"
 
 /*****************************************************************************
@@ -63,8 +68,22 @@ namespace Kerberos
   class EntityCamera;
   class EntityLight;
   class EntityMesh;
+  class EntityParticleEmitter;
   class EntityPhysicsDynamic;
   class EntityPhysicsStatic;
+
+  class GUI;
+
+  inline string getVersionString()
+  {
+    stringstream ss_ver;
+    ss_ver << 
+    KRB_VERSION_MAJOR << "." <<
+    KRB_VERSION_MINOR << "." <<
+    KRB_VERSION_PATCH << "." <<
+    KRB_VERSION_ALPHA << " (" << KRB_VERSION_NAME ")";
+    return ss_ver.str();
+  }
 }
 
 /*****************************************************************************
@@ -90,6 +109,7 @@ namespace Kerberos
 #include "entities/krbEntityCamera.h"
 #include "entities/krbEntityLight.h"
 #include "entities/krbEntityMesh.h"
+#include "entities/krbEntityParticleEmitter.h"
 #include "entities/krbEntityPhysics.h"
 #include "entities/krbEntityPhysicsDynamic.h"
 #include "entities/krbEntityPhysicsStatic.h"

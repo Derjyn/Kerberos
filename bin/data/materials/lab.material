@@ -4,58 +4,15 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-import * from "shaders.material"
-
-///////////////////////////////////////////////////////////////////////////////
-
-vertex_program fog_v glsl
-{
-  source fog.vert
-
-  default_params
-  {
-    param_named_auto proj projection_matrix
-    param_named_auto view worldview_matrix
-  }
-}
-fragment_program fog_f glsl
-{
-  source fog.frag
-
-  default_params
-  {
-    param_named_auto fog_color fog_colour
-    param_named_auto fog_props fog_params
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 material lab_base
 {
   technique
   {
-    pass
+    pass lab_base
     {
       texture_unit
       {
         texture lab_base.png
-      }
-    }
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-material lab_plank : shader/fog
-{
-  technique
-  {
-    pass
-    {
-      texture_unit
-      {
-        texture lab_plank.png
       }
     }
   }
@@ -113,38 +70,6 @@ material lab_cube_yellow
       texture_unit
       {
         texture lab_cube_yellow.png
-      }
-    }
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-material lab_cone
-{
-  technique
-  {
-    pass
-    {
-      texture_unit
-      {
-        texture lab_cone.png
-      }
-    }
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-material lab_ico
-{
-  technique
-  {
-    pass
-    {
-      texture_unit
-      {
-        texture lab_ico.png
       }
     }
   }

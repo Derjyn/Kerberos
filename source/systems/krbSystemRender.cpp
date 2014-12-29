@@ -11,10 +11,10 @@
 /**
 * @file   krbSystemRender.cpp
 * @author Nathan Harris
-* @date   23 December 2014
+* @date   26 December 2014
 * @brief  Rendering system
 *
-* @description
+* @details
 *  Coming soon to a code file near you...
 */
 
@@ -22,20 +22,21 @@
 *****************************************************************************/
 
 #include "systems/krbSystemRender.h"
-#include "core/krbConfig.h"
-#include "core/krbClock.h"
-#include "core/krbLogger.h"
 
 #include "Ogre3D/OgreMaterialManager.h"
 #include "Ogre3D/OgreRenderWindow.h"
 #include "Ogre3D/OgreResourceGroupManager.h"
 #include "Ogre3D/OgreRoot.h"
 
+#include "ParticleUniverse/ParticleUniverseSystemManager.h"
+#include "ParticleUniverse/Externs/ParticleUniversePhysXBridge.h"
+
 /*****************************************************************************
 *****************************************************************************/
 
-namespace Kerberos
-{
+template<> Kerberos::SystemRender* Ogre::Singleton<Kerberos::SystemRender>::msSingleton = 0;
+
+namespace Kerberos {
 
 /*****************************************************************************
 *****************************************************************************/
@@ -54,6 +55,15 @@ SystemRender::~SystemRender()
 {
   m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
     str_Name + ": No more visuals for you!");
+}
+
+SystemRender* SystemRender::getSingletonPtr(void)
+{
+    return msSingleton;
+}
+SystemRender& SystemRender::getSingleton(void)
+{  
+    return (*msSingleton);  
 }
 
 /*****************************************************************************
@@ -76,6 +86,7 @@ void SystemRender::init()
 
   // LOAD OTHER PLUGINS
   m_Ogre->loadPlugin("Plugin_OctreeSceneManager");
+  m_Ogre->loadPlugin("ParticleUniverse");
   m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
     str_Name + ": Plugins loaded");
 
@@ -139,6 +150,8 @@ void SystemRender::init()
 
   loadResources();
 
+  m_PUSysMgr  = ParticleUniverse::ParticleSystemManager::getSingletonPtr();
+
   m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
     str_Name + ": Initialized :)");
 }
@@ -146,7 +159,7 @@ void SystemRender::init()
 /*****************************************************************************
 *****************************************************************************/
 
-void SystemRender::cycle()
+void SystemRender::cycle(float delta)
 {
   m_Ogre->renderOneFrame();
 }
@@ -156,9 +169,11 @@ void SystemRender::cycle()
 
 void SystemRender::halt()
 {
-  //m_SceneMgr->clearScene(); //! \bug Causes error on shutdown
+  m_PUSysMgr->destroyAllParticleSystems(m_SceneMgr);
 
   delete m_Cam;
+
+  //m_SceneMgr->clearScene(); //! \bug Causes error on shutdown
 
   m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
     str_Name + ": Scene cleared");
@@ -206,19 +221,19 @@ void SystemRender::loadResources()
   m_ResMgr->addResourceLocation("data/gui",
     "FileSystem", "GUI");
 
-  // SHADERS
-  m_ResMgr->addResourceLocation("data/shaders",
-    "FileSystem", "SHADERS");
-
   // TEXTURE DATA
   m_ResMgr->addResourceLocation("data/textures",
     "FileSystem", "TEXTURES");
 
   // MATERIAL SCRIPTS
-  m_ResMgr->addResourceLocation("data/materials",
-    "FileSystem", "MATERIALS");
   m_ResMgr->addResourceLocation("data/materials/core",
     "FileSystem", "MATERIALS");
+  m_ResMgr->addResourceLocation("data/materials",
+    "FileSystem", "MATERIALS");
+
+  // SHADERS
+  m_ResMgr->addResourceLocation("data/shaders",
+    "FileSystem", "SHADERS");
 
   // MESH DATA
   m_ResMgr->addResourceLocation("data/meshes",
@@ -227,6 +242,14 @@ void SystemRender::loadResources()
   // ENTITY PROPERTIES/SCRIPTS
   m_ResMgr->addResourceLocation("data/entities",
     "FileSystem", "ENTITIES");
+
+  // PARTICLE SYSTEM ASSETS
+  m_ResMgr->addResourceLocation("data/particles/textures",
+    "FileSystem", "PARTICLES");
+  m_ResMgr->addResourceLocation("data/particles/materials",
+    "FileSystem", "PARTICLES");
+  m_ResMgr->addResourceLocation("data/particles",
+    "FileSystem", "PARTICLES");
 
   // FIRE UP OUR RESOURCE GROUPS
   m_ResMgr->initialiseAllResourceGroups();
@@ -245,11 +268,10 @@ void SystemRender::setActiveCam(Ogre::Camera* camera)
 
 /*****************************************************************************
 *****************************************************************************/
+// FRAME LISTENER TANGS
 
 bool SystemRender::frameStarted(const Ogre::FrameEvent& evt)
 {
-  f_LastFrameTime = evt.timeSinceLastFrame;
-
   return true;
 }
 bool SystemRender::frameRenderingQueued(const Ogre::FrameEvent& evt)
@@ -258,11 +280,14 @@ bool SystemRender::frameRenderingQueued(const Ogre::FrameEvent& evt)
 }
 bool SystemRender::frameEnded(const Ogre::FrameEvent& evt)
 {
+  f_LastFrameTime = evt.timeSinceLastFrame;
+
   return true;
 }
 
 /*****************************************************************************
 *****************************************************************************/
+// RENDER LISTENER STUFF
 
 void SystemRender::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
 {
@@ -274,16 +299,17 @@ void SystemRender::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
 
 /*****************************************************************************
 *****************************************************************************/
+ // GETTERS
 
-Ogre::RenderSystem* SystemRender::getRenderer() { return m_Renderer; }
-Ogre::RenderWindow* SystemRender::getWindow() { return m_Window; }
-Ogre::Viewport*     SystemRender::getViewport() { return m_Viewport; }
+Ogre::RenderSystem* SystemRender::getRenderer()     { return m_Renderer; }
+Ogre::RenderWindow* SystemRender::getWindow()       { return m_Window; }
+Ogre::Viewport*     SystemRender::getViewport()     { return m_Viewport; }
 Ogre::SceneManager* SystemRender::getSceneManager() { return m_SceneMgr; }
 
-int SystemRender::getWindowWidth() { return i_ScreenW; }
-int SystemRender::getWindowHeight() { return i_ScreenH; }
-float SystemRender::getAspectRatio() { return i_ScreenW / i_ScreenH; }
-float SystemRender::getLastFrameTime() { return f_LastFrameTime; }
+int SystemRender::getWindowWidth()                  { return i_ScreenW; }
+int SystemRender::getWindowHeight()                 { return i_ScreenH; }
+float SystemRender::getAspectRatio()                { return i_ScreenW / i_ScreenH; }
+float SystemRender::getLastFrameTime()              { return f_LastFrameTime; }
 
 /*****************************************************************************
 *****************************************************************************/

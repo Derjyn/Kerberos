@@ -11,7 +11,7 @@
 /**
 * @file   krbClock.h
 * @author Nathan Harris
-* @date   19 December 2014
+* @date   25 December 2014
 * @brief  Tick, tock...
 *
 * @details
@@ -49,9 +49,6 @@ class Clock
 {
   typedef std::chrono::high_resolution_clock hrc;
   typedef std::chrono::milliseconds millisec;
-
-  typedef std::chrono::high_resolution_clock hrcClock;
-  typedef std::chrono::milliseconds millisecClock;
 
 public:
   Clock(bool run);

@@ -11,7 +11,7 @@
 /**
 * @file   krbBrain.h
 * @author Nathan Harris
-* @date   23 December 2014
+* @date   26 December 2014
 *
 * @details 
 *  Brain is the central core of Kerberos responsible for overseeing all the 
@@ -43,6 +43,8 @@ using namespace std;
 /*****************************************************************************
 *****************************************************************************/
 
+// THESE PRE-DECLARATIONS WILL DISAPPEAR ONCE LAB IS MOVED TO IT'S OWN
+// THING...  AS WELL AS SEVERAL OTHER BITS.
 namespace FMOD
 {
   class Channel;
@@ -56,6 +58,12 @@ namespace Gorilla
   class MarkupText;
   class Rectangle;
   class Screen;
+}
+
+namespace ParticleUniverse
+{
+  class ParticleSystem;
+  class PhysicsActor;
 }
 
 /*****************************************************************************
@@ -77,11 +85,7 @@ class SystemScript;
 class SystemSound;
 class SystemWorld;
 
-class EntityCamera;
-class EntityLight;
-class EntityMesh;
-class EntityPhysicsDynamic;
-class EntityPhysicsStatic;
+class Lab;
 
 /*****************************************************************************
 *****************************************************************************/
@@ -99,39 +103,39 @@ public:
   void cycle();
   void halt();
 
-  string          getVersion()    { return str_Version; }
-  Clock*          getClock()      { return m_Clock; }
-  Config*         getConfig()     { return m_Config; }
-  Logger*         getLogger()     { return m_Log; }
+  // GETTERS
+  Clock*            getClock()      { return m_Clock; }
+  Config*           getConfig()     { return m_Config; }
+  Logger*           getLogger()     { return m_Log; }
 
-  SystemAI*       getSysAI()      { return m_SysAI; }
-  SystemGUI*      getSysGUI()     { return m_SysGUI; }
-  SystemInput*    getSysInput()   { return m_SysInput; }
-  SystemNetwork*  getSysNetwork() { return m_SysNetwork; }
-  SystemPhysics*  getSysPhysics() { return m_SysPhysics; }
-  SystemRender*   getSysRender()  { return m_SysRender; }
-  SystemScript*   getSysScript()  { return m_SysScript; }
-  SystemSound*    getSysSound()   { return m_SysSound; }
-  SystemWorld*    getSysWorld()   { return m_SysWorld; }
+  SystemAI*         getSysAI()      { return m_SysAI; }
+  SystemGUI*        getSysGUI()     { return m_SysGUI; }
+  SystemInput*      getSysInput()   { return m_SysInput; }
+  SystemNetwork*    getSysNetwork() { return m_SysNetwork; }
+  SystemPhysics*    getSysPhysics() { return m_SysPhysics; }
+  SystemRender*     getSysRender()  { return m_SysRender; }
+  SystemScript*     getSysScript()  { return m_SysScript; }
+  SystemSound*      getSysSound()   { return m_SysSound; }
+  SystemWorld*      getSysWorld()   { return m_SysWorld; }
 
 protected:
-  Clock*          m_Clock;
-  Config*         m_Config;
-  Logger*         m_Log;
+  Clock*            m_Clock;
+  Config*           m_Config;
+  Logger*           m_Log;
 
-  SystemAI*       m_SysAI;
-  SystemGUI*      m_SysGUI;
-  SystemInput*    m_SysInput;
-  SystemNetwork*  m_SysNetwork;
-  SystemPhysics*  m_SysPhysics;
-  SystemRender*   m_SysRender;
-  SystemScript*   m_SysScript;
-  SystemSound*    m_SysSound;
-  SystemWorld*    m_SysWorld;
+  SystemAI*         m_SysAI;
+  SystemGUI*        m_SysGUI;
+  SystemInput*      m_SysInput;
+  SystemNetwork*    m_SysNetwork;
+  SystemPhysics*    m_SysPhysics;
+  SystemRender*     m_SysRender;
+  SystemScript*     m_SysScript;
+  SystemSound*      m_SysSound;
+  SystemWorld*      m_SysWorld;
 
-  bool            b_Alive;
-  string          str_Version;
-  string          str_LogFile;  
+  Lab*              m_Lab;
+
+  string            str_LogFile;  
 
 private:
   void parseConfig();
@@ -151,32 +155,6 @@ private:
 
   vector<System*> vec_Sys;
   map<string, System*> map_Sys;
-
-  // THIS'LL BE SCRIPT BASED OR SOME SUCH... DOESN'T BELONG IN THE BRAIN
-  void createLab();
-  void cycleLab();
-  void handleLabInput();
-  void updateDebug();
-
-  float           f_DemoTime;
-  float           f_WorldRateTemp;
-  float           f_InputDelay;   
-  unsigned int    i_ScreenShots;
-
-  // LAB LEVEL AND ACTION
-  Color           clr_LabEnv;
-  Vector3         vec_LabFog;
-  EntityCamera*   m_LabCamera;
-  float           f_CamSpeed;
-  EntityLight*    m_LabLight;
-
-  // HUD
-  Gorilla::Screen*      m_Screen;
-  Gorilla::Layer*       m_Layer;
-  Gorilla::Caption*     m_Caption;
-  Gorilla::Rectangle*   m_CaptionBG;
-  Gorilla::MarkupText*  m_DebugText;
-  Gorilla::Rectangle*   m_DebugBG;
 };
 
 /*****************************************************************************

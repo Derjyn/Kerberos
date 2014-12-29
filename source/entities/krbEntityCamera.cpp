@@ -38,7 +38,7 @@ EntityCamera::EntityCamera(string name, Ogre::SceneManager* scenemgr)
 {
   str_Name    = name;
   m_SceneMgr  = scenemgr;
-  m_WorldNode = m_SceneMgr->getSceneNode("WORLD_NODE");
+  m_WorldNode = m_SceneMgr->getRootSceneNode();
 
   m_Camera = m_SceneMgr->createCamera(name);
   m_Camera->setAutoAspectRatio(true);

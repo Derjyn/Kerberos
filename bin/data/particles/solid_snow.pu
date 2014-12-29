@@ -1,0 +1,185 @@
+system black_snow
+{
+  category Kerberos
+
+  technique
+  {
+    visual_particle_quota 10000
+    material particle/solid_black
+
+    renderer Billboard
+    {
+      sorting true
+    }
+
+    emitter Box
+    {
+      emission_rate   200
+      time_to_live    60
+
+      all_particle_dimensions dyn_random
+      {
+        min 0.05
+        max 0.50
+      }
+      angle dyn_random
+      {
+        min 0
+        max 45
+      }
+      velocity dyn_random
+      {
+        min  1.5
+        max  4.0
+      }
+
+      position    0 100 0
+      direction   0 -1 0
+      box_width   1000
+      box_height  50
+      box_depth   1000
+    }
+
+    affector LinearForce wind_left
+    {
+      enabled false
+      force_vector  -0.3 -0.25 0
+    }
+    affector LinearForce wind_right
+    {
+      enabled false
+      force_vector  0.3 0 0
+    }
+
+    observer OnRandom
+    {
+      observe_interval  1
+
+      handler DoEnableComponent
+      {
+        enable_component affector_component wind_left true
+      }
+      handler DoEnableComponent
+      {
+        enable_component affector_component wind_right false
+      }
+    }
+    observer OnRandom
+    {
+      observe_interval 1
+      random_threshold 0.6
+
+      handler DoEnableComponent
+      {
+        enable_component affector_component wind_right true
+      }
+      handler DoEnableComponent
+      {
+        enable_component affector_component wind_left false
+      }
+    }
+    observer OnPosition
+    {
+      observe_interval 1
+      position_y less_than 0
+
+      handler DoExpire
+      {
+      }
+    }
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+system red_snow
+{
+  category Kerberos
+
+  technique
+  {
+    visual_particle_quota 10000
+    material particle/solid_red
+
+    renderer Billboard
+    {
+      sorting true
+    }
+
+    emitter Box
+    {
+      emission_rate   500
+      time_to_live    60
+
+      all_particle_dimensions dyn_random
+      {
+        min 0.15
+        max 0.25
+      }
+      angle dyn_random
+      {
+        min 0
+        max 45
+      }
+      velocity dyn_random
+      {
+        min  1.5
+        max  4.0
+      }
+
+      position    0 100 0
+      direction   0 -1 0
+      box_width   500
+      box_height  50
+      box_depth   500
+    }
+
+    affector LinearForce wind_left
+    {
+      enabled false
+      force_vector  -1.3 -0.15 0
+    }
+    affector LinearForce wind_right
+    {
+      enabled false
+      force_vector  0.4 0 0
+    }
+
+    observer OnRandom
+    {
+      observe_interval  1
+
+      handler DoEnableComponent
+      {
+        enable_component affector_component wind_left true
+      }
+      handler DoEnableComponent
+      {
+        enable_component affector_component wind_right false
+      }
+    }
+    observer OnRandom
+    {
+      observe_interval 1
+      random_threshold 0.6
+
+      handler DoEnableComponent
+      {
+        enable_component affector_component wind_right true
+      }
+      handler DoEnableComponent
+      {
+        enable_component affector_component wind_left false
+      }
+    }
+    observer OnPosition
+    {
+      observe_interval 1
+      position_y less_than 0
+
+      handler DoExpire
+      {
+      }
+    }
+  }
+}

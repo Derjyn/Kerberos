@@ -11,10 +11,10 @@
 /**
 * @file   krbSystemInput.cpp
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   26 December 2014
 * @brief  Input system
 *
-* @description
+* @details
 *  Coming soon to a code file near you...
 */
 
@@ -22,15 +22,15 @@
 *****************************************************************************/
 
 #include "systems/krbSystemInput.h"
-#include "core/krbConfig.h"
-#include "core/krbClock.h"
-#include "core/krbLogger.h"
+#include "systems/krbSystemRender.h"
 
 #include "Ogre3D/OgreRenderWindow.h"
 #include "Ogre3D/OgreStringConverter.h"
 
 /*****************************************************************************
 *****************************************************************************/
+
+template<> Kerberos::SystemInput* Ogre::Singleton<Kerberos::SystemInput>::msSingleton = 0;
 
 namespace Kerberos {
 
@@ -53,11 +53,24 @@ SystemInput::~SystemInput()
     str_Name + ": No keyloggers here. Move along.");
 }
 
+SystemInput* SystemInput::getSingletonPtr(void)
+{
+    return msSingleton;
+}
+SystemInput& SystemInput::getSingleton(void)
+{  
+    return (*msSingleton);  
+}
+
 /*****************************************************************************
 *****************************************************************************/
 
 void SystemInput::init()
 {
+  m_Window = SystemRender::getSingletonPtr()->getWindow();
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Ogre Ogre window");
+
   m_Window->getCustomAttribute("WINDOW", &hWnd);
 
   OIS::ParamList pl;

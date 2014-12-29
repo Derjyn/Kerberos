@@ -9,11 +9,14 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - LAB
   TimeLimit     : 0
-  EnvColor      : [0.70, 0.70, 0.72]
-  FogSetting    : [0.01, 0, 100]     # Density, start, end
-  CamSpeed      : 0.15
-  MaxEntities   : 250
-  SpawnDelay    : 175.0
+  ExtentW       : 1000
+  ExtentH       : 1000
+  EnvColor      : [0.01, 0.01, 0.01]
+  FogDensity    : 0.008
+  FogStart      : 0
+  FogEnd        : 200
+  CamSpeed      : 0.075
+  CamSpeedFast  : 0.5
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # BRAIN SETTINGS
@@ -45,30 +48,31 @@
 - RENDER
   OgreLog       : "./debug/Ogre.log"
   WinTitle      : "Kerberos Engine Concept"
-  ScreenWidth   : 896
-  ScreenHeight  : 504
-  Fullscreen    : false
-  VSync         : false
+  ScreenWidth   : 1366
+  ScreenHeight  : 768
+  Fullscreen    : true
+  VSync         : true
   FSAA          : 0
   Filtering     : 3
   Anisotropy    : 16
   WinBorder     : "none"
-  MatteColor    : [0.5, 0.5, 0.55]
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # WORLD SETTINGS
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - WORLD
-  WorldRate     : 1.0
-  WorldTimeRate : 10.0
-  GridScale     : 1.0
-  GridExtent    : 100
+  WorldRate     : 1.0             # RATE MULTIPLIER
+  WorldTimeRate : 10.0            # (FINAL = WorldTimeRate x WorldRate)
+  GridScale     : 5.0             # DEBUG GRID UNIT SIZE MULTIPLIER
+  GridExtent    : 200             # DEBUG GRID EXTENT (WALKS OUT FROM 0,0,0)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # PHYSICS SETTINGS
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - PHYSICS
-  PhysicsRPS    : 60.0
-  PhysicsSteps  : 1
+  InfinitePlane : true            # INFINITE COLLISION PLANE AT 0,0,0
+  PhysicsRPS    : 60.0            # PHYSICS RATE-PER-SECOND (DEFAULT: 120)
+  PhysicsSteps  : 1               # PHYSICS SUB-STEPS (DEFAULT: 4)
+  Gravity       : -9.80665        # STANDARD GRAVITATION: 9.80665 m/s^2
 
 #~~~ EOF ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

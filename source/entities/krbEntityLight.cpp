@@ -39,7 +39,7 @@ EntityLight::EntityLight(string name, LightType type,
 {
   str_Name    = name;
   m_SceneMgr  = scenemgr;
-  m_WorldNode = m_SceneMgr->getSceneNode("WORLD_NODE");
+  m_WorldNode = m_SceneMgr->getRootSceneNode();
 
   // CREATE LIGHT
   m_Light = m_SceneMgr->createLight(name);

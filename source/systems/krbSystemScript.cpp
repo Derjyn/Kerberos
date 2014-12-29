@@ -11,10 +11,10 @@
 /**
 * @file   krbSystemScript.cpp
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   26 December 2014
 * @brief  Script system
 *
-* @description
+* @details
 *  Coming soon to a code file near you...
 */
 
@@ -22,15 +22,13 @@
 *****************************************************************************/
 
 #include "systems/krbSystemScript.h"
-#include "core/krbConfig.h"
-#include "core/krbClock.h"
-#include "core/krbLogger.h"
 
 /*****************************************************************************
 *****************************************************************************/
 
-namespace Kerberos
-{
+template<> Kerberos::SystemScript* Ogre::Singleton<Kerberos::SystemScript>::msSingleton = 0;
+
+namespace Kerberos {
 
 /*****************************************************************************
 *****************************************************************************/
@@ -49,6 +47,15 @@ SystemScript::~SystemScript()
 {
   m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
     str_Name + ": I was getting bored anyhow...");
+}
+
+SystemScript* SystemScript::getSingletonPtr(void)
+{
+    return msSingleton;
+}
+SystemScript& SystemScript::getSingleton(void)
+{  
+    return (*msSingleton);  
 }
 
 /*****************************************************************************

@@ -11,10 +11,10 @@
 /**
 * @file   krbSystemGUI.cpp
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   28 December 2014
 * @brief  GUI system
 *
-* @description
+* @details
 *  Coming soon to a code file near you...
 */
 
@@ -22,17 +22,14 @@
 *****************************************************************************/
 
 #include "systems/krbSystemGUI.h"
-#include "core/krbConfig.h"
-#include "core/krbClock.h"
-#include "core/krbLogger.h"
-
-#include "Gorilla/Gorilla.h"
+#include "systems/krbSystemRender.h"
 
 /*****************************************************************************
 *****************************************************************************/
 
-namespace Kerberos
-{
+template<> Kerberos::SystemGUI* Ogre::Singleton<Kerberos::SystemGUI>::msSingleton = 0;
+
+namespace Kerberos {
 
 /*****************************************************************************
 *****************************************************************************/
@@ -53,12 +50,25 @@ SystemGUI::~SystemGUI()
     str_Name + ": Gorillas went back into the mist...");
 }
 
+SystemGUI* SystemGUI::getSingletonPtr(void)
+{
+    return msSingleton;
+}
+SystemGUI& SystemGUI::getSingleton(void)
+{  
+    return (*msSingleton);  
+}
+
 /*****************************************************************************
 *****************************************************************************/
 
 void SystemGUI::init()
 {
   m_Silverback = new Gorilla::Silverback();
+
+  m_Viewport = SystemRender::getSingletonPtr()->getViewport();
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Got Ogre viewport");
 
   m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
     str_Name + ": Initialized :)");
@@ -86,91 +96,15 @@ void SystemGUI::parseConfig()
 /*****************************************************************************
 *****************************************************************************/
 
-void SystemGUI::loadAtlas(string name) 
+UI_GUI* SystemGUI::createGUI(string name, bool visible)
 {
-  m_Silverback->loadAtlas(name);
-  vec_Atlas.push_back(name);
-}
-
-/*****************************************************************************
-*****************************************************************************/
-
-bool SystemGUI::hasAtlas(string name) 
-{
-  for (unsigned int i = 0; i < vec_Atlas.size(); i++) 
+  UI_GUI* gui = new UI_GUI(name, visible, m_Viewport, m_Silverback);
+  if (map_GUI[name] == nullptr) 
   {
-    if (vec_Atlas[i] == name) 
-    {
-      return true;
-    }
+    map_GUI[name] = gui;
   }
 
-  return false;
-}
-
-/*****************************************************************************
-*****************************************************************************/
-
-Gorilla::Screen* SystemGUI::createScreen(string name, string atlas, 
-  Ogre::Viewport* vp)
-{
-  Screen* scr = new Screen();
-  if (!hasAtlas(atlas)) 
-  {
-    loadAtlas(atlas);
-  }
-
-  if (map_Screens[name] == nullptr) 
-  {
-    scr->screen = m_Silverback->createScreen(vp, atlas);
-    map_Screens[name] = scr;
-  }
-
-  return scr->screen;
-}
-
-Gorilla::Layer* SystemGUI::createLayer(std::string layer, std::string screen)
-{
-  Gorilla::Layer* lyr = getLayer(layer, screen);
-
-  if (lyr != nullptr) 
-  {
-    return lyr;
-  }
-
-  if (getScreen(screen) != nullptr) 
-  {
-    map_Screens[screen]->layers[layer] = 
-      getScreen(screen)->createLayer(map_Screens[screen]->layers.size());
-
-    return map_Screens[screen]->layers[layer];
-  }
-
-  return nullptr;
-}
-
-Gorilla::Layer* SystemGUI::createLayer(string layer, Gorilla::Screen* screen)
-{
-  Gorilla::Layer* lyr = getLayer(layer, screen);
-
-  if (lyr != nullptr) 
-  {
-    return lyr;
-  }
-
-  map<string, Screen*>::iterator i;
-  for (i = map_Screens.begin(); i != map_Screens.end(); i++) 
-  {
-    if (i->second->screen == screen) 
-    {
-      i->second->layers[layer] = 
-        i->second->screen->createLayer(i->second->layers.size());
-
-      return i->second->layers[layer];
-    }
-  }
-
-  return nullptr;
+  return gui;
 }
 
 /*****************************************************************************
@@ -181,33 +115,11 @@ Gorilla::Silverback* SystemGUI::getSilverback()
   return m_Silverback;
 }
 
-Gorilla::Screen* SystemGUI::getScreen(string name)
+UI_GUI* SystemGUI::getGUI(string name)
 {
-  if (map_Screens[name] != nullptr) 
+  if (map_GUI[name] != nullptr) 
   {
-    return map_Screens[name]->screen;
-  }
-
-  return nullptr;
-}
-
-Gorilla::Layer* SystemGUI::getLayer(string layer, string screen)
-{
-  if (map_Screens[screen] != nullptr) 
-  {
-    return map_Screens[screen]->layers[layer];
-  }
-
-  return nullptr;
-}
-
-Gorilla::Layer* SystemGUI::getLayer(std::string layer, Gorilla::Screen* screen)
-{
-  map<std::string, Screen*>::iterator i;
-
-  for (i = map_Screens.begin(); i != map_Screens.end(); i++) 
-  {
-    return getLayer(layer, i->first);
+    return map_GUI[name];
   }
 
   return nullptr;
@@ -216,10 +128,121 @@ Gorilla::Layer* SystemGUI::getLayer(std::string layer, Gorilla::Screen* screen)
 /*****************************************************************************
 *****************************************************************************/
 
-void SystemGUI::connectOgre(Ogre::Viewport* viewport)
+bool SystemGUI::keyPressed(const OIS::KeyEvent &e)
 {
-  m_Viewport = viewport;
+  return true;
 }
+  
+bool SystemGUI::keyReleased(const OIS::KeyEvent &e)
+{   
+  return true;
+}
+  
+bool SystemGUI::mouseMoved(const OIS::MouseEvent &arg)
+{
+  return true;
+}
+  
+bool SystemGUI::mousePressed(
+  const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+{
+  return true;
+}
+  
+bool SystemGUI::mouseReleased(
+  const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+{
+  return true;
+}
+
+/*****************************************************************************
+*****************************************************************************/
+
+//Menu::Menu(string name, string atlas, string bgImage, Vector2 dimensions, 
+//  GUI* gui, Ogre::Viewport* viewport)
+//{
+//  str_Name = name;
+//
+//  if (!gui)
+//  {
+//    return;
+//  }
+//
+//  m_Screen = gui->createScreen("GUI_SCREEN_MENU_" + name, atlas, viewport);
+//  m_Layer = gui->createLayer("GUI_LAYER_MENU_" + name, m_Screen);
+//	
+//	m_vSize = Ogre::Vector2(dimensions.x, dimensions.y);
+//	m_vPosition = Ogre::Vector2(
+//    m_Screen->getWidth() / 2 - m_vSize.x / 2, 
+//    m_Screen->getHeight() / 2 - m_vSize.y / 2);
+//	//m_vButtonOffset = Ogre::Vector2(60,135);
+//	//m_vButtonSize = Ogre::Vector2(275,60);
+//	
+//	m_Background = m_Layer->createRectangle(m_vPosition, m_vSize);
+//	m_Background->background_image(bgImage);
+//	
+//	//m_Exit = new GUI::Button();
+//	//m_Exit->background = m_Layer->createRectangle(
+// //   m_vPosition + m_vButtonOffset + Ogre::Vector2(0, m_vButtonSize.y) * 2, 
+// //   m_vButtonSize);
+//	//m_Exit->img_base = "quickmenu_exit";
+//	//m_Exit->img_hover = "quickmenu_exit_hover";
+//	//m_Exit->hover(false);
+//
+//	setVisible(false);
+//}
+//
+//void Menu::setVisible(bool value)
+//{
+//	m_Layer->setVisible(value);
+//	b_isVisible = value;
+//}
+//
+//bool Menu::mouseDown(unsigned int x, unsigned int y, OIS::MouseButtonID id)
+//{
+//  if (m_Background->intersects(Ogre::Vector2(x, y)) && isVisible())
+//  {
+//    return false;
+//  }
+//
+//	return true;
+//}
+//
+//bool Menu::mouseUp(unsigned int x, unsigned int y, OIS::MouseButtonID id)
+//{
+//	/*if(id == OIS::MB_Left && isVisible())
+//	{
+//    if (isOver(Ogre::Vector2(x, y), m_Exit))
+//    {
+//      if (m_Listener != nullptr)
+//      {
+//        m_Listener->MenuExit();
+//      }
+//
+//			return false;
+//		}
+//	}*/
+//
+//  if (m_Background->intersects(Ogre::Vector2(x, y)) && isVisible())
+//  {
+//    return false;
+//  }
+//
+//	return true;
+//}
+//
+//void Menu::mouseMoved(unsigned int x, unsigned int y)
+//{
+//	//isOver(Ogre::Vector2(x, y), m_Exit);	
+//}
+//
+//bool Menu::isOver(Ogre::Vector2 pos, GUI::Button *button)
+//{
+//	bool result = button->background->intersects(pos);
+//	button->hover(result);
+//
+//	return result;
+//}
 
 /*****************************************************************************
 *****************************************************************************/

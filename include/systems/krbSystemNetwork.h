@@ -11,7 +11,7 @@
 /**
 * @file   krbSystemNetwork.h
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   26 December 2014
 * @brief  Network system
 *
 * @details
@@ -34,8 +34,7 @@
 /*****************************************************************************
 *****************************************************************************/
 
-namespace Kerberos
-{
+namespace Kerberos {
 
 /*****************************************************************************
 *****************************************************************************/
@@ -43,11 +42,16 @@ namespace Kerberos
 //
 //! \brief Network system (currently empty)
 //
-class SystemNetwork final : public System
+class SystemNetwork final : 
+  public System, 
+  public Ogre::Singleton<SystemNetwork>
 {
 public:
   SystemNetwork(Config* config, Logger* log);
   ~SystemNetwork();
+
+  static SystemNetwork& getSingleton();
+  static SystemNetwork* getSingletonPtr();
 
   void init();
   void cycle();

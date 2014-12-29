@@ -1,4 +1,38 @@
-import * from "base.material"
+///////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+///////////////////////////////////////////////////////////////////////////////
+
+material bullet_debug_lines
+{
+  technique
+  {
+    pass
+    {
+      lighting off
+
+      diffuse 1 1 1
+    }
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+material white_no_light
+{
+  receive_shadows off
+
+  technique
+  {
+    pass
+    {
+      lighting off
+
+      diffuse 1 1 1
+    }
+  }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -10,9 +44,21 @@ material grid
   {
     pass
     {
-      ambient       0.0 0.0 0.0 1.0
-      diffuse       0.0 0.0 0.0 1.0
-      emissive      0.1 0.1 0.12 1.0
+      emissive 0.2 0.2 0.2 1.0
+    }
+  }
+}
+
+material world_plane
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture "internal/world_plane.png"
+      }
     }
   }
 }

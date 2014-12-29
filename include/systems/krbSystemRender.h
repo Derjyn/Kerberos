@@ -11,7 +11,7 @@
 /**
 * @file   krbSystemRender.h
 * @author Nathan Harris
-* @date   23 December 2014
+* @date   26 December 2014
 * @brief  Rendering system
 *
 * @details
@@ -62,6 +62,11 @@ namespace Ogre
   class Viewport;
 }
 
+namespace ParticleUniverse
+{
+  class ParticleSystemManager;
+}
+
 /*****************************************************************************
 *****************************************************************************/
 
@@ -76,22 +81,28 @@ class Logger;
 //
 //! \brief Render system, utilizing Ogre
 //
-class SystemRender final : public System, 
+class SystemRender final : 
+  public System, 
   public Ogre::FrameListener,
-  public Ogre::RenderTargetListener
+  public Ogre::RenderTargetListener, 
+  public Ogre::Singleton<SystemRender>
 {
 public:
   SystemRender(Config* config, Logger* log);
   ~SystemRender();
 
+  static SystemRender& getSingleton();
+  static SystemRender* getSingletonPtr();
+
   void init();
-  void cycle();
+  void cycle(float delta);
   void halt();
 
   void loadResources();
 
   void setActiveCam(Ogre::Camera* camera);
 
+  // GETTERS
   Ogre::RenderSystem*     getRenderer();
   Ogre::RenderWindow*     getWindow();
   Ogre::Viewport*         getViewport();
@@ -114,10 +125,11 @@ protected:
   Ogre::SceneNode*        m_CamNode;
   float                   f_LastFrameTime;
 
-  // HANDY POINTERS
   Ogre::MaterialManager*        m_MatMgr;
   Ogre::TextureManager*         m_TexMgr;
   Ogre::ResourceGroupManager*   m_ResMgr;
+
+  ParticleUniverse::ParticleSystemManager*  m_PUSysMgr;
 
   virtual bool frameStarted(const Ogre::FrameEvent& evt);
   virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);

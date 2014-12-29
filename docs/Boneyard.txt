@@ -1,0 +1,6 @@
+Since I'm using VS Express, I have to use this little bit to get a line count:
+
+Ctrl+Shift+F
+Find what: ^(?([^\r\n])\s)*[^\s+?/]+[^\n]*$
+Look in: current solution
+Find options-> [x] Use regular expressions, Look at common C++ filetypes

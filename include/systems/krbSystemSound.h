@@ -11,7 +11,7 @@
 /**
 * @file   krbSystemSound.h
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   26 December 2014
 * @brief  Sound system
 *
 * @details
@@ -48,11 +48,16 @@ namespace Kerberos {
 //
 //! \brief Sound system, utilizing FMOD
 //
-class SystemSound final : public System
+class SystemSound final : 
+  public System, 
+  public Ogre::Singleton<SystemSound>
 {
 public:
   SystemSound(Config* config, Logger* log);
   ~SystemSound();
+
+  static SystemSound& getSingleton();
+  static SystemSound* getSingletonPtr();
 
   void init();
   void cycle();

@@ -11,7 +11,7 @@
 /**
 * @file   krbSystemPhysics.h
 * @author Nathan Harris
-* @date   23 December 2014
+* @date   26 December 2014
 * @brief  Physics system
 *
 * @details
@@ -29,32 +29,15 @@
 /*****************************************************************************
 *****************************************************************************/
 
-#define CUSTOM_PHYS_CONF  // COMMENT OUT TO BRING BULLET DOWN TO DEFAULTS
-
-/*****************************************************************************
-*****************************************************************************/
-
 #include "systems/krbSystem.h"
+#include "utility/krbMath.h"
 
-#ifdef CUSTOM_PHYS_CONF
-#include "Bullet/BulletDynamics/ConstraintSolver/btContactSolverInfo.h"
-#include "Bullet/BulletCollision/BroadphaseCollision/btDispatcher.h"
-#endif
+#include "BtOgre/BtOgrePG.h"
+#include "BtOgre/BtOgreGP.h"
+#include "BtOgre/BtOgreExtras.h"
 
 /*****************************************************************************
 *****************************************************************************/
-
-class btBroadphaseInterface;
-class btCollisionDispatcher;
-class btDefaultCollisionConfiguration;
-class btDynamicsWorld;
-class btSequentialImpulseConstraintSolver;
-class btRigidBody;
-
-namespace BtOgre
-{
-  class DebugDrawer;
-}
 
 namespace Ogre
 {
@@ -73,44 +56,45 @@ namespace Kerberos {
 //
 //! \brief Physics system
 //
-class SystemPhysics final : public System
+class SystemPhysics final : 
+  public System, 
+  public Ogre::Singleton<SystemPhysics>
 {
 public:
   SystemPhysics(Config* config, Logger* log);
   ~SystemPhysics();
 
+  static SystemPhysics& getSingleton();
+  static SystemPhysics* getSingletonPtr();
+
   void init();
   void cycle(float delta, float rate, bool paused);
   void halt();
 
-  void connectOgre(Ogre::SceneManager* sceneMgr);
   void toggleDebug();
 
-  btDynamicsWorld*      getBulletWorld();
-  float                 getPhysicsRate();
+  void createBody(string name, string mesh, Vector3 pos);
+
+  float getPhysicsRate();
+  btDynamicsWorld* getPhysWorld() { return m_PhysWorld; }
 
 protected:
   bool    b_DebugOn;
+  bool    b_InfinitePlane;
   float   f_PhysicsRate;
   int     i_PhysicsSteps;
+  float   f_Gravity;
 
-  Ogre::SceneManager*   m_SceneMgr;
-  Ogre::SceneNode*      m_WorldNode;
+  Ogre::SceneManager*     m_SceneMgr;
+  Ogre::SceneNode*        m_WorldNode;
 
-  btDynamicsWorld*      m_BulletWorld;
-  BtOgre::DebugDrawer*  m_BulletDrawer;
+  btDynamicsWorld*        m_PhysWorld;
+  BtOgre::DebugDrawer*    m_PhysDebug;
 
-  btBroadphaseInterface* m_Broadphase;
-  btCollisionDispatcher* m_Dispatcher;
-  btDefaultCollisionConfiguration* m_CollisionConfig;
-  btSequentialImpulseConstraintSolver* m_Solver;
-
-  btRigidBody*          m_PlaneRB;
-
-#ifdef CUSTOM_PHYS_CONF
-  btContactSolverInfo   m_SolverInfo;
-  btDispatcherInfo      m_DispInfo;
-#endif
+  btDbvtBroadphase*                     m_PhysBroadphase;
+	btDefaultCollisionConfiguration*      m_PhysCollisionConfig;
+	btCollisionDispatcher*                m_PhysDispatcher;
+	btSequentialImpulseConstraintSolver*  m_PhysSolver;
 
 private:
   void parseConfig();

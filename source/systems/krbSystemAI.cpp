@@ -11,10 +11,10 @@
 /**
 * @file   krbSystemAI.cpp
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   26 December 2014
 * @brief  AI system
 *
-* @description
+* @details
 *  Coming soon to a code file near you...
 */
 
@@ -22,15 +22,13 @@
 *****************************************************************************/
 
 #include "systems/krbSystemAI.h"
-#include "core/krbConfig.h"
-#include "core/krbClock.h"
-#include "core/krbLogger.h"
 
 /*****************************************************************************
 *****************************************************************************/
 
-namespace Kerberos
-{
+template<> Kerberos::SystemAI* Ogre::Singleton<Kerberos::SystemAI>::msSingleton = 0;
+
+namespace Kerberos {
 
 /*****************************************************************************
 *****************************************************************************/
@@ -49,6 +47,15 @@ SystemAI::~SystemAI()
 {
   m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
     str_Name + ": Almost got all your bases :/");
+}
+
+SystemAI* SystemAI::getSingletonPtr(void)
+{
+    return msSingleton;
+}
+SystemAI& SystemAI::getSingleton(void)
+{  
+    return (*msSingleton);  
 }
 
 /*****************************************************************************

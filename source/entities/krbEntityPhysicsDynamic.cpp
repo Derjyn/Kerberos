@@ -11,7 +11,7 @@
 /**
 * @file   krbEntityPhysicsDynamic.cpp
 * @author Nathan Harris
-* @date   22 December 2014
+* @date   26 December 2014
 * @brief  Dynamic physics entity
 *
 * @details
@@ -22,6 +22,10 @@
 *****************************************************************************/
 
 #include "entities/krbEntityPhysicsDynamic.h"
+#include "systems/krbSystemPhysics.h"
+#include "systems/krbSystemRender.h"
+
+#include "Ogre3D/OgreEntity.h"
 
 /*****************************************************************************
 *****************************************************************************/
@@ -31,9 +35,8 @@ namespace Kerberos {
 /*****************************************************************************
 *****************************************************************************/
 
-EntityPhysicsDynamic::EntityPhysicsDynamic(string name, string mesh,
-  int maxAge, float createTime, float mass, Vector3 position,
-  Ogre::SceneManager* sceneMgr, btDynamicsWorld* world)
+EntityPhysicsDynamic::EntityPhysicsDynamic(string name, string mesh, float mass,
+    int maxAge, float createTime, Vector3 position)
 {
   str_Name      = name;
   f_Age         = 0;
@@ -41,31 +44,36 @@ EntityPhysicsDynamic::EntityPhysicsDynamic(string name, string mesh,
   f_CreateTime  = createTime;
   f_MassKg      = mass;
   ent_Position  = position;
-  m_SceneMgr    = sceneMgr;
-  m_BulletWorld = world;
+  m_SceneMgr    = SystemRender::getSingletonPtr()->getSceneManager();
+  m_PhysWorld   = SystemPhysics::getSingletonPtr()->getPhysWorld();
 
-  // Create Ogre entity.
-  ent_Mesh = m_SceneMgr->createEntity(str_Name, mesh);
+  // CREATE MESH
+  m_SceneMgr->createEntity(str_Name, mesh);
 
-  // Convert to shape (and set some options).
-  BtOgre::StaticMeshToShapeConverter converter(ent_Mesh);
-  ent_ShapeConvex = converter.createConvex();
-
-  // Calculate intertia. Need to experiment with this.
-  btVector3 inertia;
-  ent_ShapeConvex->calculateLocalInertia(f_MassKg, inertia);
-
-  // Create node and attach mesh.
-  ent_Node = m_SceneMgr->getRootSceneNode()->createChildSceneNode(
+  // ATTACH TO NODE
+  m_SceneMgr->getRootSceneNode()->createChildSceneNode(
     "NODE_" + str_Name, toOgre(ent_Position));
-  ent_Node->attachObject(ent_Mesh);
+  m_SceneMgr->getSceneNode("NODE_" + str_Name)->attachObject
+    (m_SceneMgr->getEntity(str_Name));
 
-  // Connect Ogre node to Bullet.
-  ent_State = new BtOgre::RigidBodyState(ent_Node);
+  // CREATE RIGID BODY STATE
+  ent_State = new BtOgre::RigidBodyState(
+    m_SceneMgr->getSceneNode("NODE_" + str_Name));
 
-  // Create rigid body and add it to the physics world.
-  ent_Body = new btRigidBody(f_MassKg, ent_State, ent_ShapeConvex, inertia);  
-  m_BulletWorld->addRigidBody(ent_Body);
+  // CONVERT TO BULLET CONVEX SHAPE
+  BtOgre::StaticMeshToShapeConverter converter(
+    m_SceneMgr->getEntity(str_Name));
+  ent_HullConvex = converter.createConvex();
+
+  // CALCULATE INERTIA
+  btVector3 vec_Intertia;
+  ent_HullConvex->calculateLocalInertia(f_MassKg, vec_Intertia);
+
+  // CREATE BULLET RIGID BODY AND ADD TO WORLD
+  ent_Body = new btRigidBody(f_MassKg, ent_State, ent_HullConvex, vec_Intertia);
+  ent_Body->setFriction(Ogre::Math::RangeRandom(0.52f, 0.54f));
+  ent_Body->setRestitution(Ogre::Math::RangeRandom(0.26f, 0.27f));
+  m_PhysWorld->addRigidBody(ent_Body);
 }
 
 /*****************************************************************************
@@ -73,27 +81,14 @@ EntityPhysicsDynamic::EntityPhysicsDynamic(string name, string mesh,
 
 EntityPhysicsDynamic::~EntityPhysicsDynamic()
 {
-  m_BulletWorld->removeRigidBody(ent_Body);
+  m_PhysWorld->removeRigidBody(ent_Body);
   delete ent_Body;
-  delete ent_ShapeConvex;
+  delete ent_HullConvex;
   delete ent_State;
 
   ent_Node->detachAllObjects();
-  delete ent_Mesh;
   delete ent_Node;
-}
-
-/*****************************************************************************
-*****************************************************************************/
-
-void EntityPhysicsDynamic::lockAxisLinear(Vector3 axis)
-{
-  ent_Body->setLinearFactor(toBullet(axis));
-}
-
-void EntityPhysicsDynamic::lockAxisAngular(Vector3 axis)
-{
-  ent_Body->setAngularFactor(toBullet(axis));
+  delete ent_Mesh;
 }
 
 /*****************************************************************************

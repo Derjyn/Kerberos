@@ -12,7 +12,7 @@
 /**
 * @file   krbMath.h
 * @author Nathan Harris
-* @date   19 December 2014
+* @date   26 December 2014
 * @brief  Helpful maths
 *
 * @description

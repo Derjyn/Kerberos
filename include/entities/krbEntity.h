@@ -11,7 +11,7 @@
 /**
 * @file   krbEntity.h
 * @author Nathan Harris
-* @date   22 December 2014
+* @date   25 December 2014
 * @brief  Base class for entities
 *
 * @details
@@ -105,6 +105,11 @@ public:
     i_MaxAge = age;
   }
 
+  virtual void setTimeScale(float scale)
+  {
+    f_TimeScale = scale;
+  }
+
   // GETTERS //////////////////////////////////////////////////////////////////
 
   inline string getName() 
@@ -144,6 +149,7 @@ protected:
   float                   f_CreateTime;
   unsigned int            i_MaxAge;
   float                   f_Speed;
+  float                   f_TimeScale;
 
   Ogre::SceneManager*     m_SceneMgr;
   Ogre::SceneNode*        m_WorldNode;

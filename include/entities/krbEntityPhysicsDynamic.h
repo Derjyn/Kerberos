@@ -11,7 +11,7 @@
 /**
 * @file   krbEntityPhysicsDynamic.h
 * @author Nathan Harris
-* @date   22 December 2014
+* @date   26 December 2014
 * @brief  Dynamic physics entity
 *
 * @details
@@ -45,16 +45,10 @@ namespace Kerberos {
 class EntityPhysicsDynamic : public EntityPhysics
 {
 public:
-  EntityPhysicsDynamic(string name, string mesh,
-    int maxAge, float createTime, float mass, Vector3 position,
-    Ogre::SceneManager* sceneMgr, btDynamicsWorld* world);
+  EntityPhysicsDynamic(string name, string mesh,float mass,
+    int maxAge, float createTime, Vector3 position);
 
   ~EntityPhysicsDynamic();
-
-  void lockAxisLinear(Vector3 axis);
-  void lockAxisAngular(Vector3 axis);
-
-protected:
 };
 
 /*****************************************************************************

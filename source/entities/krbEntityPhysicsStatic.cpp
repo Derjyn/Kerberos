@@ -11,7 +11,7 @@
 /**
 * @file   krbEntityPhysicsStatic.cpp
 * @author Nathan Harris
-* @date   22 December 2014
+* @date   26 December 2014
 * @brief  Static physics entity. Good for solid scene meshes.
 *
 * @details
@@ -22,6 +22,10 @@
 *****************************************************************************/
 
 #include "entities/krbEntityPhysicsStatic.h"
+#include "systems/krbSystemPhysics.h"
+#include "systems/krbSystemRender.h"
+
+#include "Ogre3D/OgreEntity.h"
 
 /*****************************************************************************
 *****************************************************************************/
@@ -32,8 +36,7 @@ namespace Kerberos {
 *****************************************************************************/
 
 EntityPhysicsStatic::EntityPhysicsStatic(string name, string mesh,
-    int maxAge, float createTime, Vector3 position,
-    Ogre::SceneManager* sceneMgr, btDynamicsWorld* world)
+    int maxAge, float createTime, Vector3 position)
 {
   str_Name      = name;
   f_Age         = 0;
@@ -41,19 +44,19 @@ EntityPhysicsStatic::EntityPhysicsStatic(string name, string mesh,
   f_CreateTime  = createTime;
   f_MassKg      = 0;
   ent_Position  = position;
-  m_SceneMgr    = sceneMgr;
-  m_BulletWorld = world;
+  m_SceneMgr    = SystemRender::getSingletonPtr()->getSceneManager();
+  m_PhysWorld   = SystemPhysics::getSingletonPtr()->getPhysWorld();
 
   // Create Ogre entity.
   ent_Mesh = m_SceneMgr->createEntity(str_Name, mesh);
 
   // Convert to shape (and set some options).
   BtOgre::StaticMeshToShapeConverter converter(ent_Mesh);
-  ent_ShapeTrimesh = converter.createTrimesh();
+  ent_HullTrimesh = converter.createTrimesh();
 
   // Calculate intertia. Need to experiment with this.
   btVector3 inertia;
-  ent_ShapeTrimesh->calculateLocalInertia(f_MassKg, inertia);
+  ent_HullTrimesh->calculateLocalInertia(f_MassKg, inertia);
 
   // Create node and attach mesh.
   ent_Node = m_SceneMgr->getRootSceneNode()->createChildSceneNode(
@@ -64,8 +67,8 @@ EntityPhysicsStatic::EntityPhysicsStatic(string name, string mesh,
   ent_State = new BtOgre::RigidBodyState(ent_Node);
 
   // Create rigid body and add it to the physics world.
-  ent_Body = new btRigidBody(f_MassKg, ent_State, ent_ShapeTrimesh, inertia);  
-  m_BulletWorld->addRigidBody(ent_Body);
+  ent_Body = new btRigidBody(f_MassKg, ent_State, ent_HullTrimesh, inertia);  
+  m_PhysWorld->addRigidBody(ent_Body);
 }
 
 /*****************************************************************************
@@ -73,9 +76,9 @@ EntityPhysicsStatic::EntityPhysicsStatic(string name, string mesh,
 
 EntityPhysicsStatic::~EntityPhysicsStatic()
 {
-  m_BulletWorld->removeRigidBody(ent_Body);
+  m_PhysWorld->removeRigidBody(ent_Body);
   delete ent_Body;
-  delete ent_ShapeTrimesh;
+  delete ent_HullTrimesh;
   delete ent_State;
 
   ent_Node->detachAllObjects();

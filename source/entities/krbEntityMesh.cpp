@@ -38,7 +38,7 @@ EntityMesh::EntityMesh(string name, string mesh, float scale,
 {
   str_Name    = name;
   m_SceneMgr  = scenemgr;
-  m_WorldNode = m_SceneMgr->getSceneNode("WORLD_NODE");
+  m_WorldNode = m_SceneMgr->getRootSceneNode();
 
   ent_Mesh = m_SceneMgr->createEntity(name, mesh);
 

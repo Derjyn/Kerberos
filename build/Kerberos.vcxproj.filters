@@ -37,6 +37,12 @@
     <Filter Include="Source Files\Dependencies">
       <UniqueIdentifier>{f58bc5f5-94e4-4417-bb4f-5183055ecc7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Systems\GUI">
+      <UniqueIdentifier>{81a853de-1261-445e-b1d1-e3982889ae6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Documentation">
+      <UniqueIdentifier>{778ed354-a69f-4087-9811-c76b68a453c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\Kerberos.cpp">
@@ -96,10 +102,16 @@
     <ClCompile Include="..\source\entities\krbEntityPhysicsStatic.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Resources\Development\Libraries\include\BtOgre\BtOgre.cpp">
+    <ClCompile Include="..\..\..\Resources\Development\Libraries\include\Gorilla\Gorilla.cpp">
       <Filter>Source Files\Dependencies</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Resources\Development\Libraries\include\Gorilla\Gorilla.cpp">
+    <ClCompile Include="..\source\entities\krbEntityParticleEmitter.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\krbLab.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Resources\Development\Libraries\include\Monkey\Monkey.cpp">
       <Filter>Source Files\Dependencies</Filter>
     </ClCompile>
   </ItemGroup>
@@ -158,9 +170,6 @@
     <ClInclude Include="..\include\systems\krbSystemAI.h">
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\systems\krbSystemGUI.h">
-      <Filter>Header Files\Systems</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\entities\krbEntityCamera.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
@@ -179,10 +188,36 @@
     <ClInclude Include="..\include\entities\krbEntityPhysicsStatic.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\entities\krbEntityParticleEmitter.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\krbLab.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\systems\krbSystemGUI.h">
+      <Filter>Header Files\Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\systems\gui\krbUI_Button.h">
+      <Filter>Header Files\Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\systems\gui\krbUI_GUI.h">
+      <Filter>Header Files\Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\systems\gui\krbUI_Menu.h">
+      <Filter>Header Files\Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\systems\gui\krbUI_Screen.h">
+      <Filter>Header Files\Systems\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="resources\resources.res">
       <Filter>Resource Files</Filter>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\docs\Boneyard.txt">
+      <Filter>Documentation</Filter>
+    </Text>
   </ItemGroup>
 </Project>

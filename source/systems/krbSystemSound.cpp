@@ -11,10 +11,10 @@
 /**
 * @file   krbSystemSound.cpp
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   26 December 2014
 * @brief  Sound system
 *
-* @description
+* @details
 *  Coming soon to a code file near you...
 */
 
@@ -22,16 +22,14 @@
 *****************************************************************************/
 
 #include "systems/krbSystemSound.h"
-#include "core/krbConfig.h"
-#include "core/krbClock.h"
-#include "core/krbLogger.h"
 
 /*****************************************************************************
 *****************************************************************************/
 
-namespace Kerberos
-{
+template<> Kerberos::SystemSound* Ogre::Singleton<Kerberos::SystemSound>::msSingleton = 0;
 
+namespace Kerberos {
+  
 /*****************************************************************************
 *****************************************************************************/
 
@@ -52,6 +50,15 @@ SystemSound::~SystemSound()
 {
   m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
     str_Name + ": Holler if you need me.");
+}
+
+SystemSound* SystemSound::getSingletonPtr(void)
+{
+    return msSingleton;
+}
+SystemSound& SystemSound::getSingleton(void)
+{  
+    return (*msSingleton);  
 }
 
 /*****************************************************************************

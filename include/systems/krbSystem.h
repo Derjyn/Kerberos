@@ -11,7 +11,7 @@
 /**
 * @file   krbSystem.h
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   26 December 2014
 * @brief  Base class for systems
 *
 * @details
@@ -28,6 +28,12 @@
 
 /*****************************************************************************
 *****************************************************************************/
+
+#include "core/krbConfig.h"
+#include "core/krbClock.h"
+#include "core/krbLogger.h"
+
+#include <OgreSingleton.h>
 
 #include <string>
 using namespace std;

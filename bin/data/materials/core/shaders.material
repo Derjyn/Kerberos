@@ -4,10 +4,26 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-import * from "base.material"
+vertex_program fog_v glsl
+{
+  source fog_v.glsl
 
-///////////////////////////////////////////////////////////////////////////////
+  default_params
+  {
+    param_named_auto proj projection_matrix
+    param_named_auto view worldview_matrix
+  }
+}
+fragment_program fog_f glsl
+{
+  source fog_f.glsl
 
+  default_params
+  {
+    param_named_auto fog_color fog_colour
+    param_named_auto fog_props fog_params
+  }
+}
 material shader/fog
 {
   technique

@@ -69,7 +69,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\include;E:\Resources\Development\Libraries\include;E:\Resources\Development\Libraries\include\Bullet;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;E:\Resources\Development\Libraries\include;E:\Resources\Development\Libraries\include\Ogre3D;E:\Resources\Development\Libraries\include\ParticleUniverse;e:\Resources\Development\Libraries\include\Bullet;E:\Resources\Development\Libraries\include\BtOgre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4098;4244;4316</DisableSpecificWarnings>
       <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
@@ -80,12 +80,12 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>E:\Resources\Development\Libraries\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
-      <AdditionalDependencies>OgreMain.lib;OIS.lib;fmodex_vc.lib;BulletDynamics.lib;BulletCollision.lib;BulletLinearMath.lib;BulletMultiThreaded.lib;BulletSoftBody.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain.lib;OIS.lib;fmodex_vc.lib;ParticleUniverse.lib;BtOgre.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Resources\Development\Libraries\include\BtOgre\BtOgre.cpp" />
     <ClCompile Include="..\..\..\Resources\Development\Libraries\include\Gorilla\Gorilla.cpp" />
+    <ClCompile Include="..\..\..\Resources\Development\Libraries\include\Monkey\Monkey.cpp" />
     <ClCompile Include="..\source\core\krbBrain.cpp" />
     <ClCompile Include="..\source\core\krbConfig.cpp" />
     <ClCompile Include="..\source\core\krbLogger.cpp" />
@@ -93,9 +93,11 @@
     <ClCompile Include="..\source\entities\krbEntityCamera.cpp" />
     <ClCompile Include="..\source\entities\krbEntityLight.cpp" />
     <ClCompile Include="..\source\entities\krbEntityMesh.cpp" />
+    <ClCompile Include="..\source\entities\krbEntityParticleEmitter.cpp" />
     <ClCompile Include="..\source\entities\krbEntityPhysicsDynamic.cpp" />
     <ClCompile Include="..\source\entities\krbEntityPhysicsStatic.cpp" />
     <ClCompile Include="..\source\Kerberos.cpp" />
+    <ClCompile Include="..\source\krbLab.cpp" />
     <ClCompile Include="..\source\systems\krbSystemAI.cpp" />
     <ClCompile Include="..\source\systems\krbSystemGUI.cpp" />
     <ClCompile Include="..\source\systems\krbSystemInput.cpp" />
@@ -115,10 +117,16 @@
     <ClInclude Include="..\include\entities\krbEntityCamera.h" />
     <ClInclude Include="..\include\entities\krbEntityLight.h" />
     <ClInclude Include="..\include\entities\krbEntityMesh.h" />
+    <ClInclude Include="..\include\entities\krbEntityParticleEmitter.h" />
     <ClInclude Include="..\include\entities\krbEntityPhysics.h" />
     <ClInclude Include="..\include\entities\krbEntityPhysicsDynamic.h" />
     <ClInclude Include="..\include\entities\krbEntityPhysicsStatic.h" />
     <ClInclude Include="..\include\Kerberos.h" />
+    <ClInclude Include="..\include\krbLab.h" />
+    <ClInclude Include="..\include\systems\gui\krbUI_Button.h" />
+    <ClInclude Include="..\include\systems\gui\krbUI_GUI.h" />
+    <ClInclude Include="..\include\systems\gui\krbUI_Menu.h" />
+    <ClInclude Include="..\include\systems\gui\krbUI_Screen.h" />
     <ClInclude Include="..\include\systems\krbSystem.h" />
     <ClInclude Include="..\include\systems\krbSystemAI.h" />
     <ClInclude Include="..\include\systems\krbSystemGUI.h" />
@@ -135,6 +143,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="resources\resources.res" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\docs\Boneyard.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

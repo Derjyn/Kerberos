@@ -11,10 +11,10 @@
 /**
 * @file   krbSystemNetwork.cpp
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   26 December 2014
 * @brief  Network system
 *
-* @description
+* @details
 *  Coming soon to a code file near you...
 */
 
@@ -22,15 +22,13 @@
 *****************************************************************************/
 
 #include "systems/krbSystemNetwork.h"
-#include "core/krbConfig.h"
-#include "core/krbClock.h"
-#include "core/krbLogger.h"
 
 /*****************************************************************************
 *****************************************************************************/
 
-namespace Kerberos
-{
+template<> Kerberos::SystemNetwork* Ogre::Singleton<Kerberos::SystemNetwork>::msSingleton = 0;
+
+namespace Kerberos {
 
 /*****************************************************************************
 *****************************************************************************/
@@ -49,6 +47,15 @@ SystemNetwork::~SystemNetwork()
 {
   m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
     str_Name + ": I'll leave my packets here then.");
+}
+
+SystemNetwork* SystemNetwork::getSingletonPtr(void)
+{
+    return msSingleton;
+}
+SystemNetwork& SystemNetwork::getSingleton(void)
+{  
+    return (*msSingleton);  
 }
 
 /*****************************************************************************

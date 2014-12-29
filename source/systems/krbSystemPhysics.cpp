@@ -11,10 +11,10 @@
 /**
 * @file   krbSystemPhysics.cpp
 * @author Nathan Harris
-* @date   23 December 2014
+* @date   26 December 2014
 * @brief  Physics system
 *
-* @description
+* @details
 *  Coming soon to a code file near you...
 */
 
@@ -22,12 +22,7 @@
 *****************************************************************************/
 
 #include "systems/krbSystemPhysics.h"
-#include "core/krbConfig.h"
-#include "core/krbClock.h"
-#include "core/krbLogger.h"
-
-#include "BtOgre/BtOgreGP.h"
-#include "BtOgre/BtOgrePG.h"
+#include "systems/krbSystemRender.h"
 
 #include "Ogre3D/OgreSceneManager.h"
 #include "Ogre3D/OgreSceneNode.h"
@@ -35,7 +30,12 @@
 /*****************************************************************************
 *****************************************************************************/
 
+template<> Kerberos::SystemPhysics* Ogre::Singleton<Kerberos::SystemPhysics>::msSingleton = 0;
+
 namespace Kerberos {
+
+SystemPhysics* SystemPhysics::getSingletonPtr(void) { return msSingleton; }
+SystemPhysics& SystemPhysics::getSingleton(void)    { return (*msSingleton); }
 
 /*****************************************************************************
 *****************************************************************************/
@@ -46,6 +46,7 @@ SystemPhysics::SystemPhysics(Config* config, Logger* log)
   m_Config  = config;
   m_Log     = log;
   b_DebugOn = false;
+  b_InfinitePlane = false;
 
   m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
     str_Name + ": Gravity check good!");
@@ -53,14 +54,6 @@ SystemPhysics::SystemPhysics(Config* config, Logger* log)
 
 SystemPhysics::~SystemPhysics()
 {
-  delete m_BulletDrawer;
-  delete m_BulletWorld;
-
-  delete m_Solver;
-  delete m_Dispatcher;
-  delete m_Broadphase;
-  delete m_CollisionConfig;
-
   m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
     str_Name + ": Don't cry to me, if you fall.");
 }
@@ -72,60 +65,70 @@ void SystemPhysics::init()
 {
   parseConfig();
 
-  // BULLET SETUP
-  m_Broadphase      = new btDbvtBroadphase();
-  m_CollisionConfig = new btDefaultCollisionConfiguration();
-  m_Dispatcher      = new btCollisionDispatcher(m_CollisionConfig);
-  m_Solver          = new btSequentialImpulseConstraintSolver();
+  m_SceneMgr  = SystemRender::getSingletonPtr()->getSceneManager();
+  m_WorldNode = m_SceneMgr->getRootSceneNode();
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Connected to Ogre");
 
-  m_BulletWorld = new btDiscreteDynamicsWorld(
-    m_Dispatcher, m_Broadphase, m_Solver, m_CollisionConfig);
-  m_BulletWorld->setGravity(btVector3(0, -9.80712f, 0));
+  m_PhysBroadphase = new btDbvtBroadphase();
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Broadphase created");
 
-/*****************************************************************************/
-#ifdef CUSTOM_PHYS_CONF
-  // SET SOME SOLVER OPTIONS
-  m_SolverInfo = m_BulletWorld->getSolverInfo();
-  m_SolverInfo.m_solverMode = SOLVER_USE_WARMSTARTING | SOLVER_SIMD;
-  m_SolverInfo.m_numIterations = 8; // LOWER IS FASTER/LESS ACCURATE (DEFAULT: 10)
-  //m_SolverInfo.m_splitImpulse = true;
-  //m_SolverInfo.m_splitImpulsePenetrationThreshold = -0.03f;
-  //m_SolverInfo.m_timeStep = f_PhysicsRate;
-  //m_SolverInfo.m_restitution = 0.6f;
+	m_PhysCollisionConfig = new btDefaultCollisionConfiguration();
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Collision config created");
 
-  // SET SOME DISPATCHER OPTIONS
-  m_DispInfo = m_BulletWorld->getDispatchInfo();
-  //m_DispInfo.m_useConvexConservativeDistanceUtil = true;
-  //m_DispInfo.m_convexConservativeDistanceThreshold = 0.01;
-#endif
-/*****************************************************************************/
+	m_PhysDispatcher = new btCollisionDispatcher(m_PhysCollisionConfig);
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Collision dispatcher created");
 
-  // DEBUG DRAWER SETUP  
-  m_BulletDrawer = new BtOgre::DebugDrawer(m_WorldNode, m_BulletWorld);
-  m_BulletWorld->setDebugDrawer(m_BulletDrawer);
-  m_BulletDrawer->setDebugMode(true);
+	m_PhysSolver = new btSequentialImpulseConstraintSolver();
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Physics solver created");
 
-  // CREATE AN INFINITE COLLISION PLANE FOR THE GROUND
-  /*
-  btStaticPlaneShape* plane_Shape = 
-    new btStaticPlaneShape(btVector3(0, 1, 0), 0);
+	m_PhysWorld = new btDiscreteDynamicsWorld(
+    m_PhysDispatcher, m_PhysBroadphase, m_PhysSolver, m_PhysCollisionConfig);
+	m_PhysWorld->setGravity(btVector3(0, f_Gravity, 0));
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Physics world created");
 
-  btRigidBody::btRigidBodyConstructionInfo plane_Properties(
-    0, 
-    new btDefaultMotionState(), 
-    plane_Shape, 
-    btVector3(0, 0, 0));
+  if (b_InfinitePlane)
+  {
+    btDefaultMotionState* plane_MS = new btDefaultMotionState(
+      btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
 
-  m_PlaneRB = new btRigidBody(plane_Properties);
-  m_PlaneRB->setFriction(5.0f);
-  m_PlaneRB->setRestitution(0.f);
+    btRigidBody::btRigidBodyConstructionInfo plane_CI(
+      0, plane_MS, 
+      new btStaticPlaneShape(btVector3(0, 1, 0), 1),
+      btVector3(0, 0, 0));
+    plane_CI.m_friction = 0.54f;
+    plane_CI.m_restitution = 0.81f;
 
-  // UNCOMMENT TO ADD INFINITE COLLISION PLANE TO WORLD
-  m_BulletWorld->addRigidBody(m_PlaneRB);
-  */
+    m_PhysWorld->addRigidBody(new btRigidBody(plane_CI));
+
+    m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+      str_Name + ": Infinite collision plane created");
+  }
+
+  m_PhysDebug = new BtOgre::DebugDrawer(m_WorldNode, m_PhysWorld);
+	m_PhysWorld->setDebugDrawer(m_PhysDebug);
+  m_PhysDebug->setDebugMode(0);
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Debugger created");
 
   m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
     str_Name + ": Initialized :)");
+}
+
+void SystemPhysics::createBody(string name, string mesh, Vector3 pos)
+{
+  delete m_PhysDebug;
+  delete m_PhysWorld;
+
+  delete m_PhysSolver;
+  delete m_PhysDispatcher;
+  delete m_PhysCollisionConfig;
+  delete m_PhysBroadphase;
 }
 
 /*****************************************************************************
@@ -135,18 +138,11 @@ void SystemPhysics::cycle(float delta, float rate, bool paused)
 {
   if (!paused)
   {
-    m_BulletWorld->stepSimulation(
-      delta, i_PhysicsSteps, f_PhysicsRate * rate);    
+    m_PhysWorld->stepSimulation(delta, i_PhysicsSteps, f_PhysicsRate * rate);
+    m_PhysDebug->step();
   }
 
-  m_BulletWorld->synchronizeMotionStates();
-
-  m_BulletDrawer->step();
-
-  if (b_DebugOn)
-  {
-    m_BulletWorld->debugDrawWorld();
-  }
+  m_PhysWorld->debugDrawWorld();
 }
 
 /*****************************************************************************
@@ -163,20 +159,13 @@ void SystemPhysics::halt()
 
 void SystemPhysics::parseConfig()
 {
+  b_InfinitePlane = m_Config->getBool("PHYSICS", "InfinitePlane");
   i_PhysicsSteps  = m_Config->getInt("PHYSICS", "PhysicsSteps");
-  f_PhysicsRate   = (1.0f / m_Config->getFloat("PHYSICS", "PhysicsRPS")) / i_PhysicsSteps;
+  f_PhysicsRate   = 1.0f / m_Config->getFloat("PHYSICS", "PhysicsRPS");
+  f_Gravity       = m_Config->getFloat("PHYSICS", "Gravity");
 
   m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
     str_Name + ": Config parsed");
-}
-
-/*****************************************************************************
-*****************************************************************************/
-
-void SystemPhysics::connectOgre(Ogre::SceneManager* sceneMgr)
-{
-  m_SceneMgr  = sceneMgr;
-  m_WorldNode = m_SceneMgr->getSceneNode("WORLD_NODE");
 }
 
 /*****************************************************************************
@@ -188,21 +177,16 @@ void SystemPhysics::toggleDebug()
 
   if (b_DebugOn)
   {
-    m_BulletDrawer->setDebugMode(1);
+    m_PhysDebug->setDebugMode(1);
   }
   else
   {
-    m_BulletDrawer->setDebugMode(0);
+    m_PhysDebug->setDebugMode(0);
   }  
 }
 
 /*****************************************************************************
 *****************************************************************************/
-
-btDynamicsWorld* SystemPhysics::getBulletWorld()
-{
-  return m_BulletWorld;
-}
 
 float SystemPhysics::getPhysicsRate()
 {

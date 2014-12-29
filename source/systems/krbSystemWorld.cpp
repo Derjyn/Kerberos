@@ -11,10 +11,10 @@
 /**
 * @file   krbSystemWorld.cpp
 * @author Nathan Harris
-* @date   23 December 2014
+* @date   28 December 2014
 * @brief  World system
 *
-* @description
+* @details
 *  Coming soon to a code file near you...
 */
 
@@ -22,19 +22,20 @@
 *****************************************************************************/
 
 #include "systems/krbSystemWorld.h"
-#include "core/krbConfig.h"
-#include "core/krbClock.h"
-#include "core/krbLogger.h"
-
-#include "Bullet/BulletDynamics/Dynamics/btDynamicsWorld.h"
+#include "systems/krbSystemPhysics.h"
+#include "systems/krbSystemRender.h"
 
 #include "Ogre3D/OgreBillboardSet.h"
+#include "Ogre3D/OgreEntity.h"
 #include "Ogre3D/OgreManualObject.h"
+#include "Ogre3D/OgreMeshManager.h"
 #include "Ogre3D/OgreSceneManager.h"
 #include "Ogre3D/OgreViewport.h"
 
 /*****************************************************************************
 *****************************************************************************/
+
+template<> Kerberos::SystemWorld* Ogre::Singleton<Kerberos::SystemWorld>::msSingleton = 0;
 
 namespace Kerberos {
 
@@ -43,20 +44,23 @@ namespace Kerberos {
 
 SystemWorld::SystemWorld(Config* config, Logger* log)
 {
-  str_Name      = "World";
-  m_Clock       = new Clock(false);
-  ent_Clock     = new Clock(false);
-  m_Config      = config;
-  m_Log         = log;
-  b_WorldPaused = false;
-  b_GridVisible = false;
-  i_EntityCount = 0;
+  str_Name        = "World";
+  m_Clock         = new Clock(false);
+  ent_Clock       = new Clock(false);
+  m_Config        = config;
+  m_Log           = log;
+  b_WorldPaused   = false;
+  f_WorldTimeRate = 1.0f;
 
-  vec_Time.ms   = 0;
-  vec_Time.sec  = 0;
-  vec_Time.min  = 0;
-  vec_Time.hr   = 0;
-  vec_Time.day  = 0;
+  b_GridVisible   = false;
+  i_EntityCount   = 0;
+  i_EmitterCount  = 0;
+
+  vec_Time.ms     = 0;
+  vec_Time.sec    = 0;
+  vec_Time.min    = 0;
+  vec_Time.hr     = 0;
+  vec_Time.day    = 0;
 
   m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
     str_Name + ": 7 days? Really?");
@@ -68,6 +72,15 @@ SystemWorld::~SystemWorld()
     str_Name + ": Another world, another time.");
 }
 
+SystemWorld* SystemWorld::getSingletonPtr(void)
+{
+    return msSingleton;
+}
+SystemWorld& SystemWorld::getSingleton(void)
+{  
+    return (*msSingleton);  
+}
+
 /*****************************************************************************
 *****************************************************************************/
 
@@ -75,9 +88,20 @@ void SystemWorld::init()
 {
   parseConfig();
 
-  createGrid();
+  m_SceneMgr = SystemRender::getSingletonPtr()->getSceneManager();
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Got scene manager");
 
-  //m_SceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+  m_OgreVP = SystemRender::getSingletonPtr()->getViewport();
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Got Ogre viewport");
+
+  m_WorldNode = m_SceneMgr->getRootSceneNode();
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Got root scene node");
+
+  m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
+    str_Name + ": Got physics scene");
 
   ent_Clock->reset();
 
@@ -160,6 +184,7 @@ void SystemWorld::halt()
 void SystemWorld::parseConfig()
 {
   f_WorldRate     = m_Config->getFloat("WORLD", "WorldRate");
+  f_WorldRateTemp = f_WorldTimeRate;
   f_WorldTimeRate = m_Config->getFloat("WORLD", "WorldTimeRate");
 
   f_GridScale     = m_Config->getFloat("WORLD", "GridScale");
@@ -172,33 +197,53 @@ void SystemWorld::parseConfig()
 /*****************************************************************************
 *****************************************************************************/
 
-void SystemWorld::connectOgre(
-  Ogre::SceneManager* sceneMgr, Ogre::Viewport* viewport)
-{
-  m_SceneMgr  = sceneMgr;
-  m_OgreVP    = viewport;
-
-  m_WorldNode = 
-    m_SceneMgr->getRootSceneNode()->createChildSceneNode("WORLD_NODE");
-}
-
-
-void SystemWorld::connectBullet(btDynamicsWorld* world)
-{
-  m_BulletWorld = world;
-}
-
-/*****************************************************************************
-*****************************************************************************/
-
 void SystemWorld::resetClock()
 {
   m_Clock->reset();
 }
 
+/*****************************************************************************
+*****************************************************************************/
+
 void SystemWorld::pauseWorld()
 {
-  b_WorldPaused = !b_WorldPaused;
+  b_WorldPaused = !b_WorldPaused;  
+
+  if (b_WorldPaused)
+  {
+    f_WorldRateTemp = f_WorldRate;
+    f_WorldRate = 0.0f;
+  }
+  else
+  {
+    f_WorldRate = f_WorldRateTemp;
+  }
+
+  // TOGGLE PAUSE FOR EMIITERS
+  vit_Emitters = vec_Emitters.begin();
+  for (; vit_Emitters != vec_Emitters.end(); vit_Emitters++)
+  {
+    (*vit_Emitters)->togglePause();
+  }
+}
+
+/*****************************************************************************
+*****************************************************************************/
+
+void SystemWorld::setWorldRate(float rate) 
+{
+  if (!b_WorldPaused)
+  {
+    f_WorldRateTemp = f_WorldRate;
+    f_WorldRate = rate;
+
+    // SET TIME SCALE FOR EMITTERS
+    vit_Entities = vec_Entities.begin();
+    for (; vit_Entities != vec_Entities.end(); vit_Entities++)
+    {
+      (*vit_Entities)->setTimeScale(f_WorldRate);
+    }
+  }
 }
 
 /*****************************************************************************
@@ -220,8 +265,7 @@ void SystemWorld::setFog(Color color, float density, float start, float end)
     color.r, color.g, color.b));
 }
 
-void SystemWorld::setEnvironment(Color baseColor,
-  float fogDensity, float fogStart, float fogEnd)
+void SystemWorld::setEnvironment(Color baseColor, Vector3 fogSettings)
 {
   env_Color = baseColor;
 
@@ -230,7 +274,7 @@ void SystemWorld::setEnvironment(Color baseColor,
 
   m_SceneMgr->setFog(Ogre::FOG_EXP2, Ogre::ColourValue(
     baseColor.r, baseColor.g, baseColor.b), 
-    fogDensity, fogStart, fogEnd);
+    fogSettings.x, fogSettings.y, fogSettings.z);
 
   m_OgreVP->setBackgroundColour(Ogre::ColourValue(
     baseColor.r, baseColor.g, baseColor.b));
@@ -268,7 +312,31 @@ void SystemWorld::createGrid()
   m_Grid->end();
   m_Grid->setVisible(b_GridVisible);
 
-  m_SceneMgr->getRootSceneNode()->attachObject(m_Grid);
+  m_WorldNode->attachObject(m_Grid);
+}
+
+/*****************************************************************************
+*****************************************************************************/
+
+void SystemWorld::createPlane(Vector2 extent)
+{
+  Ogre::Plane plane;
+	plane.normal = Ogre::Vector3::UNIT_Y;
+	plane.d = 0;
+ 
+	Ogre::MeshManager::getSingleton().createPlane(
+    "ground", 
+    Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+    plane, 
+    extent.x, extent.y, 1, 1, 
+    true, 1, 
+    extent.x / 2, extent.y / 2, 
+    Ogre::Vector3::UNIT_Z);
+
+	Ogre::Entity* planeEnt = m_SceneMgr->createEntity("WORLD_PLANE", "ground");
+	planeEnt->setMaterialName("world_plane");
+	planeEnt->setCastShadows(false);
+	m_WorldNode->createChildSceneNode()->attachObject(planeEnt);
 }
 
 /*****************************************************************************
@@ -321,28 +389,11 @@ EntityMesh* SystemWorld::addMesh(string name, string mesh, float scale)
 /*****************************************************************************
 *****************************************************************************/
 
-EntityPhysicsDynamic* SystemWorld::addDynamic(string name, string mesh, 
-  int maxAge, float mass, Vector3 pos)
-{
-  EntityPhysicsDynamic* entDynamic = new EntityPhysicsDynamic(name, mesh, 
-    maxAge * f_WorldTimeRate, ent_Pulse, mass, pos, 
-    m_SceneMgr, m_BulletWorld);
-
-  vec_Entities.push_back(dynamic_cast<Entity*>(entDynamic));
-  i_EntityCount++;
-
-  return entDynamic;
-}
-
-/*****************************************************************************
-*****************************************************************************/
-
 EntityPhysicsStatic* SystemWorld::addStatic(string name, string mesh, 
   int maxAge, Vector3 pos)
 {
-  EntityPhysicsStatic* entStatic = new EntityPhysicsStatic(name, mesh, 
-    maxAge * f_WorldTimeRate, ent_Pulse, pos, 
-    m_SceneMgr, m_BulletWorld);
+  EntityPhysicsStatic* entStatic = new EntityPhysicsStatic(
+    name, mesh, maxAge * f_WorldTimeRate, ent_Pulse, pos);
 
   vec_Entities.push_back(dynamic_cast<Entity*>(entStatic));
   i_EntityCount++;
@@ -353,7 +404,33 @@ EntityPhysicsStatic* SystemWorld::addStatic(string name, string mesh,
 /*****************************************************************************
 *****************************************************************************/
 
-void SystemWorld::setWorldRate(float rate)    { f_WorldRate = rate; }
+EntityPhysicsDynamic* SystemWorld::addDynamic(string name, string mesh, 
+  int maxAge, Vector3 pos)
+{
+  EntityPhysicsDynamic* entDynamic = new EntityPhysicsDynamic(
+    name, mesh, 1.0f, maxAge * f_WorldTimeRate, ent_Pulse, pos);
+
+  vec_Entities.push_back(dynamic_cast<Entity*>(entDynamic));
+  i_EntityCount++;
+
+  return entDynamic;
+}
+
+/*****************************************************************************
+*****************************************************************************/
+
+EntityParticleEmitter* SystemWorld::addParticleEmitter(string name)
+{
+  EntityParticleEmitter* entEmitter = new EntityParticleEmitter(name, m_SceneMgr);
+
+  vec_Entities.push_back(dynamic_cast<Entity*>(entEmitter));
+  i_EntityCount++;
+
+  vec_Emitters.push_back(entEmitter);
+  i_EmitterCount++;
+
+  return entEmitter;
+}
 
 /*****************************************************************************
 *****************************************************************************/

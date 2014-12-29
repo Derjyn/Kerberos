@@ -1,3 +1,4 @@
+bin/debug/*.log
 build/intermediate
 build/dependencies
 build/Kerberos.sdf
@@ -5,5 +6,5 @@ build/Kerberos.suo
 build/Kerberos.v12.suo
 build/Kerberos.vcxproj.user
 build/docs/doxygen/html
+tools/*
 workfiles/*
-bin/debug/*.log

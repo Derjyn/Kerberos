@@ -11,7 +11,7 @@
 /**
 * @file   krbEntityPhysicsStatic.h
 * @author Nathan Harris
-* @date   22 December 2014
+* @date   26 December 2014
 * @brief  Static physics entity. Good for solid scene meshes.
 *
 * @details
@@ -46,12 +46,9 @@ class EntityPhysicsStatic : public EntityPhysics
 {
 public:
   EntityPhysicsStatic(string name, string mesh,
-    int maxAge, float createTime, Vector3 position,
-    Ogre::SceneManager* sceneMgr, btDynamicsWorld* world);
+    int maxAge, float createTime, Vector3 position);
 
   ~EntityPhysicsStatic();
-
-protected:
 };
 
 /*****************************************************************************
