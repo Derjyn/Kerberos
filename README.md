@@ -14,7 +14,8 @@ _12/29/2014_
   + Implement AI system
   + Implement networking system
   + Move to component based entities
-  + Implement state system  
+  + Implement state system
+  
 ---
   
 ## Introduction  
