@@ -9,14 +9,13 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - LAB
   TimeLimit     : 0
-  ExtentW       : 1000
-  ExtentH       : 1000
   EnvColor      : [0.01, 0.01, 0.01]
-  FogDensity    : 0.008
+  FogDensity    : 0.03
   FogStart      : 0
-  FogEnd        : 200
-  CamSpeed      : 0.075
-  CamSpeedFast  : 0.5
+  FogEnd        : 100
+  FogType       : 3               # 1 LINEAR / 2 EXP / 3 EXP2
+  CamSpeed      : 0.05
+  CamSpeedFast  : 0.50
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # BRAIN SETTINGS
@@ -52,7 +51,7 @@
   ScreenHeight  : 768
   Fullscreen    : true
   VSync         : true
-  FSAA          : 0
+  FSAA          : 4
   Filtering     : 3
   Anisotropy    : 16
   WinBorder     : "none"
@@ -63,8 +62,11 @@
 - WORLD
   WorldRate     : 1.0             # RATE MULTIPLIER
   WorldTimeRate : 10.0            # (FINAL = WorldTimeRate x WorldRate)
-  GridScale     : 5.0             # DEBUG GRID UNIT SIZE MULTIPLIER
-  GridExtent    : 200             # DEBUG GRID EXTENT (WALKS OUT FROM 0,0,0)
+  WorldScale    : 1.0             # WORLD SCALE x METERS
+  GridScale     : 1.0             # DEBUG GRID UNIT SIZE MULTIPLIER
+  GridExtent    : 250             # DEBUG GRID EXTENT (WALKS OUT FROM 0,0,0)
+  ExtentW       : 250             # DETERMINES WORLD BOUNDARY WIDTH
+  ExtentH       : 250             # DETERMINES WORLD BOUNDARY HEIGHT
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # PHYSICS SETTINGS
@@ -72,7 +74,7 @@
 - PHYSICS
   InfinitePlane : true            # INFINITE COLLISION PLANE AT 0,0,0
   PhysicsRPS    : 60.0            # PHYSICS RATE-PER-SECOND (DEFAULT: 120)
-  PhysicsSteps  : 1               # PHYSICS SUB-STEPS (DEFAULT: 4)
+  PhysicsSteps  : 1               # PHYSICS SUB-STEPS (DEFAULT: 1)
   Gravity       : -9.80665        # STANDARD GRAVITATION: 9.80665 m/s^2
 
 #~~~ EOF ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

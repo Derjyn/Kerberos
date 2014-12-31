@@ -11,7 +11,7 @@
 /**
 * @file   krbSystemWorld.cpp
 * @author Nathan Harris
-* @date   28 December 2014
+* @date   30 December 2014
 * @brief  World system
 *
 * @details
@@ -100,8 +100,9 @@ void SystemWorld::init()
   m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
     str_Name + ": Got root scene node");
 
+  createEntityBBS();
   m_Log->logMessage(m_Log->LVL_INFO, m_Log->MSG_SYSTEM,
-    str_Name + ": Got physics scene");
+    str_Name + ": Entity billboards created");
 
   ent_Clock->reset();
 
@@ -147,22 +148,6 @@ void SystemWorld::cycle()
 
             vec_Time.day++;
           }
-        }
-      }
-    }
-
-    // REMOVE OLD ENTITIES... GOTTA BE A BETTER WAY TO DO THIS!
-    vit_Entities = vec_Entities.begin();
-    for (; vit_Entities != vec_Entities.end(); vit_Entities++)
-    {
-      if ((*vit_Entities)->getMaxAge() > 0)
-      {
-        if ((*vit_Entities)->getAge(ent_Pulse) > (*vit_Entities)->getMaxAge())
-        {          
-          delete (*vit_Entities);
-          vec_Entities.erase(vit_Entities);
-
-          i_EntityCount--;
         }
       }
     }
@@ -218,13 +203,6 @@ void SystemWorld::pauseWorld()
   {
     f_WorldRate = f_WorldRateTemp;
   }
-
-  // TOGGLE PAUSE FOR EMIITERS
-  vit_Emitters = vec_Emitters.begin();
-  for (; vit_Emitters != vec_Emitters.end(); vit_Emitters++)
-  {
-    (*vit_Emitters)->togglePause();
-  }
 }
 
 /*****************************************************************************
@@ -236,13 +214,6 @@ void SystemWorld::setWorldRate(float rate)
   {
     f_WorldRateTemp = f_WorldRate;
     f_WorldRate = rate;
-
-    // SET TIME SCALE FOR EMITTERS
-    vit_Entities = vec_Entities.begin();
-    for (; vit_Entities != vec_Entities.end(); vit_Entities++)
-    {
-      (*vit_Entities)->setTimeScale(f_WorldRate);
-    }
   }
 }
 
@@ -251,33 +222,45 @@ void SystemWorld::setWorldRate(float rate)
 
 void SystemWorld::setAmbient(Color color)
 {
-  m_SceneMgr->setAmbientLight(Ogre::ColourValue(color.r, color.g, color.b));
+  m_SceneMgr->setAmbientLight(toOgre(color));
+  m_OgreVP->setBackgroundColour(toOgre(color));
 
   env_Color = color;
 }
 
-void SystemWorld::setFog(Color color, float density, float start, float end)
+void SystemWorld::setFog(Color color, int type, float density, float start, float end)
 {
-  m_SceneMgr->setFog(Ogre::FOG_EXP2, Ogre::ColourValue(
-    color.r, color.g, color.b), density, start, end);
-
-  m_OgreVP->setBackgroundColour(Ogre::ColourValue(
-    color.r, color.g, color.b));
+  switch (type)
+  {
+    case 1:
+      m_SceneMgr->setFog(
+        Ogre::FOG_LINEAR, toOgre(color), density, start, end);
+      break;
+    case 2:
+      m_SceneMgr->setFog(
+        Ogre::FOG_EXP, toOgre(color), density, start, end);
+      break;
+    case 3:
+      m_SceneMgr->setFog(
+        Ogre::FOG_EXP2, toOgre(color), density, start, end);
+      break;
+    default:
+      m_SceneMgr->setFog(
+        Ogre::FOG_LINEAR, toOgre(color), density, start, end);
+      break;
+  }
 }
 
 void SystemWorld::setEnvironment(Color baseColor, Vector3 fogSettings)
 {
   env_Color = baseColor;
 
-  m_SceneMgr->setAmbientLight(Ogre::ColourValue(
-    baseColor.r, baseColor.g, baseColor.b));
+  m_SceneMgr->setAmbientLight(toOgre(baseColor));
 
-  m_SceneMgr->setFog(Ogre::FOG_EXP2, Ogre::ColourValue(
-    baseColor.r, baseColor.g, baseColor.b), 
+  m_OgreVP->setBackgroundColour(toOgre(baseColor));
+
+  m_SceneMgr->setFog(Ogre::FOG_EXP2, toOgre(baseColor), 
     fogSettings.x, fogSettings.y, fogSettings.z);
-
-  m_OgreVP->setBackgroundColour(Ogre::ColourValue(
-    baseColor.r, baseColor.g, baseColor.b));
 }
 
 /*****************************************************************************
@@ -288,7 +271,7 @@ void SystemWorld::createGrid()
 {
   m_Grid = new Ogre::ManualObject("WORLD_GRID");
 
-  m_Grid->begin("grid", Ogre::RenderOperation::OT_LINE_LIST);
+  m_Grid->begin("world_grid", Ogre::RenderOperation::OT_LINE_LIST);
 
   Ogre::Real res = f_GridScale;
   unsigned int count = f_GridExtent;
@@ -318,22 +301,26 @@ void SystemWorld::createGrid()
 /*****************************************************************************
 *****************************************************************************/
 
-void SystemWorld::createPlane(Vector2 extent)
+void SystemWorld::createPlane(Vector2 extent, float scale)
 {
   Ogre::Plane plane;
 	plane.normal = Ogre::Vector3::UNIT_Y;
 	plane.d = 0;
  
 	Ogre::MeshManager::getSingleton().createPlane(
-    "ground", 
+    "world_plane_mesh", 
     Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
     plane, 
-    extent.x, extent.y, 1, 1, 
+    extent.x, extent.y, 
+    extent.x * scale, extent.y * scale,
     true, 1, 
-    extent.x / 2, extent.y / 2, 
+    extent.x / 2, extent.y / 2,
     Ogre::Vector3::UNIT_Z);
 
-	Ogre::Entity* planeEnt = m_SceneMgr->createEntity("WORLD_PLANE", "ground");
+	Ogre::Entity* planeEnt = m_SceneMgr->createEntity("WORLD_PLANE", "world_plane_mesh");
+  planeEnt->getMesh()->prepare(true);
+  planeEnt->getMesh()->buildTangentVectors();
+  planeEnt->getMesh()->buildEdgeList();
 	planeEnt->setMaterialName("world_plane");
 	planeEnt->setCastShadows(false);
 	m_WorldNode->createChildSceneNode()->attachObject(planeEnt);
@@ -352,24 +339,52 @@ void SystemWorld::toggleGrid()
 /*****************************************************************************
 *****************************************************************************/
 
-EntityCamera* SystemWorld::addCamera(string name)
+void SystemWorld::createEntityBBS()
 {
-  EntityCamera* entCamera = new EntityCamera(name, m_SceneMgr);
+  bbs_Basic = m_SceneMgr->createBillboardSet("BBS_ENTITY_BASIC");
+  bbs_Basic->setMaterialName("ent_basic");
+  bbs_Basic->setDefaultWidth(0.5f);
+  bbs_Basic->setDefaultHeight(0.5f);
 
-  vec_Entities.push_back(dynamic_cast<Entity*>(entCamera));
-  i_EntityCount++;
+  bbs_Cameras = m_SceneMgr->createBillboardSet("BBS_ENTITY_CAMERAS");
+  bbs_Cameras->setMaterialName("ent_camera");
+  bbs_Cameras->setDefaultWidth(0.5f);
+  bbs_Cameras->setDefaultHeight(0.5f);
 
-  return entCamera;
+  bbs_Lights = m_SceneMgr->createBillboardSet("BBS_ENTITY_LIGHTS");
+  bbs_Lights->setMaterialName("ent_light");
+  bbs_Lights->setDefaultWidth(0.5f);
+  bbs_Lights->setDefaultHeight(0.5f);
+
+  m_WorldNode->attachObject(bbs_Basic);
+  m_WorldNode->attachObject(bbs_Cameras);
+  m_WorldNode->attachObject(bbs_Lights);
+}
+
+void SystemWorld::toggleEntityBillboards()
+{
+  b_EntityBillboardsOn = !b_EntityBillboardsOn;
+
+  bbs_Basic->setVisible(b_EntityBillboardsOn);
+  bbs_Cameras->setVisible(b_EntityBillboardsOn);
+  bbs_Lights->setVisible(b_EntityBillboardsOn);
 }
 
 /*****************************************************************************
 *****************************************************************************/
 
-EntityLight* SystemWorld::addLight(string name, EntityLight::LightType type)
+EntityCamera* SystemWorld::addEntityCamera(string name, Vector3 position)
 {
-  EntityLight* entLight = new EntityLight(name, type, m_SceneMgr);
-  vec_Entities.push_back(dynamic_cast<Entity*>(entLight));
-  i_EntityCount++;
+  EntityCamera* entCamera = new EntityCamera(name, position, 
+    bbs_Cameras, m_SceneMgr);
+
+  return entCamera;
+}
+
+EntityLight* SystemWorld::addEntityLight(string name, Vector3 position)
+{
+  EntityLight* entLight = new EntityLight(name, position,
+    bbs_Lights, m_SceneMgr);
 
   return entLight;
 }
@@ -377,60 +392,60 @@ EntityLight* SystemWorld::addLight(string name, EntityLight::LightType type)
 /*****************************************************************************
 *****************************************************************************/
 
-EntityMesh* SystemWorld::addMesh(string name, string mesh, float scale)
-{
-  EntityMesh* entMesh = new EntityMesh(name, mesh, scale, m_SceneMgr);
-  vec_Entities.push_back(dynamic_cast<Entity*>(entMesh));
-  i_EntityCount++;
-
-  return entMesh;
-}
-
-/*****************************************************************************
-*****************************************************************************/
-
-EntityPhysicsStatic* SystemWorld::addStatic(string name, string mesh, 
-  int maxAge, Vector3 pos)
-{
-  EntityPhysicsStatic* entStatic = new EntityPhysicsStatic(
-    name, mesh, maxAge * f_WorldTimeRate, ent_Pulse, pos);
-
-  vec_Entities.push_back(dynamic_cast<Entity*>(entStatic));
-  i_EntityCount++;
-
-  return entStatic;
-}
+//EntityMesh* SystemWorld::addMesh(string name, string mesh, float scale)
+//{
+//  EntityMesh* entMesh = new EntityMesh(name, mesh, scale, m_SceneMgr);
+//  vec_Entities.push_back(dynamic_cast<Entity*>(entMesh));
+//  i_EntityCount++;
+//
+//  return entMesh;
+//}
 
 /*****************************************************************************
 *****************************************************************************/
 
-EntityPhysicsDynamic* SystemWorld::addDynamic(string name, string mesh, 
-  int maxAge, Vector3 pos)
-{
-  EntityPhysicsDynamic* entDynamic = new EntityPhysicsDynamic(
-    name, mesh, 1.0f, maxAge * f_WorldTimeRate, ent_Pulse, pos);
-
-  vec_Entities.push_back(dynamic_cast<Entity*>(entDynamic));
-  i_EntityCount++;
-
-  return entDynamic;
-}
+//EntityPhysicsStatic* SystemWorld::addStatic(string name, string mesh, 
+//  int maxAge, Vector3 pos)
+//{
+//  EntityPhysicsStatic* entStatic = new EntityPhysicsStatic(
+//    name, mesh, maxAge * f_WorldTimeRate, ent_Pulse, pos);
+//
+//  vec_Entities.push_back(dynamic_cast<Entity*>(entStatic));
+//  i_EntityCount++;
+//
+//  return entStatic;
+//}
 
 /*****************************************************************************
 *****************************************************************************/
 
-EntityParticleEmitter* SystemWorld::addParticleEmitter(string name)
-{
-  EntityParticleEmitter* entEmitter = new EntityParticleEmitter(name, m_SceneMgr);
+//EntityPhysicsDynamic* SystemWorld::addDynamic(string name, string mesh, 
+//  int maxAge, Vector3 pos)
+//{
+//  EntityPhysicsDynamic* entDynamic = new EntityPhysicsDynamic(
+//    name, mesh, 1.0f, maxAge * f_WorldTimeRate, ent_Pulse, pos);
+//
+//  vec_Entities.push_back(dynamic_cast<Entity*>(entDynamic));
+//  i_EntityCount++;
+//
+//  return entDynamic;
+//}
 
-  vec_Entities.push_back(dynamic_cast<Entity*>(entEmitter));
-  i_EntityCount++;
+/*****************************************************************************
+*****************************************************************************/
 
-  vec_Emitters.push_back(entEmitter);
-  i_EmitterCount++;
-
-  return entEmitter;
-}
+//EntityParticleEmitter* SystemWorld::addParticleEmitter(string name)
+//{
+//  EntityParticleEmitter* entEmitter = new EntityParticleEmitter(name, m_SceneMgr);
+//
+//  vec_Entities.push_back(dynamic_cast<Entity*>(entEmitter));
+//  i_EntityCount++;
+//
+//  vec_Emitters.push_back(entEmitter);
+//  i_EmitterCount++;
+//
+//  return entEmitter;
+//}
 
 /*****************************************************************************
 *****************************************************************************/

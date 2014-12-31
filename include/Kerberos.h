@@ -12,7 +12,7 @@
 /**
 * @file   Kerberos.h
 * @author Nathan Harris
-* @date   28 December 2014
+* @date   30 December 2014
 * @brief  Wrangles up Kerberos for consumption
 *
 * @description
@@ -40,7 +40,7 @@ using namespace std;
 #define KRB_VERSION_MAJOR 0
 #define KRB_VERSION_MINOR 0
 #define KRB_VERSION_PATCH 1
-#define KRB_VERSION_ALPHA 5
+#define KRB_VERSION_ALPHA 7
 #define KRB_VERSION_NAME "Conceptus"
 
 /*****************************************************************************
@@ -64,13 +64,9 @@ namespace Kerberos
   class SystemSound;
   class SystemWorld;
 
-  class Entity;
   class EntityCamera;
   class EntityLight;
-  class EntityMesh;
-  class EntityParticleEmitter;
-  class EntityPhysicsDynamic;
-  class EntityPhysicsStatic;
+  //class EntityMesh;
 
   class GUI;
 
@@ -105,14 +101,9 @@ namespace Kerberos
 #include "systems/krbSystemSound.h"
 #include "systems/krbSystemWorld.h"
 
-#include "entities/krbEntity.h"
 #include "entities/krbEntityCamera.h"
 #include "entities/krbEntityLight.h"
-#include "entities/krbEntityMesh.h"
-#include "entities/krbEntityParticleEmitter.h"
-#include "entities/krbEntityPhysics.h"
-#include "entities/krbEntityPhysicsDynamic.h"
-#include "entities/krbEntityPhysicsStatic.h"
+//#include "entities/krbEntityMesh.h"
 
 #include "utility/krbConverter.h"
 #include "utility/krbMath.h"

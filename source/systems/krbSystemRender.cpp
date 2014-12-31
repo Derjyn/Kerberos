@@ -11,7 +11,7 @@
 /**
 * @file   krbSystemRender.cpp
 * @author Nathan Harris
-* @date   26 December 2014
+* @date   30 December 2014
 * @brief  Rendering system
 *
 * @details
@@ -108,7 +108,7 @@ void SystemRender::init()
   m_Cam->setNearClipDistance(0.01);
   m_CamNode = m_SceneMgr->createSceneNode("NODE_CAM_DEFAULT");
   m_CamNode->attachObject(m_Cam);
-  m_CamNode->setPosition(40, 40, 40);
+  m_CamNode->setPosition(25, 25, 25);
   m_Cam->lookAt(Ogre::Vector3(0, 0, 0));
   m_Cam->setAutoAspectRatio(true);
   m_CamActive = m_Cam;

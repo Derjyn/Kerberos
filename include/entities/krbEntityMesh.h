@@ -29,11 +29,6 @@
 /*****************************************************************************
 *****************************************************************************/
 
-#include "entities/krbEntity.h"
-
-/*****************************************************************************
-*****************************************************************************/
-
 namespace Ogre
 {
   class Entity;
@@ -50,17 +45,8 @@ namespace Kerberos {
 //
 //! \brief Mesh entity
 //
-class EntityMesh : public Entity
+class EntityMesh
 {
-public:
-  EntityMesh(string name, string mesh, float scale, 
-    Ogre::SceneManager* scenemgr);
-  ~EntityMesh();
-
-  Ogre::Entity* getOgreEnt() { return ent_Mesh; }
-
-protected:
-  Ogre::Entity*     ent_Mesh;
 };
 
 /*****************************************************************************

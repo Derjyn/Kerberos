@@ -10,9 +10,14 @@ material bullet_debug_lines
   {
     pass
     {
-      lighting off
+      scene_blend alpha_blend
+      depth_write off
 
-      diffuse 1 1 1
+      texture_unit
+      {
+        colour_op_ex source1 src_manual src_current 0.7 0.1 1.0
+        alpha_op_ex source1 src_manual src_current 0.3
+      }
     }
   }
 }
@@ -29,24 +34,31 @@ material white_no_light
     {
       lighting off
 
-      diffuse 1 1 1
+      diffuse   1 1 1
+      specular  0 0 0 1
+      emissive  0 0 0
     }
   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-material grid
+material world_grid
 {
-  receive_shadows off
-
   technique
-  {
-    pass
-    {
-      emissive 0.2 0.2 0.2 1.0
-    }
-  }
+   {
+     pass
+     {
+       scene_blend alpha_blend
+       depth_write off
+
+       texture_unit
+       {
+         colour_op_ex source1 src_manual src_current 0.3 1.0 0.1
+         alpha_op_ex source1 src_manual src_current 0.2
+       }
+     }
+   }
 }
 
 material world_plane
@@ -65,7 +77,7 @@ material world_plane
 
 ///////////////////////////////////////////////////////////////////////////////
 
-material ent_light
+material ent_BB
 {
   technique
   {
@@ -74,44 +86,77 @@ material ent_light
       depth_write   off
       lighting      off
       scene_blend   alpha_blend
+      shading       flat
+    }
+  }
+}
 
+material ent_basic : ent_BB
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture "icons/ent_basic.png"
+        filtering trilinear
+      }
+    }
+  }
+}
+material ent_camera : ent_BB
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture "icons/ent_camera.png"
+        filtering trilinear
+      }
+    }
+  }
+}
+material ent_light : ent_BB
+{
+  technique
+  {
+    pass
+    {
       texture_unit
       {
         texture "icons/ent_light.png"
+        filtering trilinear
       }
     }
   }
 }
-material ent_sound
+material ent_sound : ent_BB
 {
   technique
   {
     pass
     {
-      depth_write   off
-      lighting      off
-      scene_blend   alpha_blend
-
       texture_unit
       {
         texture "icons/ent_sound.png"
+        filtering trilinear
       }
     }
   }
 }
-material ent_trigger
+material ent_trigger : ent_BB
 {
   technique
   {
     pass
     {
-      depth_write   off
-      lighting      off
-      scene_blend   alpha_blend
-
       texture_unit
       {
         texture "icons/ent_trigger.png"
+        filtering trilinear
       }
     }
   }

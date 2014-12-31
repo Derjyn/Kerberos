@@ -11,7 +11,7 @@
 /**
 * @file   krbBrain.cpp
 * @author Nathan Harris
-* @date   26 December 2014
+* @date   30 December 2014
 * @brief  The central nervous system of Kerberos
 *
 * @description
@@ -79,7 +79,7 @@ void Brain::init()
   // PERHAPS DO THINGS BEFORE INITIALIZING SYSTEMS
   initSystems();
 
-  m_Lab = new Lab(m_Config, m_Clock);
+  m_Lab = new Lab(m_Config, m_Clock, m_Log);
 }
 
 /*****************************************************************************

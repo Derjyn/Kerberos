@@ -28,9 +28,6 @@
     <Filter Include="Header Files\Entities">
       <UniqueIdentifier>{7dca1bb6-444b-476c-9aa0-c7b36cebd1a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Entities">
-      <UniqueIdentifier>{0587941d-069a-4839-9108-299b7f4645fc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Utility">
       <UniqueIdentifier>{e973db22-ed9f-4007-b0ee-1a3e0fb64028}</UniqueIdentifier>
     </Filter>
@@ -42,6 +39,9 @@
     </Filter>
     <Filter Include="Documentation">
       <UniqueIdentifier>{778ed354-a69f-4087-9811-c76b68a453c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entities\Components">
+      <UniqueIdentifier>{437fef0e-8383-4e2d-8bda-9521e7e4a6f2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -87,26 +87,8 @@
     <ClCompile Include="..\source\systems\krbSystemGUI.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\entities\krbEntityCamera.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\entities\krbEntityMesh.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\entities\krbEntityLight.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\entities\krbEntityPhysicsDynamic.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\entities\krbEntityPhysicsStatic.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Resources\Development\Libraries\include\Gorilla\Gorilla.cpp">
       <Filter>Source Files\Dependencies</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\entities\krbEntityParticleEmitter.cpp">
-      <Filter>Source Files\Entities</Filter>
     </ClCompile>
     <ClCompile Include="..\source\krbLab.cpp">
       <Filter>Source Files</Filter>
@@ -121,9 +103,6 @@
     </ClInclude>
     <ClInclude Include="..\include\systems\krbSystem.h">
       <Filter>Header Files\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\entities\krbEntity.h">
-      <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="..\include\core\krbLogger.h">
       <Filter>Header Files\Core</Filter>
@@ -173,22 +152,7 @@
     <ClInclude Include="..\include\entities\krbEntityCamera.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\entities\krbEntityMesh.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\entities\krbEntityLight.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\entities\krbEntityPhysics.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\entities\krbEntityPhysicsDynamic.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\entities\krbEntityPhysicsStatic.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\entities\krbEntityParticleEmitter.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="..\include\krbLab.h">
@@ -208,6 +172,15 @@
     </ClInclude>
     <ClInclude Include="..\include\systems\gui\krbUI_Screen.h">
       <Filter>Header Files\Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\entities\krbEntCompBase.h">
+      <Filter>Header Files\Entities\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\entities\krbEntCompPhysical.h">
+      <Filter>Header Files\Entities\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\entities\krbEntCompVisual.h">
+      <Filter>Header Files\Entities\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

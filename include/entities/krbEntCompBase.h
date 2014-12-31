@@ -9,10 +9,10 @@
 *******************************************************************************/
 
 /**
-* @file   krbEntityCamera.cpp
+* @file   krbEntCompBase.h
 * @author Nathan Harris
-* @date   21 December 2014
-* @brief  Camera entity
+* @date   30 December 2014
+* @brief  ECS component base
 *
 * @details
 *  Coming soon to a code file near you...
@@ -21,63 +21,27 @@
 /*****************************************************************************
 *****************************************************************************/
 
-#include "entities/krbEntityCamera.h"
+#pragma once
 
-#include "Ogre3D/OgreCamera.h"
-#include "Ogre3D/OgreViewport.h"
-
-/*****************************************************************************
-*****************************************************************************/
-
-namespace Kerberos {
+#ifndef krbEntCompBase_h
+#define krbEntCompBase_h
 
 /*****************************************************************************
 *****************************************************************************/
 
-EntityCamera::EntityCamera(string name, Ogre::SceneManager* scenemgr)
-{
-  str_Name    = name;
-  m_SceneMgr  = scenemgr;
-  m_WorldNode = m_SceneMgr->getRootSceneNode();
+#include "utility/krbConverter.h"
 
-  m_Camera = m_SceneMgr->createCamera(name);
-  m_Camera->setAutoAspectRatio(true);
-  m_Camera->setNearClipDistance(0.1f);
-
-  ent_Node = m_WorldNode->createChildSceneNode("NODE_" + str_Name);
-  ent_Node->attachObject(m_Camera);
-  ent_Node->setOrientation(ent_Euler);
-
-  f_Speed = 0;
-}
-
-EntityCamera::~EntityCamera()
-{
-}
+#include "entityx/entityx.h"
+namespace EX = entityx;
 
 /*****************************************************************************
 *****************************************************************************/
 
-void EntityCamera::activate(Ogre::Viewport* viewport)
-{
-  m_Viewport = viewport;
-  m_Viewport->setCamera(m_Camera);
-}
+namespace Kerberos {}
 
 /*****************************************************************************
 *****************************************************************************/
 
-Vector3 EntityCamera::getPosition()
-{
-  return Vector3(
-    ent_Node->getPosition().x,
-    ent_Node->getPosition().y,
-    ent_Node->getPosition().z);
-}
-
-/*****************************************************************************
-*****************************************************************************/
-
-} // namespace Kerberos
+#endif // krbEntCompBase_h
 
 /***]EOF[*********************************************************************/

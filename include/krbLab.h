@@ -11,7 +11,7 @@
 /**
 * @file   krbLab.h
 * @author Nathan Harris
-* @date   28 December 2014
+* @date   30 December 2014
 * @brief  Kerberos test-lab
 *
 * @details
@@ -66,7 +66,7 @@ namespace Kerberos {
 class Lab
 {
 public:
-  Lab(Config* config, Clock* brainClock);
+  Lab(Config* config, Clock* brainClock, Logger* log);
   ~Lab();
 
   void init();
@@ -92,6 +92,7 @@ protected:
   Clock*          m_LabClock;
   Clock*          m_BrainClock;
   Config*         m_Config;
+  Logger*         m_Log;
 
   bool            b_Alive;
   float           f_TimeLimit;
@@ -120,12 +121,16 @@ protected:
   // LAB LEVEL AND ACTION
   Color           clr_LabEnv;
   Vector3         vec_LabFog;
+
   EntityCamera*   m_LabCamera;
   float           f_CamSpeed;
   float           f_CamSpeedFast;
-  EntityLight*    m_LabLight;
 
-  EntityParticleEmitter* ent_PESnow;
+  EntityLight*    m_LabLightRed;
+  EntityLight*    m_LabLightGreen;
+  EntityLight*    m_LabLightBlue;
+
+  //EntityParticleEmitter* ent_PESnow;
 
   int             i_JunkCount;
   int             i_MaxJunk;

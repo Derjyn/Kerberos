@@ -70,7 +70,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\include;E:\Resources\Development\Libraries\include;E:\Resources\Development\Libraries\include\Ogre3D;E:\Resources\Development\Libraries\include\ParticleUniverse;e:\Resources\Development\Libraries\include\Bullet;E:\Resources\Development\Libraries\include\BtOgre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4098;4244;4316</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4098;4244;4291;4316</DisableSpecificWarnings>
       <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
@@ -80,7 +80,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>E:\Resources\Development\Libraries\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
-      <AdditionalDependencies>OgreMain.lib;OIS.lib;fmodex_vc.lib;ParticleUniverse.lib;BtOgre.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain.lib;OIS.lib;fmodex_vc.lib;ParticleUniverse.lib;BtOgre.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;EntityX.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -90,12 +90,6 @@
     <ClCompile Include="..\source\core\krbConfig.cpp" />
     <ClCompile Include="..\source\core\krbLogger.cpp" />
     <ClCompile Include="..\source\core\krbClock.cpp" />
-    <ClCompile Include="..\source\entities\krbEntityCamera.cpp" />
-    <ClCompile Include="..\source\entities\krbEntityLight.cpp" />
-    <ClCompile Include="..\source\entities\krbEntityMesh.cpp" />
-    <ClCompile Include="..\source\entities\krbEntityParticleEmitter.cpp" />
-    <ClCompile Include="..\source\entities\krbEntityPhysicsDynamic.cpp" />
-    <ClCompile Include="..\source\entities\krbEntityPhysicsStatic.cpp" />
     <ClCompile Include="..\source\Kerberos.cpp" />
     <ClCompile Include="..\source\krbLab.cpp" />
     <ClCompile Include="..\source\systems\krbSystemAI.cpp" />
@@ -113,14 +107,11 @@
     <ClInclude Include="..\include\core\krbBrain.h" />
     <ClInclude Include="..\include\core\krbLogger.h" />
     <ClInclude Include="..\include\core\krbClock.h" />
-    <ClInclude Include="..\include\entities\krbEntity.h" />
+    <ClInclude Include="..\include\entities\krbEntCompBase.h" />
+    <ClInclude Include="..\include\entities\krbEntCompPhysical.h" />
+    <ClInclude Include="..\include\entities\krbEntCompVisual.h" />
     <ClInclude Include="..\include\entities\krbEntityCamera.h" />
     <ClInclude Include="..\include\entities\krbEntityLight.h" />
-    <ClInclude Include="..\include\entities\krbEntityMesh.h" />
-    <ClInclude Include="..\include\entities\krbEntityParticleEmitter.h" />
-    <ClInclude Include="..\include\entities\krbEntityPhysics.h" />
-    <ClInclude Include="..\include\entities\krbEntityPhysicsDynamic.h" />
-    <ClInclude Include="..\include\entities\krbEntityPhysicsStatic.h" />
     <ClInclude Include="..\include\Kerberos.h" />
     <ClInclude Include="..\include\krbLab.h" />
     <ClInclude Include="..\include\systems\gui\krbUI_Button.h" />

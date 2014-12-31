@@ -11,7 +11,7 @@
 /**
 * @file   krbLab.cpp
 * @author Nathan Harris
-* @date   28 December 2014
+* @date   30 December 2014
 * @brief  Kerberos test-lab
 *
 * @details
@@ -32,10 +32,11 @@ namespace Kerberos {
 /*****************************************************************************
 *****************************************************************************/
 
-Lab::Lab(Config* config, Clock* brainClock)
+Lab::Lab(Config* config, Clock* brainClock, Logger* log)
 {
   m_Config      = config;
   m_BrainClock  = brainClock;
+  m_Log         = log;
   b_Alive       = false;
 
   m_SysGUI      = nullptr;
@@ -76,34 +77,46 @@ void Lab::init()
   m_SysAI       = SystemAI::getSingletonPtr();
   m_SysNetwork  = SystemNetwork::getSingletonPtr();
 
+  // LIGHTS
+  m_LabLightRed = m_SysWorld->addEntityLight(
+    "LAB_LIGHT_RED", Vector3(0, 0, 0));
+  m_LabLightRed->setPosition(Vector3(0, 3.f, 2.5f));
+  m_LabLightRed->setDiffuseColor(Color(1.f, 0, 0));
+
+  m_LabLightGreen = m_SysWorld->addEntityLight(
+    "LAB_LIGHT_GREEN", Vector3(0, 0, 0));
+  m_LabLightGreen->setPosition(Vector3(-5.f, 3, 0));
+  m_LabLightGreen->setDiffuseColor(Color(0, 1.f, 0));
+
+  m_LabLightBlue = m_SysWorld->addEntityLight(
+    "LAB_LIGHT_BLUE", Vector3(0, 0, 0));
+  m_LabLightBlue->setPosition(Vector3(0, 3.f, -2.5f));
+  m_LabLightBlue->setDiffuseColor(Color(0, 0, 1.f));
+
+  // CAMERA
+  m_LabCamera = m_SysWorld->addEntityCamera(
+    "LAB_CAM", Vector3(10, 10, 10));
+  m_LabCamera->setViewport(m_SysRender->getViewport());
+  m_LabCamera->setActive();
+  m_LabCamera->lookAt(Vector3(0, 0, 0));
+
   // ENVIRONMENT
   m_SysWorld->createGrid();
 
   m_SysWorld->createPlane(Vector2(
-    m_Config->getFloat("LAB", "ExtentW"),
-    m_Config->getFloat("LAB", "ExtentH")));
+    m_Config->getFloat("WORLD", "ExtentW"),
+    m_Config->getFloat("WORLD", "ExtentH")), 
+    m_Config->getFloat("WORLD", "WorldScale"));
 
-  m_SysWorld->setEnvironment(
-    Color(clr_LabEnv.r, clr_LabEnv.g, clr_LabEnv.b), 
-    vec_LabFog);
-
-  // LIGHT
-  m_LabLight = m_SysWorld->addLight("LIGHT_LAB", EntityLight::LT_DIR);
-  m_LabLight->setMaxAge(0);
-  m_LabLight->position(1000, 1000, 1000);
-  m_LabLight->setDirection(0.1f, -1.f, 0.1f);
-
-  // CAMERA
-  m_LabCamera = m_SysWorld->addCamera("CAM_LAB");
-  m_LabCamera->setMaxAge(0);
-  m_LabCamera->position(-10, 10, -10);
-  m_LabCamera->lookAt(0, 0, 0);
-  m_LabCamera->activate(m_SysRender->getViewport());
-  m_SysRender->setActiveCam(m_LabCamera->getOgreCam());
+  m_SysWorld->setAmbient(clr_LabEnv);
+  m_SysWorld->setFog(
+    clr_LabEnv, 
+    m_Config->getFloat("LAB", "FogType"),
+    vec_LabFog.x, vec_LabFog.y, vec_LabFog.z);
 
   // PARTICLE STUFF
-  ent_PESnow = m_SysWorld->addParticleEmitter("red_snow");
-  ent_PESnow->start();
+  //ent_PESnow = m_SysWorld->addParticleEmitter("red_snow");
+  //ent_PESnow->start();
 
   // SETUP BASIC GUI
   m_GUI = m_SysGUI->createGUI("GUI_DEBUG", false);
@@ -144,14 +157,16 @@ void Lab::init()
   float f_CaptionH, f_CaptionW, f_CaptionCntrX, f_CaptionCntrY;
   f_CaptionH = 16;
   f_CaptionW = 256;
-  f_CaptionCntrX = (m_MenuPause->getScreen()->getWidth() / 2) - (f_CaptionW / 2);
-  f_CaptionCntrY = (m_MenuPause->getScreen()->getHeight() / 2) - (f_CaptionH / 2);
+  f_CaptionCntrX = 
+    (m_MenuPause->getScreen()->getWidth() / 2) - (f_CaptionW / 2);
+  f_CaptionCntrY = 
+    (m_MenuPause->getScreen()->getHeight() / 2) - (f_CaptionH / 2);
 
   m_CaptionPause = m_MenuPause->getLayer()->createCaption(7, 0, 0, 
     "Kerberos Engine v" + getVersionString());
   m_Caption->width(m_MenuPause->getDimensions().x);
-  m_CaptionPause->left(f_CaptionCntrX + 4);
-  m_CaptionPause->top(f_CaptionCntrY + 144);
+  m_CaptionPause->left(f_CaptionCntrX + 3);
+  m_CaptionPause->top(f_CaptionCntrY + 148);
   m_CaptionPause->fixedWidth(true);
 
   // UI CURSOR
@@ -159,11 +174,13 @@ void Lab::init()
   m_LayerCursor = m_MenuPause->getScreen()->createLayer();
   m_CursorBG = m_LayerCursor->createRectangle(
     Ogre::Vector2(0, 0), 
-    Ogre::Vector2(16,16));
+    Ogre::Vector2(16, 16));
   m_CursorBG->background_image("cursor");
 
   i_ScreenShots = 0;
   i_JunkCount = 0;
+
+  m_SysWorld->toggleEntityBillboards();
 
   b_Alive = true;
   
@@ -209,8 +226,12 @@ void Lab::cycle(float delta)
       "\n" +
       "Batches : " + Ogre::StringConverter::toString(
       m_SysRender->getWindow()->getBatchCount()) +
-      "\n" +
-      "Junk count : " + toString(i_JunkCount)
+      "\n"
+      //"Yaw: " + toString(m_LabCamera->getYawPitch().x) +
+      //"\n" +
+      //"Pitch: " + toString(m_LabCamera->getYawPitch().y) +
+      //"\n"
+      //"Junk count : " + toString(i_JunkCount)
       );
   }
 }
@@ -256,13 +277,12 @@ void Lab::handleInput()
     m_LabClock->reset();
   }
 
-  // MOVEMENT
   if (!b_CursorMode)
   {
-    m_LabCamera->orient(
-      m_SysInput->getMouse()->getMouseState().Y.rel,
-      m_SysInput->getMouse()->getMouseState().X.rel,
-      0.0008f);
+    m_LabCamera->setOrientation(
+      -m_SysInput->getMouse()->getMouseState().X.rel,
+      -m_SysInput->getMouse()->getMouseState().Y.rel,
+      0.001f);
   }
 
   if (!m_SysWorld->isPaused())
@@ -271,22 +291,22 @@ void Lab::handleInput()
     {
       if (m_SysInput->keyDown(OIS::KC_W))
       {
-        m_LabCamera->moveAbscissa(f_CamSpeedFast);
+        m_LabCamera->moveApplicate(f_CamSpeedFast);
       }
 
       if (m_SysInput->keyDown(OIS::KC_S))
       {
-        m_LabCamera->moveAbscissa(-f_CamSpeedFast);
+        m_LabCamera->moveApplicate(-f_CamSpeedFast);
       }
 
       if (m_SysInput->keyDown(OIS::KC_A))
       {
-        m_LabCamera->moveApplicate(f_CamSpeedFast);
+        m_LabCamera->moveAbscissa(f_CamSpeedFast);
       }
 
       if (m_SysInput->keyDown(OIS::KC_D))
       {
-        m_LabCamera->moveApplicate(-f_CamSpeedFast);
+        m_LabCamera->moveAbscissa(-f_CamSpeedFast);
       }
 
       if (m_SysInput->keyDown(OIS::KC_Q))
@@ -303,22 +323,22 @@ void Lab::handleInput()
     {
       if (m_SysInput->keyDown(OIS::KC_W))
       {
-        m_LabCamera->moveAbscissa(f_CamSpeed);
+        m_LabCamera->moveApplicate(f_CamSpeed);
       }
 
       if (m_SysInput->keyDown(OIS::KC_S))
       {
-        m_LabCamera->moveAbscissa(-f_CamSpeed);
+        m_LabCamera->moveApplicate(-f_CamSpeed);
       }
 
       if (m_SysInput->keyDown(OIS::KC_A))
       {
-        m_LabCamera->moveApplicate(f_CamSpeed);
+        m_LabCamera->moveAbscissa(f_CamSpeed);
       }
 
       if (m_SysInput->keyDown(OIS::KC_D))
       {
-        m_LabCamera->moveApplicate(-f_CamSpeed);
+        m_LabCamera->moveAbscissa(-f_CamSpeed);
       }
 
       if (m_SysInput->keyDown(OIS::KC_Q))
@@ -338,6 +358,7 @@ void Lab::handleInput()
   {
     m_ScreenDebug->toggleVisible();
     m_SysWorld->toggleGrid();
+    m_SysWorld->toggleEntityBillboards();
 
     m_LabClock->reset();
   }
@@ -359,17 +380,17 @@ void Lab::handleInput()
   }
   
   // SPAWN SOME JUNK
-  if (m_SysInput->keyDown(OIS::KC_SPACE) && m_LabClock->msex() >= f_InputDelay)
-  {
-    m_SysWorld->addDynamic(
-      "EPD_CUBE_" + to_string(i_JunkCount), 
-      "lab_cube_red.mesh",
-      0, Vector3(0, 10, 0));
+  //if (m_SysInput->keyDown(OIS::KC_SPACE) && m_LabClock->msex() >= f_InputDelay)
+  //{
+  //  m_SysWorld->addDynamic(
+  //    "EPD_CUBE_" + to_string(i_JunkCount), 
+  //    "lab_cube_red.mesh",
+  //    0, Vector3(0, 10, 0));
 
-    i_JunkCount++;
+  //  i_JunkCount++;
 
-    m_LabClock->reset();
-  }
+  //  m_LabClock->reset();
+  //}
 
   // CHANGE WORLD RATE
   if (!m_SysWorld->isPaused())

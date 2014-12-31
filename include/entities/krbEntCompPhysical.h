@@ -9,10 +9,10 @@
 *******************************************************************************/
 
 /**
-* @file   krbEntityMesh.cpp
+* @file   krbEntCompPhysical.h
 * @author Nathan Harris
-* @date   21 December 2014
-* @brief  Mesh entity
+* @date   30 December 2014
+* @brief  ECS physical components
 *
 * @details
 *  Coming soon to a code file near you...
@@ -21,9 +21,17 @@
 /*****************************************************************************
 *****************************************************************************/
 
-#include "entities/krbEntityMesh.h"
+#pragma once
 
-#include "Ogre3D/OgreEntity.h"
+#ifndef krbEntCompPhysical_h
+#define krbEntCompPhysical_h
+
+/*****************************************************************************
+*****************************************************************************/
+
+#include "entities/krbEntCompBase.h"
+
+#include "Ogre3D/OgreEuler.h"
 
 /*****************************************************************************
 *****************************************************************************/
@@ -33,30 +41,41 @@ namespace Kerberos {
 /*****************************************************************************
 *****************************************************************************/
 
-EntityMesh::EntityMesh(string name, string mesh, float scale, 
-  Ogre::SceneManager* scenemgr)
+struct EntCompPosition : EX::Component<EntCompPosition> 
 {
-  str_Name    = name;
-  m_SceneMgr  = scenemgr;
-  m_WorldNode = m_SceneMgr->getRootSceneNode();
+public:
+  EntCompPosition(float x, float y, float z)
+  {
+    _position.x = x;
+    _position.y = y;
+    _position.z = z;
+  }
+  EntCompPosition(Vector3 position)
+  {
+    _position = position;
+  }
 
-  ent_Mesh = m_SceneMgr->createEntity(name, mesh);
+  Vector3  _position;
+};
 
-  ent_Node = m_WorldNode->createChildSceneNode("NODE_" + str_Name);
-  ent_Node->attachObject(ent_Mesh);
-  ent_Node->scale(scale, scale, scale);
-  ent_Node->setOrientation(ent_Euler);
+/*****************************************************************************
+*****************************************************************************/
 
-  f_Speed = 0;
-}
-
-EntityMesh::~EntityMesh()
+struct EntCompDirection : EX::Component<EntCompDirection>
 {
-}
+public:
+  EntCompDirection()
+  {
+    _euler.orientation(Ogre::Radian(0), Ogre::Radian(0), Ogre::Radian(0));
+  }
+
+  Ogre::Euler _euler;
+};
 
 /*****************************************************************************
 *****************************************************************************/
 
 } // namespace Kerberos
+#endif // krbEntCompPhysical_h
 
 /***]EOF[*********************************************************************/

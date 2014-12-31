@@ -1,6 +1,6 @@
 [Texture]
-file          gui_lab.png
-whitepixel    252 252
+file            gui_lab.png
+whitepixel      252 252
 
 [Sprites]
 cursor          0 32 16 16
@@ -9,50 +9,50 @@ btn_exit_base   256 256 128 16
 btn_exit_hover  384 256 128 16
 
 [Font.7]
-lineheight    10
-spacelength   7
-baseline      7
-letterspacing 0.0
-monowidth     7
+lineheight      10
+spacelength     7
+baseline        7
+letterspacing   0.0
+monowidth       7
 
-range 33 126
-glyph_33 0 0 6 9 6
-glyph_34 6 0 6 9 6
-glyph_35 12 0 6 9 6
-glyph_36 18 0 6 9 6
-glyph_37 24 0 6 9 6
-glyph_38 30 0 6 9 6
-glyph_39 36 0 6 9 6
-glyph_40 42 0 6 9 6
-glyph_41 48 0 6 9 6
-glyph_42 54 0 6 9 6
-glyph_43 60 0 6 9 6
-glyph_44 66 0 6 9 6
-glyph_45 72 0 6 9 6
-glyph_46 78 0 6 9 6
-glyph_47 84 0 6 9 6
-glyph_48 90 0 6 9 6
-glyph_49 96 0 6 9 6
-glyph_50 102 0 6 9 6
-glyph_51 108 0 6 9 6
-glyph_52 114 0 6 9 6
-glyph_53 120 0 6 9 6
-glyph_54 126 0 6 9 6
-glyph_55 132 0 6 9 6
-glyph_56 138 0 6 9 6
-glyph_57 144 0 6 9 6
-glyph_58 150 0 6 9 6
-glyph_59 156 0 6 9 6
-glyph_60 162 0 6 9 6
-glyph_61 168 0 6 9 6
-glyph_62 174 0 6 9 6
-glyph_63 180 0 6 9 6
-glyph_64 186 0 6 9 6
-glyph_65 192 0 6 9 6
-glyph_66 198 0 6 9 6
-glyph_67 204 0 6 9 6
-glyph_68 210 0 6 9 6
-glyph_69 216 0 6 9 6
+range 33        126
+glyph_33        0 0 6 9 6
+glyph_34        6 0 6 9 6
+glyph_35        12 0 6 9 6
+glyph_36        18 0 6 9 6
+glyph_37        24 0 6 9 6
+glyph_38        30 0 6 9 6
+glyph_39        36 0 6 9 6
+glyph_40        42 0 6 9 6
+glyph_41        48 0 6 9 6
+glyph_42        54 0 6 9 6
+glyph_43        60 0 6 9 6
+glyph_44        66 0 6 9 6
+glyph_45        72 0 6 9 6
+glyph_46        78 0 6 9 6
+glyph_47        84 0 6 9 6
+glyph_48        90 0 6 9 6
+glyph_49        96 0 6 9 6
+glyph_50        102 0 6 9 6
+glyph_51        108 0 6 9 6
+glyph_52        114 0 6 9 6
+glyph_53        120 0 6 9 6
+glyph_54        126 0 6 9 6
+glyph_55        132 0 6 9 6
+glyph_56        138 0 6 9 6
+glyph_57        144 0 6 9 6
+glyph_58        150 0 6 9 6
+glyph_59        156 0 6 9 6
+glyph_60        162 0 6 9 6
+glyph_61        168 0 6 9 6
+glyph_62        174 0 6 9 6
+glyph_63        180 0 6 9 6
+glyph_64        186 0 6 9 6
+glyph_65        192 0 6 9 6
+glyph_66        198 0 6 9 6
+glyph_67        204 0 6 9 6
+glyph_68        210 0 6 9 6
+glyph_69        216 0 6 9 6
 glyph_70 222 0 6 9 6
 glyph_71 228 0 6 9 6
 glyph_72 234 0 6 9 6

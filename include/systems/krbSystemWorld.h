@@ -11,7 +11,7 @@
 /**
 * @file   krbSystemWorld.h
 * @author Nathan Harris
-* @date   28 December 2014
+* @date   30 December 2014
 * @brief  World system
 *
 * @details
@@ -35,9 +35,9 @@
 #include "entities/krbEntityCamera.h"
 #include "entities/krbEntityLight.h"
 #include "entities/krbEntityMesh.h"
-#include "entities/krbEntityParticleEmitter.h"
-#include "entities/krbEntityPhysicsDynamic.h"
-#include "entities/krbEntityPhysicsStatic.h"
+//#include "entities/krbEntityParticleEmitter.h"
+//#include "entities/krbEntityPhysicsDynamic.h"
+//#include "entities/krbEntityPhysicsStatic.h"
 
 /*****************************************************************************
 *****************************************************************************/
@@ -81,61 +81,68 @@ public:
 
   void createGrid();
   void toggleGrid();
-  void createPlane(Vector2 extent);
+  void createPlane(Vector2 extent, float scale);
+
+  void createEntityBBS();
+  void toggleEntityBillboards();
 
   // ENVIRONMENT
   void setAmbient(Color color);
-  void setFog(Color color, float density, float start, float end);
+  void setFog(Color color, int type, float density, float start, float end);
   void setEnvironment(Color baseColor, Vector3 fogSettings);
 
   // ENTITIES
-  EntityCamera*           addCamera(string name);
-  EntityLight*            addLight(string name, EntityLight::LightType type);
-  EntityMesh*             addMesh(string name, string mesh, float scale);
-  EntityPhysicsStatic*    addStatic(string name, string mesh, int maxAge, Vector3 pos);
-  EntityPhysicsDynamic*   addDynamic(string name, string mesh, int maxAge, Vector3 pos);
-  EntityParticleEmitter*  addParticleEmitter(string name);
+  EntityCamera* addEntityCamera(string name, Vector3 position);
+  EntityLight* addEntityLight(string name, Vector3 position);
+
+  //EntityMesh*             addMesh(string name, string mesh, float scale);
+  //EntityPhysicsStatic*    addStatic(string name, string mesh, int maxAge, Vector3 pos);
+  //EntityPhysicsDynamic*   addDynamic(string name, string mesh, int maxAge, Vector3 pos);
+  //EntityParticleEmitter*  addParticleEmitter(string name);
 
   // SETTERS //////////////////////////////////////////////////////////////////
-  void setWorldRate(float rate);
+  void                  setWorldRate(float rate);
 
   // GETTERS //////////////////////////////////////////////////////////////////
-  float       getWorldRate();
-  float       getWorldTimeRate();
-  TimeVector  getTimeVector();
-  string      getTimeString();
-  bool        isPaused();
-  int         getEntityCount();
+  bool                  isPaused();
+  float                 getWorldRate();
+  float                 getWorldTimeRate();
+  TimeVector            getTimeVector();
+  string                getTimeString();
+  int                   getEntityCount();
+  Ogre::SceneNode*      getWorldNode() { return m_WorldNode; }
 
 protected:
-  float       f_WorldRate;
-  float       f_WorldRateTemp;
-  float       f_WorldTimeRate;
-  TimeVector  vec_Time;
-  bool        b_WorldPaused;
+  float                 f_WorldRate;
+  float                 f_WorldRateTemp;
+  float                 f_WorldTimeRate;
+  TimeVector            vec_Time;
+  bool                  b_WorldPaused;
 
-  Color       env_Color;
+  Color                 env_Color;
 
   Ogre::SceneManager*   m_SceneMgr;
   Ogre::SceneNode*      m_WorldNode;
   Ogre::Viewport*       m_OgreVP;
 
-  Clock*    ent_Clock;
-  float     ent_Pulse;
+  Clock*                ent_Clock;
+  float                 ent_Pulse;
 
-  float     f_GridExtent;
-  float     f_GridScale;
-  bool      b_GridVisible;
-  Ogre::ManualObject* m_Grid;
+  float                 f_GridExtent;
+  float                 f_GridScale;
+  bool                  b_GridVisible;
+  Ogre::ManualObject*   m_Grid;
 
-  int       i_EntityCount;
-  int       i_EmitterCount;
+  int                   i_EntityCount;
+  int                   i_EmitterCount;
 
-  vector<Entity*> vec_Entities;
-  vector<Entity*>::iterator vit_Entities;
-
-  vector<EntityParticleEmitter*> vec_Emitters;
-  vector<EntityParticleEmitter*>::iterator vit_Emitters;
+  Ogre::BillboardSet*   bbs_Basic;
+  Ogre::BillboardSet*   bbs_Cameras;
+  Ogre::BillboardSet*   bbs_Lights;
+  Ogre::BillboardSet*   bbs_Emitters;
+  Ogre::BillboardSet*   bbs_Meshes;
+  Ogre::BillboardSet*   bbs_Sounds;
+  bool                  b_EntityBillboardsOn;
 
 private:
   void parseConfig();
