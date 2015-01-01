@@ -11,28 +11,25 @@
 /**
 * @file   krbSystemGUI.cpp
 * @author Nathan Harris
-* @date   28 December 2014
+* @date   31 December 2014
 * @brief  GUI system
 *
 * @details
 *  Coming soon to a code file near you...
 */
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 #include "systems/krbSystemGUI.h"
 #include "systems/krbSystemRender.h"
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 template<> Kerberos::SystemGUI* Ogre::Singleton<Kerberos::SystemGUI>::msSingleton = 0;
 
 namespace Kerberos {
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 SystemGUI::SystemGUI(Config* config, Logger* log)
 {
@@ -59,8 +56,7 @@ SystemGUI& SystemGUI::getSingleton(void)
     return (*msSingleton);  
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 void SystemGUI::init()
 {
@@ -84,8 +80,7 @@ void SystemGUI::halt()
     str_Name + ": Halted :)");
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 void SystemGUI::parseConfig()
 {
@@ -93,22 +88,21 @@ void SystemGUI::parseConfig()
     str_Name + ": Config parsed");
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
-UI_GUI* SystemGUI::createGUI(string name, bool visible)
+UI_GUI* SystemGUI::createGUI(const string& name, bool visible)
 {
-  UI_GUI* gui = new UI_GUI(name, visible, m_Viewport, m_Silverback);
+  UI_GUI* _gui = new UI_GUI(name, visible, m_Viewport, m_Silverback);
+
   if (map_GUI[name] == nullptr) 
   {
-    map_GUI[name] = gui;
+    map_GUI[name] = _gui;
   }
 
-  return gui;
+  return _gui;
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 Gorilla::Silverback* SystemGUI::getSilverback()
 {
@@ -125,8 +119,7 @@ UI_GUI* SystemGUI::getGUI(string name)
   return nullptr;
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 bool SystemGUI::keyPressed(const OIS::KeyEvent &e)
 {
@@ -155,98 +148,8 @@ bool SystemGUI::mouseReleased(
   return true;
 }
 
-/*****************************************************************************
-*****************************************************************************/
-
-//Menu::Menu(string name, string atlas, string bgImage, Vector2 dimensions, 
-//  GUI* gui, Ogre::Viewport* viewport)
-//{
-//  str_Name = name;
-//
-//  if (!gui)
-//  {
-//    return;
-//  }
-//
-//  m_Screen = gui->createScreen("GUI_SCREEN_MENU_" + name, atlas, viewport);
-//  m_Layer = gui->createLayer("GUI_LAYER_MENU_" + name, m_Screen);
-//	
-//	m_vSize = Ogre::Vector2(dimensions.x, dimensions.y);
-//	m_vPosition = Ogre::Vector2(
-//    m_Screen->getWidth() / 2 - m_vSize.x / 2, 
-//    m_Screen->getHeight() / 2 - m_vSize.y / 2);
-//	//m_vButtonOffset = Ogre::Vector2(60,135);
-//	//m_vButtonSize = Ogre::Vector2(275,60);
-//	
-//	m_Background = m_Layer->createRectangle(m_vPosition, m_vSize);
-//	m_Background->background_image(bgImage);
-//	
-//	//m_Exit = new GUI::Button();
-//	//m_Exit->background = m_Layer->createRectangle(
-// //   m_vPosition + m_vButtonOffset + Ogre::Vector2(0, m_vButtonSize.y) * 2, 
-// //   m_vButtonSize);
-//	//m_Exit->img_base = "quickmenu_exit";
-//	//m_Exit->img_hover = "quickmenu_exit_hover";
-//	//m_Exit->hover(false);
-//
-//	setVisible(false);
-//}
-//
-//void Menu::setVisible(bool value)
-//{
-//	m_Layer->setVisible(value);
-//	b_isVisible = value;
-//}
-//
-//bool Menu::mouseDown(unsigned int x, unsigned int y, OIS::MouseButtonID id)
-//{
-//  if (m_Background->intersects(Ogre::Vector2(x, y)) && isVisible())
-//  {
-//    return false;
-//  }
-//
-//	return true;
-//}
-//
-//bool Menu::mouseUp(unsigned int x, unsigned int y, OIS::MouseButtonID id)
-//{
-//	/*if(id == OIS::MB_Left && isVisible())
-//	{
-//    if (isOver(Ogre::Vector2(x, y), m_Exit))
-//    {
-//      if (m_Listener != nullptr)
-//      {
-//        m_Listener->MenuExit();
-//      }
-//
-//			return false;
-//		}
-//	}*/
-//
-//  if (m_Background->intersects(Ogre::Vector2(x, y)) && isVisible())
-//  {
-//    return false;
-//  }
-//
-//	return true;
-//}
-//
-//void Menu::mouseMoved(unsigned int x, unsigned int y)
-//{
-//	//isOver(Ogre::Vector2(x, y), m_Exit);	
-//}
-//
-//bool Menu::isOver(Ogre::Vector2 pos, GUI::Button *button)
-//{
-//	bool result = button->background->intersects(pos);
-//	button->hover(result);
-//
-//	return result;
-//}
-
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 }
 
-/***]EOF[*********************************************************************/
+///^]EOF[^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\

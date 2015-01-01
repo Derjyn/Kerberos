@@ -11,23 +11,21 @@
 /**
 * @file   krbEntCompVisual.h
 * @author Nathan Harris
-* @date   30 December 2014
+* @date   31 December 2014
 * @brief  ECS visual components
 *
 * @details
 *  Coming soon to a code file near you...
 */
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 #pragma once
 
 #ifndef krbEntCompVisual_h
 #define krbEntCompVisual_h
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 #include "entities/krbEntCompBase.h"
 
@@ -38,13 +36,11 @@
 #include "Ogre3D/OgreLight.h"
 #include "Ogre3D/OgreSceneManager.h"
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 namespace Kerberos {
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 struct EntCompNode : EX::Component<EntCompNode>
 {
@@ -56,42 +52,38 @@ struct EntCompNode : EX::Component<EntCompNode>
   Ogre::SceneNode* _node;
 };
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 struct EntCompBillboard : EX::Component<EntCompBillboard> 
 {
 public:
-  EntCompBillboard(Ogre::BillboardSet* bbSet, Vector3 position)
+  EntCompBillboard(Ogre::BillboardSet* bbSet)
   {
     _billboardSet = bbSet;
-    _billboard = _billboardSet->createBillboard(toOgre(position));
+    _billboard = _billboardSet->createBillboard(Ogre::Vector3::ZERO);
   }
 
   Ogre::BillboardSet* _billboardSet;
-  Ogre::Billboard*    _billboard;
+  Ogre::Billboard* _billboard;
 };
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 struct EntCompCamera : EX::Component<EntCompCamera>
 {
 public:
-  EntCompCamera(string name, Vector3 position, Ogre::SceneManager* sceneMgr)
+  EntCompCamera(string name, Ogre::SceneManager* sceneMgr)
   {
     _camera = sceneMgr->createCamera(name + "_CAMERA");
     _camera->setNearClipDistance(0.01);
     _camera->setAutoAspectRatio(true);
-    _camera->setPosition(toOgre(position));
   }
 
-  Ogre::Camera*     _camera;
-  Ogre::Viewport*   _viewport;
+  Ogre::Camera* _camera;
+  Ogre::Viewport* _viewport;
 };
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 struct EntCompLightPoint : EX::Component<EntCompLightPoint>
 {
@@ -129,10 +121,9 @@ public:
   Ogre::Light* _light;
 };
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 } // namespace Kerberos
 #endif // krbEntCompVisual_h
 
-/***]EOF[*********************************************************************/
+///^]EOF[^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\

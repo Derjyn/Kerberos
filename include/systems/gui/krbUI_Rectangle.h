@@ -9,10 +9,10 @@
 *******************************************************************************/
 
 /**
-* @file   krbUI_Screen.h
+* @file   krbUI_Rectangle.h
 * @author Nathan Harris
-* @date   01 January 2015
-* @brief  Screen UI element
+* @date   31 December 2014
+* @brief  Layer UI element
 *
 * @details
 *  Coming soon to a code file near you...
@@ -22,10 +22,12 @@
 
 #pragma once
 
-#ifndef krbGUI_Screen_h
-#define krbGUI_Screen_h
+#ifndef krbUI_Rectangle_h
+#define krbUI_Rectangle_h
 
 ///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
+
+#include "utility/krbConverter.h"
 
 #include "Gorilla/Gorilla.h"
 #include "Monkey/Monkey.h"
@@ -39,81 +41,59 @@ namespace Kerberos {
 
 ///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
-class UI_Screen
+class UI_Rectangle
 {
 public:
-  UI_Screen(const string& name, const string& atlas, bool visible, 
-    Ogre::Viewport* vp, Gorilla::Silverback* silverback)
+  UI_Rectangle(const string& name, const string& bgImg, 
+    Vector2 position, Vector2 dimensions, 
+    Gorilla::Layer* layer)
   {
     str_Name    = name;
-    b_Visible   = visible;
-    _viewport   = vp;
-    _silverback = silverback;
+    _layer      = layer;
+    _position   = position;
 
-    if (!hasAtlas(atlas)) 
-    {
-      loadAtlas(atlas);
-    }
-
-    _screen = _silverback->createScreen(_viewport, atlas);
-
-    _screen->setVisible(b_Visible);
+    _rectangle = _layer->createRectangle(toOgre(position), toOgre(dimensions));
+    _rectangle->background_image(bgImg);
   }
 
-  ~UI_Screen()
+  UI_Rectangle(const string& name, Color bgColor, 
+    Vector2 position, Vector2 dimensions, 
+    Gorilla::Layer* layer)
   {
-    _silverback->destroyScreen(_screen);
+    str_Name  = name;
+    _layer = layer;
+
+    _rectangle = _layer->createRectangle(toOgre(position), toOgre(dimensions));
+    _rectangle->background_colour(toOgre(bgColor));
   }
 
-  void loadAtlas(const string& name) 
+  ~UI_Rectangle()
   {
-    _silverback->loadAtlas(name);
-    vec_Atlas.push_back(name);
-  }
+    _layer->destroyRectangle(_rectangle);
+  }  
 
-  bool hasAtlas(const string& name) 
+  void setPosition(Vector2 position)
   {
-    for (unsigned int i = 0; i < vec_Atlas.size(); i++) 
-    {
-      if (vec_Atlas[i] == name) 
-      {
-        return true;
-      }
-    }
+    _rectangle->left(position.x);
+    _rectangle->top(position.y);
 
-    return false;
-  }
-
-  void toggleVisible()
-  {
-    b_Visible = !b_Visible;
-
-    if (b_Visible)
-    {
-      _screen->show();
-    }
-    else
-    {
-      _screen->hide();
-    }
+    _position = position;
   }
 
   // GETTERS //////////////////////////////////////////////////////////////////
-  Gorilla::Screen* getScreen() { return _screen; }  
+  Gorilla::Rectangle* getRectangle() { return _rectangle; }
 
-  bool isVisible()      { return b_Visible; }
-  float getWidth()      { return _screen->getWidth();  }
-  float getHeight()     { return _screen->getHeight(); }
+  float getWidth()      { return _rectangle->width(); }
+  float getHeight()     { return _rectangle->height(); }
 
 protected:
-  string  str_Name;
-  bool    b_Visible;
+  string                str_Name;
+  bool                  b_Visible;
 
-  Ogre::Viewport*       _viewport;
-  Gorilla::Silverback*  _silverback;
-  Gorilla::Screen*      _screen;
+  Gorilla::Layer*       _layer;
+  Gorilla::Rectangle*   _rectangle;
 
-  vector<string> vec_Atlas;
+  Vector2               _position;
 };
 
 ///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\

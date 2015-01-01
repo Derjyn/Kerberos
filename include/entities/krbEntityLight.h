@@ -11,34 +11,30 @@
 /**
 * @file   krbEntityLight.h
 * @author Nathan Harris
-* @date   30 December 2014
+* @date   01 January 2015
 * @brief  Light entity
 *
 * @details
 *  Coming soon to a code file near you...
 */
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 #pragma once
 
 #ifndef krbEntityLight_h
 #define krbEntityLight_h
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 #include "entities/krbEntCompPhysical.h"
 #include "entities/krbEntCompVisual.h"
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 namespace Kerberos {
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 class EntityLight
 {
@@ -52,16 +48,19 @@ public:
 
     _entity.assign<EntCompPosition>(position);
     ech_Position = _entity.component<EntCompPosition>();
+    ent_Position = ech_Position.get()->_position;
 
-    _entity.assign<EntCompBillboard>(bbSet, position);
+    _entity.assign<EntCompBillboard>(bbSet);
     ech_Billboard = _entity.component<EntCompBillboard>();
+    ent_Billboard = ech_Billboard.get()->_billboard;
 
     _entity.assign<EntCompLightPoint>(name, sceneMgr);
     ech_LightPoint = _entity.component<EntCompLightPoint>();
+    ent_Light = ech_LightPoint.get()->_light;
 
-    ent_Light       = ech_LightPoint.get()->_light;
-    ent_Position    = ech_Position.get()->_position;
-    ent_Billboard   = ech_Billboard.get()->_billboard;
+    ent_Position = position;
+    ent_Billboard->setPosition(toOgre(position));
+    ent_Light->setPosition(toOgre(position));
   }
 
   ~EntityLight()
@@ -72,9 +71,9 @@ public:
   // SETTERS //////////////////////////////////////////////////////////////////
   void setPosition(Vector3 position)
   {
+    //ent_Position = position;
     ent_Billboard->setPosition(toOgre(position));
     ent_Light->setPosition(toOgre(position));
-    ent_Position = position;
   }
 
   void setDiffuseColor(Color color)
@@ -84,6 +83,12 @@ public:
   void setSpecularColor(Color color)
   {
     ent_Light->setSpecularColour(toOgre(color));
+  }
+
+  void setAttenuation(float range, float constant, 
+    float linear, float quadratic)
+  {
+    ent_Light->setAttenuation(range, constant, linear, quadratic);
   }
 
   // GETTERS //////////////////////////////////////////////////////////////////
@@ -110,10 +115,9 @@ private:
   EntCompLightPoint::Handle   ech_LightPoint;
 };
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 } // namespace Kerberos
 #endif // krbEntityLight_h
 
-/***]EOF[*********************************************************************/
+///^]EOF[^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\

@@ -33,7 +33,6 @@
 #include "utility/krbMath.h"
 
 #include "Ogre3D/OgreColourValue.h"
-#include "Ogre3D/OgreVector3.h"
 
 #include <iomanip>
 #include <string>
@@ -75,10 +74,12 @@ inline string toString(const int& i)
 {
   return to_string(i);
 }
+
 inline string toString(const unsigned int& ui)
 {
   return to_string(ui);
 }
+
 inline string toString(const float& f, const int n = 3)
 {
   stringstream out;
@@ -86,6 +87,7 @@ inline string toString(const float& f, const int n = 3)
 
   return out.str();
 }
+
 inline string toString(const double& d, const int n = 3)
 {
   stringstream out;
@@ -93,6 +95,7 @@ inline string toString(const double& d, const int n = 3)
 
   return out.str();
 }
+
 inline string toString(const Vector3& vec, const int n = 3)
 {
   stringstream out;
@@ -112,18 +115,48 @@ inline string toString(const Ogre::Vector3& vec, const int n = 3)
   return out.str();
 }
 
+inline string toString(const Color& color, const int n = 3)
+{
+  stringstream out;
+  out << fixed << setprecision(n) << color.r << " ";
+  out << fixed << setprecision(n) << color.g << " ";
+  out << fixed << setprecision(n) << color.b << " ";
+  out << fixed << setprecision(n) << color.a;
+
+  return out.str();
+}
+inline string toString(const Ogre::ColourValue& color, const int n = 3)
+{
+  stringstream out;
+  out << fixed << setprecision(n) << color.r << " ";
+  out << fixed << setprecision(n) << color.g << " ";
+  out << fixed << setprecision(n) << color.b << " ";
+  out << fixed << setprecision(n) << color.a;
+
+  return out.str();
+}
+
 /*****************************************************************************
 *****************************************************************************/
 
 // KRB <-> OGRE CONVERSION
 
-inline Ogre::ColourValue toOgre(Color color)
+inline Ogre::ColourValue toOgre(const Color& color)
 {
   return Ogre::ColourValue(color.r, color.g, color.b, color.a);
 }
-inline Color toKRB(Ogre::ColourValue color)
+inline Color toKRB(const Ogre::ColourValue& color)
 {
   return Color(color.r, color.g, color.b, color.a);
+}
+
+inline Ogre::Vector2 toOgre(const Vector2& vector)
+{
+  return Ogre::Vector2(vector.x, vector.y);
+}
+inline Vector2 toKRB(const Ogre::Vector2& vector)
+{
+  return Vector2(vector.x, vector.y);
 }
 
 inline Ogre::Vector3 toOgre(const Vector3& vector)

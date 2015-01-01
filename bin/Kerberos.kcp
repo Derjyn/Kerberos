@@ -9,13 +9,18 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - LAB
   TimeLimit     : 0
-  EnvColor      : [0.01, 0.01, 0.01]
-  FogDensity    : 0.03
+  EnvColor      : [0.01, 0.01, 0.01, 1.0]
+  FogDensity    : 0.04
   FogStart      : 0
   FogEnd        : 100
-  FogType       : 3               # 1 LINEAR / 2 EXP / 3 EXP2
+  FogType       : 2               # 1 LINEAR / 2 EXP / 3 EXP2
   CamSpeed      : 0.05
-  CamSpeedFast  : 0.50
+  CamSpeedFast  : 0.25
+  LightColor    : [1.0, 1.0, 0.9, 1.0]
+  LightRange    : 100.00
+  LightConstant : 0.0001
+  LightLinear   : 0.0325
+  LightQuad     : 0.0150
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # BRAIN SETTINGS
@@ -50,8 +55,8 @@
   ScreenWidth   : 1366
   ScreenHeight  : 768
   Fullscreen    : true
-  VSync         : true
-  FSAA          : 4
+  VSync         : false
+  FSAA          : 0
   Filtering     : 3
   Anisotropy    : 16
   WinBorder     : "none"
@@ -62,11 +67,11 @@
 - WORLD
   WorldRate     : 1.0             # RATE MULTIPLIER
   WorldTimeRate : 10.0            # (FINAL = WorldTimeRate x WorldRate)
-  WorldScale    : 1.0             # WORLD SCALE x METERS
+  WorldScale    : 2.0             # WORLD SCALE x METERS
   GridScale     : 1.0             # DEBUG GRID UNIT SIZE MULTIPLIER
-  GridExtent    : 250             # DEBUG GRID EXTENT (WALKS OUT FROM 0,0,0)
-  ExtentW       : 250             # DETERMINES WORLD BOUNDARY WIDTH
-  ExtentH       : 250             # DETERMINES WORLD BOUNDARY HEIGHT
+  GridExtent    : 100             # DEBUG GRID EXTENT (WALKS OUT FROM 0,0,0)
+  ExtentW       : 100             # DETERMINES WORLD BOUNDARY WIDTH
+  ExtentH       : 100             # DETERMINES WORLD BOUNDARY HEIGHT
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # PHYSICS SETTINGS

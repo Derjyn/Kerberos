@@ -43,6 +43,9 @@
     <Filter Include="Header Files\Entities\Components">
       <UniqueIdentifier>{437fef0e-8383-4e2d-8bda-9521e7e4a6f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Systems\Render">
+      <UniqueIdentifier>{5ae80c4d-4758-4d5a-afad-e644e6232fd1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\Kerberos.cpp">
@@ -122,9 +125,6 @@
     <ClInclude Include="..\include\utility\krbMath.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\systems\krbSystemRender.h">
-      <Filter>Header Files\Systems</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\utility\krbUtility.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
@@ -167,9 +167,6 @@
     <ClInclude Include="..\include\systems\gui\krbUI_GUI.h">
       <Filter>Header Files\Systems\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\systems\gui\krbUI_Menu.h">
-      <Filter>Header Files\Systems\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\systems\gui\krbUI_Screen.h">
       <Filter>Header Files\Systems\GUI</Filter>
     </ClInclude>
@@ -181,6 +178,30 @@
     </ClInclude>
     <ClInclude Include="..\include\entities\krbEntCompVisual.h">
       <Filter>Header Files\Entities\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\systems\krbSystemRender.h">
+      <Filter>Header Files\Systems\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\utility\krbVector3.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\utility\krbVector2.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\entities\krbEntityMesh.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\systems\gui\krbUI_Layer.h">
+      <Filter>Header Files\Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\systems\gui\krbUI_Rectangle.h">
+      <Filter>Header Files\Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\systems\gui\krbUI_Caption.h">
+      <Filter>Header Files\Systems\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\systems\gui\krbUI_Text.h">
+      <Filter>Header Files\Systems\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

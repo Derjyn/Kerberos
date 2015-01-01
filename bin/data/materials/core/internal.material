@@ -54,8 +54,8 @@ material world_grid
 
        texture_unit
        {
-         colour_op_ex source1 src_manual src_current 0.3 1.0 0.1
-         alpha_op_ex source1 src_manual src_current 0.2
+         colour_op_ex source1 src_manual src_current 0.3 0.3 0.4
+         alpha_op_ex source1 src_manual src_current 0.25
        }
      }
    }

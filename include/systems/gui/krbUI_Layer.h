@@ -9,10 +9,10 @@
 *******************************************************************************/
 
 /**
-* @file   krbSystemAI.h
+* @file   krbUI_Layer.h
 * @author Nathan Harris
-* @date   31 December 2014
-* @brief  AI system
+* @date   01 January 2015
+* @brief  Layer UI element
 *
 * @details
 *  Coming soon to a code file near you...
@@ -22,12 +22,16 @@
 
 #pragma once
 
-#ifndef krbSystemAI_h
-#define krbSystemAI_h
+#ifndef krbUI_Layer_h
+#define krbUI_Layer_h
 
 ///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
-#include "systems/krbSystem.h"
+#include "Gorilla/Gorilla.h"
+#include "Monkey/Monkey.h"
+
+#include <string>
+using namespace std;
 
 ///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
@@ -35,31 +39,62 @@ namespace Kerberos {
 
 ///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
-//
-//! \brief AI system (currently empty)
-//
-class SystemAI final : 
-  public System, 
-  public Ogre::Singleton<SystemAI>
+class UI_Layer
 {
 public:
-  SystemAI(Config* config, Logger* log);
-  ~SystemAI();
+  UI_Layer(const string& name, bool visible, unsigned int index, Gorilla::Screen* screen)
+  {
+    str_Name  = name;
+    b_Visible = visible;
+    _screen   = screen;
+    
+    _layer = _screen->createLayer(index);
 
-  static SystemAI& getSingleton();
-  static SystemAI* getSingletonPtr();
+    _layer->setVisible(b_Visible);
+  }
 
-  void init();
-  void cycle();
-  void halt();
+  ~UI_Layer()
+  {
+    _screen->destroy(_layer);
+  }
 
-private:
-  void parseConfig();
+  void toggleVisible()
+  {
+    b_Visible = !b_Visible;
+
+    if (b_Visible)
+    {
+      _layer->show();
+    }
+    else
+    {
+      _layer->hide();
+    }
+  }
+
+  void hide() { _layer->hide(); }
+  void show() { _layer->show(); }
+
+  // GETTERS //////////////////////////////////////////////////////////////////
+  Gorilla::Layer* getLayer() { return _layer; }
+
+  bool isVisible() 
+  { 
+    b_Visible = _layer->isVisible();
+    return b_Visible; 
+  }  
+
+protected:
+  string                str_Name;
+  bool                  b_Visible;
+
+  Gorilla::Layer*       _layer;
+  Gorilla::Screen*      _screen;
 };
 
 ///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 } // namespace Kerberos
-#endif // krbSystemAI_h
+#endif // krbGUI_Screen_h
 
 ///^]EOF[^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\

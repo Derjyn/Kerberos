@@ -11,7 +11,7 @@
 /**
 * @file   krbLogger.cpp
 * @author Nathan Harris
-* @date   17 December 2014
+* @date   31 December 2014
 * @brief  Takes care of logging information to file
 *
 * @description
@@ -84,22 +84,22 @@ void Logger::logMessage(MsgLevel level, MsgType type, std::string message)
       switch (type)
       {
         case MsgType::MSG_BRAIN:
-          ofs_Log << "[BRAIN] " << std::setfill(' ') << std::setw(12);
+          ofs_Log << "[BRAIN] ";
           break;
         case MsgType::MSG_ENTITY:
-          ofs_Log << "[ENTITY] " << std::setfill(' ') << std::setw(13);
+          ofs_Log << "[ENTITY] ";
           break;
         case MsgType::MSG_LAB:
-          ofs_Log << "[LAB] " << std::setfill(' ') << std::setw(13);
+          ofs_Log << "[LAB] ";
           break;
         case MsgType::MSG_NOTE:
-          ofs_Log << "[NOTE] " << std::setfill(' ') << std::setw(13);
+          ofs_Log << "[NOTE] ";
           break;
         case MsgType::MSG_STAT:
-          ofs_Log << "[STAT] " << std::setfill(' ') << std::setw(12);
+          ofs_Log << "[STAT] ";
           break;
         case MsgType::MSG_SYSTEM:
-          ofs_Log << "[SYSTEM] " << std::setfill(' ') << std::setw(10);
+          ofs_Log << "[SYSTEM] ";
           break;
       }
       switch (i_LogLevel)
@@ -121,28 +121,28 @@ void Logger::logMessage(MsgLevel level, MsgType type, std::string message)
       switch (type)
       {
         case MsgType::MSG_BRAIN:
-          ofs_Log << "[BRAIN] " << std::setfill(' ') << std::setw(12);
+          ofs_Log << "[BRAIN] ";
           break;
         case MsgType::MSG_ENTITY:
-          ofs_Log << "[ENTITY] " << std::setfill(' ') << std::setw(13);
+          ofs_Log << "[ENTITY] ";
           break;
         case MsgType::MSG_LAB:
-          ofs_Log << "[LAB] " << std::setfill(' ') << std::setw(13);
+          ofs_Log << "[LAB] ";
           break;
         case MsgType::MSG_NOTE:
-          ofs_Log << "[NOTE] " << std::setfill(' ') << std::setw(13);
+          ofs_Log << "[NOTE] ";
           break;
         case MsgType::MSG_STAT:
-          ofs_Log << "[STAT] " << std::setfill(' ') << std::setw(12);
+          ofs_Log << "[STAT] ";
           break;
         case MsgType::MSG_SYSTEM:
-          ofs_Log << "[SYSTEM] " << std::setfill(' ') << std::setw(10);
+          ofs_Log << "[SYSTEM] ";
           break;
       }
       switch (i_LogLevel)
       {
         case(1) :
-          ofs_Log << "[!!!]" << message.c_str() << std::endl;
+          ofs_Log << "[i]" << message.c_str() << std::endl;
           break;
         case(0) :
           ofs_Log << message.c_str() << std::endl;
@@ -158,28 +158,28 @@ void Logger::logMessage(MsgLevel level, MsgType type, std::string message)
       switch (type)
       {
         case MsgType::MSG_BRAIN:
-          ofs_Log << "[BRAIN] " << std::setfill(' ') << std::setw(12);
+          ofs_Log << "[BRAIN] ";
           break;
         case MsgType::MSG_ENTITY:
-          ofs_Log << "[ENTITY] " << std::setfill(' ') << std::setw(13);
+          ofs_Log << "[ENTITY] ";
           break;
         case MsgType::MSG_LAB:
-          ofs_Log << "[LAB] " << std::setfill(' ') << std::setw(13);
+          ofs_Log << "[LAB] ";
           break;
         case MsgType::MSG_NOTE:
-          ofs_Log << "[NOTE] " << std::setfill(' ') << std::setw(13);
+          ofs_Log << "[NOTE] ";
           break;
         case MsgType::MSG_STAT:
-          ofs_Log << "[STAT] " << std::setfill(' ') << std::setw(12);
+          ofs_Log << "[STAT] ";
           break;
         case MsgType::MSG_SYSTEM:
-          ofs_Log << "[SYSTEM] " << std::setfill(' ') << std::setw(10);
+          ofs_Log << "[SYSTEM] ";
           break;
       }
       switch (i_LogLevel)
       {
         case(1) :
-          ofs_Log << "[!!!]" << message.c_str() << std::endl;
+          ofs_Log << "[!]" << message.c_str() << std::endl;
           break;
         case(0) :
           ofs_Log << message.c_str() << std::endl;

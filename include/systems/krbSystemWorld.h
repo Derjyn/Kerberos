@@ -11,23 +11,21 @@
 /**
 * @file   krbSystemWorld.h
 * @author Nathan Harris
-* @date   30 December 2014
+* @date   01 January 2015
 * @brief  World system
 *
 * @details
 *  Coming soon to a code file near you...
 */
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 #pragma once
 
 #ifndef krbSystemWorld_h
 #define krbSystemWorld_h
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 #include "systems/krbSystem.h"
 #include "utility/krbMath.h"
@@ -35,12 +33,8 @@
 #include "entities/krbEntityCamera.h"
 #include "entities/krbEntityLight.h"
 #include "entities/krbEntityMesh.h"
-//#include "entities/krbEntityParticleEmitter.h"
-//#include "entities/krbEntityPhysicsDynamic.h"
-//#include "entities/krbEntityPhysicsStatic.h"
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 namespace Ogre
 {
@@ -50,13 +44,11 @@ namespace Ogre
   class Viewport;
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 namespace Kerberos {
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 //
 //! \brief World system. Tracks world time, the enviornment, and entities
@@ -81,7 +73,7 @@ public:
 
   void createGrid();
   void toggleGrid();
-  void createPlane(Vector2 extent, float scale);
+  void createPlane(Vector2 extent);
 
   void createEntityBBS();
   void toggleEntityBillboards();
@@ -93,12 +85,9 @@ public:
 
   // ENTITIES
   EntityCamera* addEntityCamera(string name, Vector3 position);
+  //EntityCamera* addEntityCamera(string name, Vector3 position, Vector3 direction);
   EntityLight* addEntityLight(string name, Vector3 position);
-
-  //EntityMesh*             addMesh(string name, string mesh, float scale);
-  //EntityPhysicsStatic*    addStatic(string name, string mesh, int maxAge, Vector3 pos);
-  //EntityPhysicsDynamic*   addDynamic(string name, string mesh, int maxAge, Vector3 pos);
-  //EntityParticleEmitter*  addParticleEmitter(string name);
+  //EntityMesh* addMesh(string name, string mesh, float scale);
 
   // SETTERS //////////////////////////////////////////////////////////////////
   void                  setWorldRate(float rate);
@@ -113,6 +102,7 @@ public:
   Ogre::SceneNode*      getWorldNode() { return m_WorldNode; }
 
 protected:
+  float                 f_WorldScale;
   float                 f_WorldRate;
   float                 f_WorldRateTemp;
   float                 f_WorldTimeRate;
@@ -148,10 +138,9 @@ private:
   void parseConfig();
 };
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 } // namespace Kerberos
 #endif // krbSystemWorld_h
 
-/***]EOF[*********************************************************************/
+///^]EOF[^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\

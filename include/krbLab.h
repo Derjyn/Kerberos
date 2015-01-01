@@ -11,28 +11,25 @@
 /**
 * @file   krbLab.h
 * @author Nathan Harris
-* @date   30 December 2014
-* @brief  Kerberos test-lab
+* @date   01 January 2015
+* @brief  Kerberos laboratory
 *
 * @details
 *  Coming soon to a code file near you...
 */
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 #pragma once
 
 #ifndef krbLab_h
 #define krbLab_h
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 #include "Kerberos.h"
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 namespace FMOD
 {
@@ -55,13 +52,11 @@ namespace ParticleUniverse
   class PhysicsActor;
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 namespace Kerberos {
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 class Lab
 {
@@ -76,6 +71,7 @@ public:
   bool isAlive();
 
 protected:
+  // CORE STUFF ///////////////////////////////////////////////////////////////
   void parseConfig();
   void handleInput();
 
@@ -93,32 +89,67 @@ protected:
   Clock*          m_BrainClock;
   Config*         m_Config;
   Logger*         m_Log;
+  
+  string          str_Version;
 
+  // LAB RELATED THINGS ///////////////////////////////////////////////////////
   bool            b_Alive;
   float           f_TimeLimit;
   float           f_WorldRateTemp;
   float           f_InputDelay;
+  float           f_ButtonDelay;
   unsigned int    i_ScreenShots;
+  
+  // LAB UI ///////////////////////////////////////////////////////////////////
+  void createLabUI();
 
-  // USER INTERFACE
-  UI_GUI*               m_GUI;
-  UI_Menu*              m_MenuPause;
-  Gorilla::Caption*     m_CaptionPause;
-  UI_Button*            m_BtnExit;
+  Clock*                ui_Clock;
+  Clock*                ui_InputClock;
 
-  UI_Screen*            m_ScreenBase;
-  Gorilla::Layer*       m_LayerCursor;
-  Gorilla::Rectangle*   m_CursorBG;
-  bool                  b_CursorMode;
+  UI_GUI*               ui_Base;
+  Config*               ui_Properties;
+  UI_Screen*            ui_ScreenLab;
 
-  UI_Screen*            m_ScreenDebug;
-  Gorilla::Layer*       m_LayerStats;
-  Gorilla::Caption*     m_Caption;
-  Gorilla::Rectangle*   m_CaptionBG;
-  Gorilla::MarkupText*  m_TextDebug;
-  Gorilla::Rectangle*   m_DebugBG;
+  UI_Layer*             ui_LayerDebug;
+  UI_Rectangle*         ui_bgDebugHeader;
+  UI_Rectangle*         ui_bgDebugInfo;
+  UI_Caption*           ui_CaptionDebugTitle;
+  UI_Text*              ui_TextDebugInfo;
 
-  // LAB LEVEL AND ACTION
+  // MENUS ////////////////////////////////////////////////////////////////////
+  float menuW;
+  float menuH;
+  float menuCntX;
+  float menuCntY;
+  float buttonW;
+  float buttonH;
+  float buttonPosX;
+  float buttonPosY;
+
+  UI_Layer*             ui_LayerMenuHelp;
+  UI_Rectangle*         ui_bgMenuHelp;
+  UI_Button*            ui_BtnBackHelp;
+
+  UI_Layer*             ui_LayerMenuOptions;
+  UI_Rectangle*         ui_bgMenuOptions;
+  UI_Button*            ui_BtnBackOptions;
+
+  UI_Layer*             ui_LayerMenuPause;
+  UI_Rectangle*         ui_bgMenuPause;
+  UI_Button*            ui_BtnHelp;
+  UI_Button*            ui_BtnOptions;
+  UI_Button*            ui_BtnExit;
+
+  UI_Layer*             ui_LayerCursor;
+  UI_Rectangle*         ui_Cursor;
+
+  bool                  b_DebugMode;
+  bool                  b_MenuMode;
+
+  // LAB LEVEL AND ACTION /////////////////////////////////////////////////////
+  void createEntities();
+  void animateLights();
+
   Color           clr_LabEnv;
   Vector3         vec_LabFog;
 
@@ -126,20 +157,27 @@ protected:
   float           f_CamSpeed;
   float           f_CamSpeedFast;
 
-  EntityLight*    m_LabLightRed;
-  EntityLight*    m_LabLightGreen;
-  EntityLight*    m_LabLightBlue;
+  EntityLight*    m_LabLightA;
+  EntityLight*    m_LabLightB;
+  EntityLight*    m_LabLightC;
+  EntityLight*    m_LabLightD;
+  Clock*          lt_Clock;
+  Color           lt_Color;
+  float           lt_Range;
+  float           lt_Const;
+  float           lt_Linear;
+  float           lt_Quad;
+  float           lt_Delay;
 
-  //EntityParticleEmitter* ent_PESnow;
+  bool            lt_MoveIn;
 
   int             i_JunkCount;
   int             i_MaxJunk;
 };
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 } // namespace Kerberos
 #endif // krbBrain_h
 
-/***]EOF[*********************************************************************/
+///^]EOF[^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\

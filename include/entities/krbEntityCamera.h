@@ -11,34 +11,30 @@
 /**
 * @file   krbEntityCamera.h
 * @author Nathan Harris
-* @date   30 December 2014
+* @date   31 December 2014
 * @brief  Camera entity
 *
 * @details
 *  Coming soon to a code file near you...
 */
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 #pragma once
 
 #ifndef krbEntityCamera_h
 #define krbEntityCamera_h
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 #include "entities/krbEntCompPhysical.h"
 #include "entities/krbEntCompVisual.h"
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 namespace Kerberos {
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 class EntityCamera
 {
@@ -52,21 +48,26 @@ public:
 
     _entity.assign<EntCompPosition>(position);
     ech_Position = _entity.component<EntCompPosition>();
+    ent_Position = ech_Position.get()->_position;
 
     _entity.assign<EntCompDirection>();
     ech_Direction = _entity.component<EntCompDirection>();
+    ent_Euler = ech_Direction.get()->_euler;
 
-    _entity.assign<EntCompBillboard>(bbSet, position);
+    _entity.assign<EntCompBillboard>(bbSet);
     ech_Billboard = _entity.component<EntCompBillboard>();
+    ent_Billboard = ech_Billboard.get()->_billboard;
 
-    _entity.assign<EntCompCamera>(name, position, sceneMgr);
+    _entity.assign<EntCompCamera>(name, sceneMgr);
     ech_Camera = _entity.component<EntCompCamera>();
+    ent_Camera = ech_Camera.get()->_camera;    
+    ent_Viewport = ech_Camera.get()->_viewport;
 
-    ent_Position    = ech_Position.get()->_position;
-    ent_Euler       = ech_Direction.get()->_euler;
-    ent_Billboard   = ech_Billboard.get()->_billboard;
-    ent_Camera      = ech_Camera.get()->_camera;    
-    ent_Viewport    = ech_Camera.get()->_viewport;
+    ent_Position = position;
+    ent_Billboard->setPosition(toOgre(position));
+    ent_Camera->setPosition(toOgre(position));
+
+    ent_Camera->setOrientation(ent_Euler);
   }
 
   ~EntityCamera()
@@ -77,7 +78,9 @@ public:
   // ACTIONS //////////////////////////////////////////////////////////////////
   void lookAt(Vector3 target)
   {
-    ent_Euler.direction(toOgre(target - ent_Position));
+    //ent_Euler.direction(toOgre(target - ent_Position));
+    ent_Euler.direction(toOgre(target) - ent_Camera->getPosition());
+
     ent_Camera->setOrientation(ent_Euler);
   }
 
@@ -85,30 +88,30 @@ public:
   void moveAbscissa(float speed)
   {
     ent_Camera->move(ent_Euler.left() * speed);
-    ent_Position = toKRB(ent_Camera->getPosition());
     ent_Billboard->setPosition(ent_Camera->getPosition());
+    ent_Position = toKRB(ent_Camera->getPosition());
   }
   // Y MOVEMENT
   void moveOrdinate(float speed)
   {
     ent_Camera->move(ent_Euler.up() * speed);
-    ent_Position = toKRB(ent_Camera->getPosition());
     ent_Billboard->setPosition(ent_Camera->getPosition());
+    ent_Position = toKRB(ent_Camera->getPosition());
   }
   // Z MOVEMENT
   void moveApplicate(float speed)
   {
     ent_Camera->move(ent_Euler.forward() * speed);
-    ent_Position = toKRB(ent_Camera->getPosition());
     ent_Billboard->setPosition(ent_Camera->getPosition());
+    ent_Position = toKRB(ent_Camera->getPosition());
   }
 
   // SETTERS //////////////////////////////////////////////////////////////////
   void setPosition(Vector3 position)
-  {    
+  {  
+    ent_Position = position;
     ent_Billboard->setPosition(toOgre(position));
     ent_Camera->setPosition(toOgre(position));
-    ent_Position = position;
   }
 
   void setOrientation(float yaw, float pitch, float speed)
@@ -141,9 +144,9 @@ private:
   string                      ent_Name;
   Vector3                     ent_Position;
   Ogre::Euler                 ent_Euler;
+  Ogre::Billboard*            ent_Billboard;
   Ogre::Viewport*             ent_Viewport;
   Ogre::Camera*               ent_Camera;
-  Ogre::Billboard*            ent_Billboard;
 
   EX::EntityX                 m_EntX;
   EX::Entity                  _entity;
@@ -153,10 +156,9 @@ private:
   EntCompCamera::Handle       ech_Camera;
 };
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 } // namespace Kerberos
 #endif // krbEntityLight_h
 
-/***]EOF[*********************************************************************/
+///^]EOF[^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\

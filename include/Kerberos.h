@@ -12,7 +12,7 @@
 /**
 * @file   Kerberos.h
 * @author Nathan Harris
-* @date   30 December 2014
+* @date   31 December 2014
 * @brief  Wrangles up Kerberos for consumption
 *
 * @description
@@ -53,6 +53,9 @@ namespace Kerberos
   class Logger;
   class Timer;
 
+  class Vector2;
+  class Vector3;
+
   class System;
   class SystemAI;
   class SystemGUI;
@@ -66,7 +69,7 @@ namespace Kerberos
 
   class EntityCamera;
   class EntityLight;
-  //class EntityMesh;
+  class EntityMesh;
 
   class GUI;
 
@@ -103,11 +106,13 @@ namespace Kerberos
 
 #include "entities/krbEntityCamera.h"
 #include "entities/krbEntityLight.h"
-//#include "entities/krbEntityMesh.h"
+#include "entities/krbEntityMesh.h"
 
 #include "utility/krbConverter.h"
 #include "utility/krbMath.h"
 #include "utility/krbUtility.h"
+#include "utility/krbVector2.h"
+#include "utility/krbVector3.h"
 
 /*****************************************************************************
 *****************************************************************************/

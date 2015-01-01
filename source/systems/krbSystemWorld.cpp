@@ -11,15 +11,14 @@
 /**
 * @file   krbSystemWorld.cpp
 * @author Nathan Harris
-* @date   30 December 2014
+* @date   01 January 2015
 * @brief  World system
 *
 * @details
 *  Coming soon to a code file near you...
 */
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 #include "systems/krbSystemWorld.h"
 #include "systems/krbSystemPhysics.h"
@@ -32,15 +31,13 @@
 #include "Ogre3D/OgreSceneManager.h"
 #include "Ogre3D/OgreViewport.h"
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 template<> Kerberos::SystemWorld* Ogre::Singleton<Kerberos::SystemWorld>::msSingleton = 0;
 
 namespace Kerberos {
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 SystemWorld::SystemWorld(Config* config, Logger* log)
 {
@@ -51,6 +48,7 @@ SystemWorld::SystemWorld(Config* config, Logger* log)
   m_Log           = log;
   b_WorldPaused   = false;
   f_WorldTimeRate = 1.0f;
+  f_WorldScale    = 1.0f;
 
   b_GridVisible   = false;
   i_EntityCount   = 0;
@@ -81,8 +79,7 @@ SystemWorld& SystemWorld::getSingleton(void)
     return (*msSingleton);  
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 void SystemWorld::init()
 {
@@ -110,8 +107,7 @@ void SystemWorld::init()
     str_Name + ": Initialized :)");
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 void SystemWorld::cycle()
 {
@@ -154,8 +150,7 @@ void SystemWorld::cycle()
   }
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 void SystemWorld::halt()
 {
@@ -163,11 +158,11 @@ void SystemWorld::halt()
     str_Name + ": Halted :)");
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 void SystemWorld::parseConfig()
 {
+  f_WorldScale    = m_Config->getFloat("WORLD", "WorldScale");
   f_WorldRate     = m_Config->getFloat("WORLD", "WorldRate");
   f_WorldRateTemp = f_WorldTimeRate;
   f_WorldTimeRate = m_Config->getFloat("WORLD", "WorldTimeRate");
@@ -179,16 +174,14 @@ void SystemWorld::parseConfig()
     str_Name + ": Config parsed");
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 void SystemWorld::resetClock()
 {
   m_Clock->reset();
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 void SystemWorld::pauseWorld()
 {
@@ -205,8 +198,7 @@ void SystemWorld::pauseWorld()
   }
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 void SystemWorld::setWorldRate(float rate) 
 {
@@ -217,8 +209,7 @@ void SystemWorld::setWorldRate(float rate)
   }
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 void SystemWorld::setAmbient(Color color)
 {
@@ -263,8 +254,7 @@ void SystemWorld::setEnvironment(Color baseColor, Vector3 fogSettings)
     fogSettings.x, fogSettings.y, fogSettings.z);
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 // REFERENCE GRID, STARTS AT WORLD CENTER (Vector3(0,0,0)) AND WALKS OUT FROM THERE
 void SystemWorld::createGrid()
@@ -273,7 +263,7 @@ void SystemWorld::createGrid()
 
   m_Grid->begin("world_grid", Ogre::RenderOperation::OT_LINE_LIST);
 
-  Ogre::Real res = f_GridScale;
+  Ogre::Real res = f_GridScale * f_WorldScale;
   unsigned int count = f_GridExtent;
   unsigned int halfCount = count / 2;
   Ogre::Real full = (res * count);
@@ -298,10 +288,9 @@ void SystemWorld::createGrid()
   m_WorldNode->attachObject(m_Grid);
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
-void SystemWorld::createPlane(Vector2 extent, float scale)
+void SystemWorld::createPlane(Vector2 extent)
 {
   Ogre::Plane plane;
 	plane.normal = Ogre::Vector3::UNIT_Y;
@@ -311,10 +300,10 @@ void SystemWorld::createPlane(Vector2 extent, float scale)
     "world_plane_mesh", 
     Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
     plane, 
-    extent.x, extent.y, 
-    extent.x * scale, extent.y * scale,
+    extent.x * f_WorldScale, extent.y * f_WorldScale, 
+    extent.x, extent.y,
     true, 1, 
-    extent.x / 2, extent.y / 2,
+    (extent.x * f_WorldScale) / 2, (extent.y * f_WorldScale) / 2,
     Ogre::Vector3::UNIT_Z);
 
 	Ogre::Entity* planeEnt = m_SceneMgr->createEntity("WORLD_PLANE", "world_plane_mesh");
@@ -380,6 +369,18 @@ EntityCamera* SystemWorld::addEntityCamera(string name, Vector3 position)
 
   return entCamera;
 }
+
+//EntityCamera* SystemWorld::addEntityCamera(string name, 
+//  Vector3 position, Vector3 direction)
+//{
+//  EntityCamera* entCamera = new EntityCamera(name, position, direction,
+//    bbs_Cameras, m_SceneMgr);
+//
+//  return entCamera;
+//}
+
+/*****************************************************************************
+*****************************************************************************/
 
 EntityLight* SystemWorld::addEntityLight(string name, Vector3 position)
 {

@@ -112,12 +112,16 @@
     <ClInclude Include="..\include\entities\krbEntCompVisual.h" />
     <ClInclude Include="..\include\entities\krbEntityCamera.h" />
     <ClInclude Include="..\include\entities\krbEntityLight.h" />
+    <ClInclude Include="..\include\entities\krbEntityMesh.h" />
     <ClInclude Include="..\include\Kerberos.h" />
     <ClInclude Include="..\include\krbLab.h" />
     <ClInclude Include="..\include\systems\gui\krbUI_Button.h" />
+    <ClInclude Include="..\include\systems\gui\krbUI_Caption.h" />
     <ClInclude Include="..\include\systems\gui\krbUI_GUI.h" />
-    <ClInclude Include="..\include\systems\gui\krbUI_Menu.h" />
+    <ClInclude Include="..\include\systems\gui\krbUI_Layer.h" />
+    <ClInclude Include="..\include\systems\gui\krbUI_Rectangle.h" />
     <ClInclude Include="..\include\systems\gui\krbUI_Screen.h" />
+    <ClInclude Include="..\include\systems\gui\krbUI_Text.h" />
     <ClInclude Include="..\include\systems\krbSystem.h" />
     <ClInclude Include="..\include\systems\krbSystemAI.h" />
     <ClInclude Include="..\include\systems\krbSystemGUI.h" />
@@ -131,6 +135,8 @@
     <ClInclude Include="..\include\utility\krbConverter.h" />
     <ClInclude Include="..\include\utility\krbMath.h" />
     <ClInclude Include="..\include\utility\krbUtility.h" />
+    <ClInclude Include="..\include\utility\krbVector2.h" />
+    <ClInclude Include="..\include\utility\krbVector3.h" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="resources\resources.res" />

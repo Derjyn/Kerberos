@@ -9,10 +9,10 @@
 *******************************************************************************/
 
 /**
-* @file   krbUI_Button.h
+* @file   krbUI_Text.h
 * @author Nathan Harris
 * @date   01 January 2015
-* @brief  Button UI element
+* @brief  Text UI element
 *
 * @details
 *  Coming soon to a code file near you...
@@ -22,19 +22,15 @@
 
 #pragma once
 
-#ifndef krbUI_Button_h
-#define krbUI_Button_h
+#ifndef krbUI_Text_h
+#define krbUI_Text_h
 
 ///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
-#include "utility/krbMath.h"
+#include "utility/krbConverter.h"
 
 #include "Gorilla/Gorilla.h"
 #include "Monkey/Monkey.h"
-
-#include "Ogre3D/OgreVector2.h"
-
-#include "OIS/OISMouse.h"
 
 #include <string>
 using namespace std;
@@ -45,71 +41,65 @@ namespace Kerberos {
 
 ///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
-class UI_Button
+class UI_Text
 {
 public:
-  UI_Button(string name, Gorilla::Layer* layer, 
-    string baseImg, string hoverImg,
+  UI_Text(string name, unsigned int glyphIndex, 
     Vector2 position, Vector2 dimensions,
-    OIS::Mouse* mouse)
+    string text,
+    Gorilla::Layer* layer)
   {
-    str_Name  = name;
-    _layer    = layer;
-    _bgBase   = baseImg;
-    _bgHover  = hoverImg;
-    _mouse    = mouse;
+    str_Name    = name;
+    _layer      = layer;
+    _position   = position;
 
-    _rectangle = _layer->createRectangle(position.x, position.y, 
-      dimensions.x, dimensions.y);
+    _text = _layer->createMarkupText(glyphIndex, position.x, position.y, text);
+    _text->size(dimensions.x, dimensions.y);
+  }  
 
-    _rectangle->background_image(_bgBase);
-  }
-
-  bool isOver()
-  {    
-    bool result = _rectangle->intersects(Ogre::Vector2(
-      _mouse->getMouseState().X.abs, 
-      _mouse->getMouseState().Y.abs));
-
-	  if(result)
-		{
-			_rectangle->background_image(_bgHover);
-		}
-		else
-		{
-			_rectangle->background_image(_bgBase);
-		}
-
-	  return result;
-  }
-
-  bool mouseDown(OIS::MouseButtonID button)
+  ~UI_Text()
   {
-    if(_layer->isVisible())
-	  {
-      if (isOver() && _mouse->getMouseState().buttonDown(button))
-      { 
-        return true; 
-      }
-		}
+    _layer->destroyMarkupText(_text);
+  }  
 
-	  return false;
+  // SETTERS //////////////////////////////////////////////////////////////////
+  void setSize(float width, float height)
+  {
+    _text->size(width, height);
   }
+
+  void setPosition(Vector2 position)
+  {
+    _text->left(position.x);
+    _text->top(position.y);
+
+    _position = position;
+  }
+
+  void setText(string text)
+  {
+    _text->text(text);
+  }
+
+  // GETTERS //////////////////////////////////////////////////////////////////
+  Gorilla::MarkupText* getText() { return _text; }
+
+  float getWidth()      { return _text->width(); }
+  float getHeight()     { return _text->height(); }
 
 protected:
-  string              str_Name;
-  
-  Gorilla::Layer*     _layer;
-  Gorilla::Rectangle* _rectangle;
-  string              _bgBase;
-  string		          _bgHover;
+  string                str_Name;
+  bool                  b_Visible;
 
-  OIS::Mouse*         _mouse;
+  Gorilla::Layer*       _layer;
+  Gorilla::MarkupText*  _text;
+
+  Vector2               _position;
 };
-  
+
 ///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 } // namespace Kerberos
-#endif // krbUI_Button_h
+#endif // krbGUI_Screen_h
 
 ///^]EOF[^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\

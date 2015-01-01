@@ -41,6 +41,7 @@ namespace Kerberos {
 
 // HANDY FOR ERROR REPORTING - FROM http://goo.gl/c0yroZ
 // TO USE, DO: CONMSG(AT, "YOUR MESSAGE");
+// ONLY HELPFUL WHEN COMPILING CONSOLE APPLICATION
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 #define AT __FILE__ " at line " TOSTRING(__LINE__) " : (" __FUNCTION__ ")"

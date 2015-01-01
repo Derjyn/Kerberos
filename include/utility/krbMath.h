@@ -5,35 +5,36 @@
 * This file is part of Kerberos.                                               *
 *                                                                              *
 *   Kerberos is free software. Enjoy it, modify it, contribute to it.          *
-*   For sales inqueries, see <http://www.omglasergunspewpewpew.com/>           *
 *                                                                              *
 *******************************************************************************/
 
 /**
 * @file   krbMath.h
 * @author Nathan Harris
-* @date   26 December 2014
-* @brief  Helpful maths
+* @date   31 December 2014
+* @brief  Helpful maths and things to do with numbers
 *
-* @description
+* @details
 *  Coming soon to a code file near you...
 */
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 #pragma once
 
 #ifndef krbMath_h
 #define krbMath_h
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
+
+#include "utility/krbVector2.h"
+#include "utility/krbVector3.h"
+
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 namespace Kerberos {
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 // COLOR
 class Color
@@ -46,7 +47,6 @@ public:
     b = 1.0f;
     a = 1.0f;
   }
-
   Color(float red, float green, float blue)
   {
     r = red;
@@ -54,7 +54,6 @@ public:
     b = blue;
     a = 1.0f;
   }
-
   Color(float red, float green, float blue, float alpha)
   {
     r = red;
@@ -64,150 +63,6 @@ public:
   }
 
   float r, g, b, a;
-};
-
-// VECTOR 2
-class Vector2
-{
-public:
-  Vector2()
-  {
-    x = 0.0f;
-    y = 0.0f;
-  }
-
-  Vector2(float vx, float vy)
-  {
-    x = float(vx);
-    y = float(vy);
-  }
-
-  Vector2 operator+(const Vector2& v)
-  {
-    Vector2 result;
-    result.x = this->x + v.x;
-    result.y = this->y + v.y;
-
-    return result;
-  };
-  Vector2 operator-(const Vector2& v)
-  {
-    Vector2 result;
-    result.x = this->x - v.x;
-    result.y = this->y - v.y;
-
-    return result;
-  };
-  Vector2 operator*(const Vector2& v)
-  {
-    Vector2 result;
-    result.x = this->x * v.x;
-    result.y = this->y * v.y;
-
-    return result;
-  };
-  Vector2 operator/(const Vector2& v)
-  {
-    Vector2 result;
-    result.x = this->x / v.x;
-    result.y = this->y / v.y;
-
-    return result;
-  };
-  Vector2 operator*(const float& v)
-  {
-    Vector2 result;
-    result.x = this->x * v;
-    result.y = this->y * v;
-
-    return result;
-  };
-  Vector2 operator/(const float& v)
-  {
-    Vector2 result;
-    result.x = this->x * v;
-    result.y = this->y * v;
-
-    return result;
-  };
-
-  float x, y;
-};
-
-// VECTOR 3
-class Vector3
-{
-public:
-  Vector3()
-  {
-    x = 0.0f;
-    y = 0.0f;
-    z = 0.0f;
-  }
-
-  Vector3(float vx, float vy, float vz)
-  {
-    x = float(vx);
-    y = float(vy);
-    z = float(vz);
-  }
-
-  Vector3 operator+(const Vector3& v)
-  {
-    Vector3 result;
-    result.x = this->x + v.x;
-    result.y = this->y + v.y;
-    result.z = this->z + v.z;
-
-    return result;
-  };
-  Vector3 operator-(const Vector3& v)
-  {
-    Vector3 result;
-    result.x = this->x - v.x;
-    result.y = this->y - v.y;
-    result.z = this->z - v.z;
-
-    return result;
-  };
-  Vector3 operator*(const Vector3& v)
-  {
-    Vector3 result;
-    result.x = this->x * v.x;
-    result.y = this->y * v.y;
-    result.z = this->z * v.z;
-
-    return result;
-  };
-  Vector3 operator/(const Vector3& v)
-  {
-    Vector3 result;
-    result.x = this->x / v.x;
-    result.y = this->y / v.y;
-    result.z = this->z / v.z;
-
-    return result;
-  };
-  Vector3 operator*(const float& v)
-  {
-    Vector3 result;
-    result.x = this->x * v;
-    result.y = this->y * v;
-    result.z = this->z * v;
-
-    return result;
-  };
-  Vector3 operator/(const float& v)
-  {
-    Vector3 result;
-    result.x = this->x * v;
-    result.y = this->y * v;
-    result.z = this->z * v;
-
-    return result;
-  };
-  
-  float x, y, z;
 };
 
 // TIME VECTOR
@@ -230,10 +85,16 @@ public:
   double ms;
 };
 
-/*****************************************************************************
-*****************************************************************************/
+// FUNCTIONS
+
+inline float findElemCenter(float parentLength, float elemLength)
+{
+  return (parentLength / 2) - (elemLength / 2);
+}
+
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 } // namespace Kerberos
 #endif // krbMath_h
 
-/***]EOF[*********************************************************************/
+///^]EOF[^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\

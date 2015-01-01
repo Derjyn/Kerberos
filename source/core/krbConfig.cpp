@@ -11,28 +11,25 @@
 /**
 * @file   krbConfig.cpp
 * @author Nathan Harris
-* @date   19 December 2014
+* @date   31 December 2014
 * @brief  Handles configuration/properties files
 *
-* @description
+* @details
 *  Coming soon to a code file near you...
 */
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 #include "core/krbConfig.h"
 #include "utility/krbMath.h"
 
 #include "Ook/Ook.h"
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 namespace Kerberos {
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 Config::Config(string file)
 {
@@ -43,8 +40,7 @@ Config::~Config()
 {
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 bool Config::getBool(string section, string key)
 {
@@ -79,7 +75,7 @@ std::string Config::getString(string section, string key)
   file.unserialise(ifstream(str_File.c_str(), ios::in | ios::binary));
   Ook::Set &ookSet = file[section.c_str()];
 
-  return ookSet[key.c_str()].asString();
+  return ookSet[key].asString();
 }
 
 Color Config::getColor(string section, std::string key)
@@ -93,7 +89,7 @@ Color Config::getColor(string section, std::string key)
   float b = ookSet[key].atFloat(2);
   float a = ookSet[key].atFloat(3);
 
-  return Color(r,g,b,a);
+  return Color(r, g, b, a);
 }
 
 Vector3 Config::getVec3(string section, string key)
@@ -109,9 +105,8 @@ Vector3 Config::getVec3(string section, string key)
   return Vector3(x, y, z);
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 }
 
-/***]EOF[*********************************************************************/
+///^]EOF[^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\

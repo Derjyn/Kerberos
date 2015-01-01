@@ -11,26 +11,23 @@
 /**
 * @file   krbLab.cpp
 * @author Nathan Harris
-* @date   30 December 2014
-* @brief  Kerberos test-lab
+* @date   01 January 2015
+* @brief  Kerberos laboratory
 *
 * @details
 *  Coming soon to a code file near you...
 */
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 #include "krbLab.h"
 #include "Kerberos.h"
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 namespace Kerberos {
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 Lab::Lab(Config* config, Clock* brainClock, Logger* log)
 {
@@ -38,33 +35,9 @@ Lab::Lab(Config* config, Clock* brainClock, Logger* log)
   m_BrainClock  = brainClock;
   m_Log         = log;
   b_Alive       = false;
-
-  m_SysGUI      = nullptr;
-  m_SysInput    = nullptr;
-  m_SysPhysics  = nullptr;
-  m_SysRender   = nullptr;
-  m_SysWorld    = nullptr;
-}
-
-Lab::~Lab()
-{
-}
-
-/*****************************************************************************
-*****************************************************************************/
-
-bool Lab::isAlive()
-{
-  return b_Alive;
-}
-
-/*****************************************************************************
-*****************************************************************************/
-
-void Lab::init()
-{
-  parseConfig();
-  m_LabClock = new Clock(false);
+  str_Version   = "Kerberos Engine v" + getVersionString();
+  i_ScreenShots = 0;
+  i_JunkCount   = 0;
 
   // GRAB POINTERS TO ALL SYSTEMS
   m_SysScript   = SystemScript::getSingletonPtr();
@@ -75,38 +48,45 @@ void Lab::init()
   m_SysSound    = SystemSound::getSingletonPtr();
   m_SysGUI      = SystemGUI::getSingletonPtr();
   m_SysAI       = SystemAI::getSingletonPtr();
-  m_SysNetwork  = SystemNetwork::getSingletonPtr();
+  m_SysNetwork  = SystemNetwork::getSingletonPtr();  
+}
 
-  // LIGHTS
-  m_LabLightRed = m_SysWorld->addEntityLight(
-    "LAB_LIGHT_RED", Vector3(0, 0, 0));
-  m_LabLightRed->setPosition(Vector3(0, 3.f, 2.5f));
-  m_LabLightRed->setDiffuseColor(Color(1.f, 0, 0));
+Lab::~Lab()
+{
+  delete m_LabCamera;
 
-  m_LabLightGreen = m_SysWorld->addEntityLight(
-    "LAB_LIGHT_GREEN", Vector3(0, 0, 0));
-  m_LabLightGreen->setPosition(Vector3(-5.f, 3, 0));
-  m_LabLightGreen->setDiffuseColor(Color(0, 1.f, 0));
+  delete m_LabLightA;
+  delete m_LabLightB;
+  delete m_LabLightC;
+  delete m_LabLightD;
+}
 
-  m_LabLightBlue = m_SysWorld->addEntityLight(
-    "LAB_LIGHT_BLUE", Vector3(0, 0, 0));
-  m_LabLightBlue->setPosition(Vector3(0, 3.f, -2.5f));
-  m_LabLightBlue->setDiffuseColor(Color(0, 0, 1.f));
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
-  // CAMERA
-  m_LabCamera = m_SysWorld->addEntityCamera(
-    "LAB_CAM", Vector3(10, 10, 10));
-  m_LabCamera->setViewport(m_SysRender->getViewport());
-  m_LabCamera->setActive();
-  m_LabCamera->lookAt(Vector3(0, 0, 0));
+bool Lab::isAlive()
+{
+  return b_Alive;
+}
+
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
+
+void Lab::init()
+{
+  parseConfig();
+
+  m_LabClock = new Clock(false);
 
   // ENVIRONMENT
   m_SysWorld->createGrid();
 
+  m_Log->logMessage(Logger::LVL_INFO, Logger::MSG_LAB,
+    "World grid created");
+
   m_SysWorld->createPlane(Vector2(
-    m_Config->getFloat("WORLD", "ExtentW"),
-    m_Config->getFloat("WORLD", "ExtentH")), 
-    m_Config->getFloat("WORLD", "WorldScale"));
+    m_Config->getFloat("WORLD", "ExtentW"),m_Config->getFloat("WORLD", "ExtentH")));
+
+  m_Log->logMessage(Logger::LVL_INFO, Logger::MSG_LAB,
+    "World plane created");
 
   m_SysWorld->setAmbient(clr_LabEnv);
   m_SysWorld->setFog(
@@ -114,81 +94,18 @@ void Lab::init()
     m_Config->getFloat("LAB", "FogType"),
     vec_LabFog.x, vec_LabFog.y, vec_LabFog.z);
 
-  // PARTICLE STUFF
-  //ent_PESnow = m_SysWorld->addParticleEmitter("red_snow");
-  //ent_PESnow->start();
+  m_Log->logMessage(Logger::LVL_INFO, Logger::MSG_LAB,
+    "Environment lighting and fog set up");  
 
-  // SETUP BASIC GUI
-  m_GUI = m_SysGUI->createGUI("GUI_DEBUG", false);
-  m_ScreenDebug = m_GUI->createScreen("SCREEN_DEBUG", "gui_lab");
-  m_LayerStats = m_ScreenDebug->createLayer("LAYER_DEBUG");
-
-  // GUI CAPTION
-  m_Caption = m_LayerStats->createCaption(7, 16, 16, 
-    "Kerberos Engine v" + getVersionString());
-  m_Caption->fixedWidth(true);
-  m_CaptionBG = m_LayerStats->createRectangle(10, 10, 325, 20);
-  m_CaptionBG->background_colour(Ogre::ColourValue(0.3, 0.1, 0.1, 0.8));
-
-  // GUI TEXT - STATS AND SUCH
-  m_TextDebug = m_LayerStats->createMarkupText(7, 16, 46, "");
-  m_DebugBG = m_LayerStats->createRectangle(10, 40, 325, 140);
-  m_DebugBG->background_colour(Ogre::ColourValue(0.1, 0.1, 0.1, 0.8));
-
-  // BASIC MENU
-  float f_MenuH, f_MenuW;
-  f_MenuH = 256;
-  f_MenuW = 256;
-  m_MenuPause = m_GUI->createMenu("MENU_PAUSE", "gui_lab", "menu_pause", Vector2(f_MenuH, f_MenuW));
-
-  // CREATE AN EXIT BUTTON
-  float f_ButtonH, f_ButtonW, f_ButtonCntrX, f_ButtonCntrY;
-  f_ButtonH = 16;
-  f_ButtonW = 128;
-  f_ButtonCntrX = (m_MenuPause->getScreen()->getWidth() / 2) - (f_ButtonW / 2);
-  f_ButtonCntrY = (m_MenuPause->getScreen()->getHeight() / 2) - (f_ButtonH / 2);
-
-  m_BtnExit = m_GUI->createButton("BUTTON_EXIT", m_MenuPause->getLayer(),
-    "btn_exit_base", "btn_exit_hover", 
-    Vector2(f_ButtonCntrX, f_ButtonCntrY + 96), Vector2(f_ButtonW, f_ButtonH),
-    m_SysInput->getMouse());
-
-  // CREATE A CAPTION
-  float f_CaptionH, f_CaptionW, f_CaptionCntrX, f_CaptionCntrY;
-  f_CaptionH = 16;
-  f_CaptionW = 256;
-  f_CaptionCntrX = 
-    (m_MenuPause->getScreen()->getWidth() / 2) - (f_CaptionW / 2);
-  f_CaptionCntrY = 
-    (m_MenuPause->getScreen()->getHeight() / 2) - (f_CaptionH / 2);
-
-  m_CaptionPause = m_MenuPause->getLayer()->createCaption(7, 0, 0, 
-    "Kerberos Engine v" + getVersionString());
-  m_Caption->width(m_MenuPause->getDimensions().x);
-  m_CaptionPause->left(f_CaptionCntrX + 3);
-  m_CaptionPause->top(f_CaptionCntrY + 148);
-  m_CaptionPause->fixedWidth(true);
-
-  // UI CURSOR
-  b_CursorMode = false;
-  m_LayerCursor = m_MenuPause->getScreen()->createLayer();
-  m_CursorBG = m_LayerCursor->createRectangle(
-    Ogre::Vector2(0, 0), 
-    Ogre::Vector2(16, 16));
-  m_CursorBG->background_image("cursor");
-
-  i_ScreenShots = 0;
-  i_JunkCount = 0;
-
-  m_SysWorld->toggleEntityBillboards();
+  createEntities();
+  createLabUI();
 
   b_Alive = true;
   
   m_LabClock->reset();
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 void Lab::cycle(float delta)
 {
@@ -197,25 +114,13 @@ void Lab::cycle(float delta)
     b_Alive = false;
   }
 
-  handleInput();
+  handleInput(); 
 
-  if (m_MenuPause->isVisible() && b_CursorMode)
-  {
-    m_CursorBG->position(Ogre::Vector2(
-      m_SysInput->getMouse()->getMouseState().X.abs,
-      m_SysInput->getMouse()->getMouseState().Y.abs));
+  animateLights();
 
-    m_BtnExit->isOver();
-
-    if (m_BtnExit->mouseDown(OIS::MB_Left))
-    {
-      b_Alive = false;
-    }
-  }
-
-  if (m_ScreenDebug->isVisible())
-  {
-    m_TextDebug->text(
+  if (ui_LayerDebug->isVisible())
+  {    
+    ui_TextDebugInfo->setText(
       "Time : " + m_BrainClock->msexString() +
       "\n" +
       "World time: " + m_SysWorld->getTimeString() +
@@ -225,30 +130,20 @@ void Lab::cycle(float delta)
       "FPS : " + toString(m_SysRender->getWindow()->getLastFPS(), 1) +
       "\n" +
       "Batches : " + Ogre::StringConverter::toString(
-      m_SysRender->getWindow()->getBatchCount()) +
-      "\n"
-      //"Yaw: " + toString(m_LabCamera->getYawPitch().x) +
-      //"\n" +
-      //"Pitch: " + toString(m_LabCamera->getYawPitch().y) +
-      //"\n"
-      //"Junk count : " + toString(i_JunkCount)
-      );
+      m_SysRender->getWindow()->getBatchCount()));
   }
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 void Lab::halt()
 {
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 void Lab::parseConfig()
 {
-  f_InputDelay      = 250.0f;
   f_WorldRateTemp   = 1.0f;  
   f_TimeLimit       = m_Config->getFloat("LAB", "TimeLimit");
   f_CamSpeed        = m_Config->getFloat("LAB", "CamSpeed");
@@ -259,25 +154,293 @@ void Lab::parseConfig()
     m_Config->getFloat("LAB", "FogDensity"),
     m_Config->getFloat("LAB", "FogStart"),
     m_Config->getFloat("LAB", "FogEnd"));
+
+  f_ButtonDelay     = 300.0f;
+  f_InputDelay      = 300.0f;
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
+
+void Lab::createEntities()
+{
+  // LIGHTS ///////////////////////////////////////////////////////////////////
+  lt_Clock = new Clock(true);
+  lt_Color  = m_Config->getColor("LAB", "LightColor");
+  lt_Range  = m_Config->getFloat("LAB", "LightRange");
+  lt_Const  = m_Config->getFloat("LAB", "LightConstant");
+  lt_Linear = m_Config->getFloat("LAB", "LightLinear");
+  lt_Quad   = m_Config->getFloat("LAB", "LightQuad");
+
+  m_LabLightA = m_SysWorld->addEntityLight(
+    "LAB_LIGHT_A", Vector3(0, 10.f, 10.f));
+  m_LabLightA->setAttenuation(lt_Range, lt_Const, lt_Linear, lt_Quad);
+  m_LabLightA->setDiffuseColor(lt_Color);
+
+  m_LabLightB = m_SysWorld->addEntityLight(
+    "LAB_LIGHT_B", Vector3(0, 10.f, -10.f));
+  m_LabLightB->setAttenuation(lt_Range, lt_Const, lt_Linear, lt_Quad);
+  m_LabLightB->setDiffuseColor(lt_Color);
+
+  m_LabLightC = m_SysWorld->addEntityLight(
+    "LAB_LIGHT_C", Vector3(10.f, 10.f, 0));
+  m_LabLightC->setAttenuation(lt_Range, lt_Const, lt_Linear, lt_Quad);
+  m_LabLightC->setDiffuseColor(lt_Color);
+
+  m_LabLightD = m_SysWorld->addEntityLight(
+    "LAB_LIGHT_D", Vector3(-10.f, 10.f, 0));
+  m_LabLightD->setAttenuation(lt_Range, lt_Const, lt_Linear, lt_Quad);
+  m_LabLightD->setDiffuseColor(lt_Color);
+
+  lt_MoveIn = false;
+
+  m_Log->logMessage(Logger::LVL_INFO, Logger::MSG_LAB,
+    "Lights created");
+
+  // CAMERA ///////////////////////////////////////////////////////////////////
+  m_LabCamera = m_SysWorld->addEntityCamera("LAB_CAM", Vector3(10, 10, 10));
+  m_LabCamera->setViewport(m_SysRender->getViewport());
+  m_LabCamera->setActive();
+  m_LabCamera->lookAt(Vector3(0, 0, 0));
+
+  m_Log->logMessage(Logger::LVL_INFO, Logger::MSG_LAB,
+    "Camera created");
+
+  // TOGGLE BILLBOARDS OFF
+  m_SysWorld->toggleEntityBillboards();
+}
+
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
+
+void Lab::createLabUI()
+{
+  ui_Clock = new Clock(false);
+  ui_InputClock = new Clock(false);
+
+  b_MenuMode = false;
+  b_DebugMode = false;  
+
+  // CORE GUI AND SCREEN //////////////////////////////////////////////////////
+  ui_Base = m_SysGUI->createGUI("GUI_LAB", true);
+
+  ui_ScreenLab = ui_Base->createScreen("SCREEN_LAB", "gui_lab", true);
+
+  float screenW = ui_ScreenLab->getWidth();
+  float screenH = ui_ScreenLab->getHeight();
+
+  // DEBUG LAYER //////////////////////////////////////////////////////////////
+  ui_LayerDebug = ui_Base->createLayer("LAYER_DEBUG", false, 1, ui_ScreenLab);
+
+  float debugHeaderW = 300;
+  float debugHeaderH = 25;
+  float debugHeaderX = 10;
+  float debugHeaderY = 10;
+
+  ui_bgDebugHeader = ui_Base->createRectangle("BG_DEBUG_HEADER", 
+    Color(0.4, 0.1, 0.1, 0.66), 
+    Vector2(debugHeaderX, debugHeaderY), 
+    Vector2(debugHeaderW, debugHeaderH), 
+    ui_LayerDebug);
+
+  ui_CaptionDebugTitle = ui_Base->createCaption("CAPTION_DEBUG_TITLE", 10,
+    Vector2(debugHeaderX + 10, debugHeaderY + 10),
+    Vector2(debugHeaderW - 10, debugHeaderH - 10),
+    str_Version, true,
+    ui_LayerDebug);
+
+  float debugInfoW = 300;
+  float debugInfoH = 200;
+  float debugInfoX = 10;
+  float debugInfoY = 45;
+
+  ui_bgDebugInfo = ui_Base->createRectangle("BG_DEBUG_INFO", 
+    Color(0.2, 0.2, 0.2, 0.66), 
+    Vector2(debugInfoX, debugInfoY), 
+    Vector2(debugInfoW, debugInfoH),
+    ui_LayerDebug);
+
+  ui_TextDebugInfo = ui_Base->createText("TEXT_DEBUG_INFO", 10,
+    Vector2(debugInfoX + 10, debugInfoY + 10),
+    Vector2(debugInfoW - 10, debugInfoH - 10),
+    "DEBUG INFO",
+    ui_LayerDebug);
+
+  // HELP MENU LAYER //////////////////////////////////////////////////////////
+  ui_LayerMenuHelp = ui_Base->createLayer(
+    "LAYER_MENU_HELP", false, 2, ui_ScreenLab);
+
+  menuW = 256;
+  menuH = 256;
+  menuCntX = findElemCenter(screenW, menuW);
+  menuCntY = findElemCenter(screenH, menuH);
+
+  ui_bgMenuHelp = ui_Base->createRectangle(
+    "BG_MENU_HELP", 
+    "menu_help", 
+    Vector2(menuCntX, menuCntY),
+    Vector2(menuW, menuH), 
+    ui_LayerMenuHelp);
+
+  buttonW = 128;
+  buttonH = 16;
+  buttonPosX = findElemCenter(screenW, buttonW);
+  buttonPosY = (screenH / 2) + ((menuH / 2) - (buttonH * 2));
+
+  ui_BtnBackHelp = ui_Base->createButton("BUTTON_BACK_HELP",
+    "btn_back_base", "btn_back_hover",
+    Vector2(buttonPosX, buttonPosY),
+    Vector2(buttonW, buttonH),
+    ui_LayerMenuHelp,
+    m_SysInput->getMouse());
+
+  // OPTIONS MENU LAYER ///////////////////////////////////////////////////////
+  ui_LayerMenuOptions = ui_Base->createLayer(
+    "LAYER_MENU_OPTIONS", false, 2, ui_ScreenLab);
+
+  menuW = 256;
+  menuH = 256;
+  menuCntX = findElemCenter(screenW, menuW);
+  menuCntY = findElemCenter(screenH, menuH);
+
+  ui_bgMenuOptions = ui_Base->createRectangle(
+    "BG_MENU_OPTIONS", 
+    "menu_options", 
+    Vector2(menuCntX, menuCntY),
+    Vector2(menuW, menuH), 
+    ui_LayerMenuOptions);
+
+  buttonW = 128;
+  buttonH = 16;
+  buttonPosX = findElemCenter(screenW, buttonW);
+  buttonPosY = (screenH / 2) + ((menuH / 2) - (buttonH * 2));
+
+  ui_BtnBackOptions = ui_Base->createButton("BUTTON_BACK_OPTIONS",
+    "btn_back_base", "btn_back_hover",
+    Vector2(buttonPosX, buttonPosY),
+    Vector2(buttonW, buttonH),
+    ui_LayerMenuOptions,
+    m_SysInput->getMouse());
+
+  // PAUSE MENU LAYER /////////////////////////////////////////////////////////
+  ui_LayerMenuPause = ui_Base->createLayer(
+    "LAYER_MENU_PAUSE", false, 2, ui_ScreenLab);
+
+  menuW = 256;
+  menuH = 256;
+  menuCntX = findElemCenter(screenW, menuW);
+  menuCntY = findElemCenter(screenH, menuH);
+
+  ui_bgMenuPause = ui_Base->createRectangle(
+    "BG_MENU_PAUSE", 
+    "menu_pause", 
+    Vector2(menuCntX, menuCntY),
+    Vector2(menuW, menuH), 
+    ui_LayerMenuPause);
+
+  buttonW = 128;
+  buttonH = 16;
+  buttonPosX = findElemCenter(screenW, buttonW);
+  buttonPosY = (screenH / 2) + ((menuH / 2) - (buttonH * 2));
+
+  ui_BtnHelp = ui_Base->createButton("BUTTON_HELP",
+    "btn_help_base", "btn_help_hover",
+    Vector2(buttonPosX, buttonPosY - (buttonH * 4)),
+    Vector2(buttonW, buttonH),
+    ui_LayerMenuPause,
+    m_SysInput->getMouse());
+
+  ui_BtnOptions = ui_Base->createButton("BUTTON_OPTIONS",
+    "btn_options_base", "btn_options_hover",
+    Vector2(buttonPosX, buttonPosY - (buttonH * 2)),
+    Vector2(buttonW, buttonH),
+    ui_LayerMenuPause,
+    m_SysInput->getMouse());
+
+  ui_BtnExit = ui_Base->createButton("BUTTON_EXIT",
+    "btn_exit_base", "btn_exit_hover",
+    Vector2(buttonPosX, buttonPosY),
+    Vector2(buttonW, buttonH),
+    ui_LayerMenuPause,
+    m_SysInput->getMouse());
+
+  // CURSOR LAYER /////////////////////////////////////////////////////////////
+  ui_LayerCursor = ui_Base->createLayer("LAYER_CURSOR", false, 15, 
+    ui_ScreenLab);
+  ui_Cursor = ui_Base->createRectangle("LAB_CURSOR", "cursor",
+    Vector2(0, 0), Vector2(16, 16), 
+    ui_LayerCursor);
+
+  ui_Clock->reset();
+  ui_InputClock->reset();
+}
+
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
+
+void Lab::animateLights()
+{
+  float speed = 0.015f * m_SysWorld->getWorldRate();
+
+  if (!lt_MoveIn)
+  {
+    m_LabLightA->setPosition(Vector3(
+      m_LabLightA->getPosition().x,
+      m_LabLightA->getPosition().y,
+      m_LabLightA->getPosition().z + speed));
+
+    m_LabLightB->setPosition(Vector3(
+      m_LabLightB->getPosition().x,
+      m_LabLightB->getPosition().y,
+      m_LabLightB->getPosition().z - speed));
+
+    m_LabLightC->setPosition(Vector3(
+      m_LabLightC->getPosition().x + speed,
+      m_LabLightC->getPosition().y,
+      m_LabLightC->getPosition().z));
+
+    m_LabLightD->setPosition(Vector3(
+      m_LabLightD->getPosition().x - speed,
+      m_LabLightD->getPosition().y,
+      m_LabLightD->getPosition().z));
+
+    if (m_LabLightC->getPosition().x >= 25.0f)
+    {
+      lt_MoveIn = true;
+    }
+  }
+  else
+  {
+    m_LabLightA->setPosition(Vector3(
+      m_LabLightA->getPosition().x,
+      m_LabLightA->getPosition().y,
+      m_LabLightA->getPosition().z - speed));
+
+    m_LabLightB->setPosition(Vector3(
+      m_LabLightB->getPosition().x,
+      m_LabLightB->getPosition().y,
+      m_LabLightB->getPosition().z + speed));
+
+    m_LabLightC->setPosition(Vector3(
+      m_LabLightC->getPosition().x - speed,
+      m_LabLightC->getPosition().y,
+      m_LabLightC->getPosition().z));
+
+    m_LabLightD->setPosition(Vector3(
+      m_LabLightD->getPosition().x + speed,
+      m_LabLightD->getPosition().y,
+      m_LabLightD->getPosition().z));
+
+    if (m_LabLightC->getPosition().x <= 5.0f)
+    {
+      lt_MoveIn = false;
+    }
+  }
+}
+
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 void Lab::handleInput()
 {
-  // PAUSE
-  if (m_SysInput->keyDown(OIS::KC_ESCAPE) && m_LabClock->msex() >= f_InputDelay)
-  {
-    m_SysWorld->pauseWorld();
-    m_MenuPause->toggleVisible();
-
-    b_CursorMode = !b_CursorMode;
-
-    m_LabClock->reset();
-  }
-
-  if (!b_CursorMode)
+  // MOUSE ////////////////////////////////////////////////////////////////////
+  if (!b_MenuMode)
   {
     m_LabCamera->setOrientation(
       -m_SysInput->getMouse()->getMouseState().X.rel,
@@ -285,6 +448,104 @@ void Lab::handleInput()
       0.001f);
   }
 
+  if (ui_LayerCursor->isVisible() && b_MenuMode)
+  {
+    ui_Cursor->setPosition(Vector2(
+      m_SysInput->getMouse()->getMouseState().X.abs,
+      m_SysInput->getMouse()->getMouseState().Y.abs));
+
+    if (ui_BtnHelp->mouseDown(OIS::MB_Left) && ui_InputClock->msex() >= f_ButtonDelay)
+    {
+      ui_LayerMenuHelp->show();
+      ui_LayerMenuOptions->hide();
+      ui_LayerMenuPause->hide();
+
+      ui_InputClock->reset();
+    }
+    if (ui_BtnBackHelp->mouseDown(OIS::MB_Left) && ui_InputClock->msex() >= f_ButtonDelay)
+    {
+      ui_LayerMenuHelp->hide();
+      ui_LayerMenuOptions->hide();
+      ui_LayerMenuPause->show();
+
+      ui_InputClock->reset();
+    }
+
+    if (ui_BtnOptions->mouseDown(OIS::MB_Left) && ui_InputClock->msex() >= f_ButtonDelay) 
+    {
+      ui_LayerMenuOptions->show();
+      ui_LayerMenuHelp->hide();
+      ui_LayerMenuPause->hide();
+
+      ui_InputClock->reset();
+    }
+    if (ui_BtnBackOptions->mouseDown(OIS::MB_Left) && ui_InputClock->msex() >= f_ButtonDelay)
+    {
+      ui_LayerMenuHelp->hide();
+      ui_LayerMenuOptions->hide();
+      ui_LayerMenuPause->show();
+
+      ui_InputClock->reset();
+    }
+
+    if (ui_BtnExit->mouseDown(OIS::MB_Left) && ui_InputClock->msex() >= f_ButtonDelay)
+    { 
+      b_Alive = false; 
+    }
+  }
+
+  // PAUSE ////////////////////////////////////////////////////////////////////
+  if (m_SysInput->keyDown(OIS::KC_ESCAPE) && m_LabClock->msex() >= f_InputDelay)
+  {
+    m_SysWorld->pauseWorld();
+
+    b_MenuMode = !b_MenuMode;
+
+    ui_LayerCursor->toggleVisible();
+    ui_LayerMenuPause->toggleVisible();
+
+    if (ui_LayerMenuHelp->isVisible()) 
+    { 
+      ui_LayerMenuHelp->hide(); 
+    }
+    if (ui_LayerMenuOptions->isVisible()) 
+    { 
+      ui_LayerMenuOptions->hide(); 
+    }
+
+    m_LabClock->reset();
+  }
+
+  // DEBUG ////////////////////////////////////////////////////////////////////
+  if (m_SysInput->keyDown(OIS::KC_GRAVE) && m_LabClock->msex() >= f_InputDelay)
+  {
+    b_DebugMode = !b_DebugMode;
+    ui_LayerDebug->toggleVisible();
+
+    m_SysWorld->toggleGrid();
+    m_SysWorld->toggleEntityBillboards();
+
+    m_LabClock->reset();
+  }
+
+  if (m_SysInput->keyDown(OIS::KC_P) && m_LabClock->msex() >= f_InputDelay)
+  {
+    m_SysPhysics->toggleDebug();
+
+    m_LabClock->reset();
+  }
+
+  // SCREENSHOT ///////////////////////////////////////////////////////////////
+  if (m_SysInput->keyDown(OIS::KC_SYSRQ) && m_LabClock->msex() >= f_InputDelay)
+  {
+    Ogre::StringStream ss;
+    ss << "screenshot_" << ++i_ScreenShots << ".png";
+    m_SysRender->getWindow()->writeContentsToFile(ss.str());
+
+    m_LabClock->reset();
+  }
+
+  // MOVEMENT /////////////////////////////////////////////////////////////////
   if (!m_SysWorld->isPaused())
   {
     if (m_SysInput->getKeyboard()->isModifierDown(OIS::Keyboard::Shift))
@@ -351,48 +612,9 @@ void Lab::handleInput()
         m_LabCamera->moveOrdinate(-f_CamSpeed);
       }
     }
-  }
+  }  
 
-  // DEBUG
-  if (m_SysInput->keyDown(OIS::KC_GRAVE) && m_LabClock->msex() >= f_InputDelay)
-  {
-    m_ScreenDebug->toggleVisible();
-    m_SysWorld->toggleGrid();
-    m_SysWorld->toggleEntityBillboards();
-
-    m_LabClock->reset();
-  }
-  if (m_SysInput->keyDown(OIS::KC_P) && m_LabClock->msex() >= f_InputDelay)
-  {
-    m_SysPhysics->toggleDebug();
-
-    m_LabClock->reset();
-  }
-
-  // SCREENSHOT
-  if (m_SysInput->keyDown(OIS::KC_SYSRQ) && m_LabClock->msex() >= f_InputDelay)
-  {
-    Ogre::StringStream ss;
-    ss << "screenshot_" << ++i_ScreenShots << ".png";
-    m_SysRender->getWindow()->writeContentsToFile(ss.str());
-
-    m_LabClock->reset();
-  }
-  
-  // SPAWN SOME JUNK
-  //if (m_SysInput->keyDown(OIS::KC_SPACE) && m_LabClock->msex() >= f_InputDelay)
-  //{
-  //  m_SysWorld->addDynamic(
-  //    "EPD_CUBE_" + to_string(i_JunkCount), 
-  //    "lab_cube_red.mesh",
-  //    0, Vector3(0, 10, 0));
-
-  //  i_JunkCount++;
-
-  //  m_LabClock->reset();
-  //}
-
-  // CHANGE WORLD RATE
+  // CHANGE WORLD RATE ////////////////////////////////////////////////////////
   if (!m_SysWorld->isPaused())
   {
     if (m_SysInput->keyDown(OIS::KC_1) && m_LabClock->msex() >= f_InputDelay)
@@ -422,9 +644,8 @@ void Lab::handleInput()
   }
 }
 
-/*****************************************************************************
-*****************************************************************************/
+///^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
 
 }
 
-/***]EOF[*********************************************************************/
+///^]EOF[^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\^\
